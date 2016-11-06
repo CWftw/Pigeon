@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.jameswolfeoliver.pigeon.Inbox_Activity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Activities.InboxActivity"
+    android:id="@+id/root_layout">
 
-    <TextView
+    <include
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        layout="@layout/action_bar_inbox" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/conversationListView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:scrollIndicators="right"
+        android:divider="@null"
+        android:dividerHeight="10.0sp"
+        android:smoothScrollbar="true"
+        android:layout_marginTop="?attr/actionBarSize" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:id="@+id/spinner_wrapper"
+        android:visibility="gone">
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            style="@style/AVLoadingIndicatorView"
+            app:indicatorColor="@color/colorAccent"
+            app:indicatorName="BallTrianglePathIndicator"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_action_new_light"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/fab_margin" />
+
 </RelativeLayout>
