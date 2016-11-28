@@ -16,6 +16,8 @@ import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import java.io.IOException;
 
+import fi.iki.elonen.NanoHTTPD;
+
 public class InboxPresenter implements NetworkStateReceiver.NetworkStateReceiverListener {
     private static final String LOG_TAG = InboxPresenter.class.getSimpleName();
     private static InboxPresenter Instance = null;
@@ -45,6 +47,7 @@ public class InboxPresenter implements NetworkStateReceiver.NetworkStateReceiver
                                 server.start();
                                 WifiManager wm = (WifiManager) context.getSystemService(Service.WIFI_SERVICE);
                                 String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+                                server.setServerIp(ip);
                                 String serverLoginUrl = String.format("http://%s:%s/login",ip,server.getListeningPort());
                                 onFinished.onServerStarted(serverLoginUrl);
                             } catch (IOException e) {

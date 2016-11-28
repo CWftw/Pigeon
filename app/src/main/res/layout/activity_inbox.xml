@@ -13,39 +13,42 @@
         android:layout_height="wrap_content"
         layout="@layout/action_bar_inbox" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/conversationListView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:scrollIndicators="right"
-        android:divider="@null"
-        android:dividerHeight="10.0sp"
-        android:smoothScrollbar="true"
-        android:layout_marginTop="?attr/actionBarSize" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        android:id="@+id/spinner_wrapper"
-        android:visibility="gone">
+        android:layout_marginTop="@dimen/abc_action_bar_default_height_material">
 
-        <com.wang.avi.AVLoadingIndicatorView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner"
-            style="@style/AVLoadingIndicatorView"
-            app:indicatorColor="@color/colorAccent"
-            app:indicatorName="BallTrianglePathIndicator"
-            android:layout_gravity="center" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/fragment_container"/>
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:id="@+id/spinner_wrapper"
+            android:visibility="gone">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner"
+                style="@style/AVLoadingIndicatorView"
+                app:indicatorColor="@color/colorAccent"
+                app:indicatorName="BallTrianglePathIndicator"
+                android:layout_gravity="center" />
+        </FrameLayout>
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/design_fab_size_normal"
+        android:layout_height="@dimen/design_fab_size_normal"
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_action_new_light"
         android:layout_marginRight="@dimen/fab_margin"
