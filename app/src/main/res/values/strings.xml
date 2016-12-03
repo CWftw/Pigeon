@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Pigeon</string>
     <string name="login_url">http://jameswolfeoliver.github.io/assets/Pigeon/login.html</string>
+    <string name="server_settings">Server&#8230;</string>
+    <string name="server_device_name">Device Name</string>
+    <string name="server_device_password">Password</string>
+
+    <!--Default responses-->
     <string name="page_not_found">
         <![CDATA[
         <html>\n
@@ -11,4 +16,35 @@
         </html>
         ]]>
     </string>
+    <string name="page_bad_request">
+        <![CDATA[
+        <html>\n
+        <body>\n
+            <h2>Error 400</h2>\n
+            <h3>Bad Request!</h3>\n
+        </body>\n
+        </html>
+        ]]>
+    </string>
+    <string name="page_forbidden">
+        <![CDATA[
+        <html>\n
+        <body>\n
+            <h2>Error 403</h2>\n
+            <h3>Forbidden!</h3>\n
+        </body>\n
+        </html>
+        ]]>
+    </string>
+    <string name="page_internal_error">
+        <![CDATA[
+        <html>\n
+        <body>\n
+            <h2>Error 500</h2>\n
+            <h3>Oops we made a mistake!</h3>\n
+        </body>\n
+        </html>
+        ]]>
+    </string>
+
 </resources>

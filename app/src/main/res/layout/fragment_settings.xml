@@ -1,14 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:layout_gravity="center_vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Settings fragment"
-        android:id="@+id/textView"
-        android:layout_gravity="center"
-        android:textSize="@dimen/abc_text_size_display_2_material" />
+        android:inputType="none"
+        android:text="@string/server_settings"
+        android:id="@+id/server_label"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
+        android:paddingStart="8dp"
+        android:textSize="19sp"
+        android:textAlignment="viewStart"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:weightSum="1">
+        <TextView
+            android:layout_width="0dp"
+            android:text="@string/server_device_name"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:textSize="17sp"
+            android:layout_weight="0.5"
+            android:textAlignment="viewStart"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:textSize="17sp"
+            android:layout_weight="0.5"
+            android:textAlignment="viewEnd"
+            android:id="@+id/server_settings_name" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+        <TextView
+            android:layout_width="0dp"
+            android:text="@string/server_device_password"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:textSize="17sp"
+            android:layout_weight="0.4"
+            android:textAlignment="viewStart"/>
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:layout_weight="0.47"
+            android:textAlignment="viewEnd"
+            android:hint="Touch to change"
+            android:id="@+id/sever_settings_password" />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.13"
+            android:paddingEnd="16dp"
+            android:background="?attr/selectableItemBackground"
+            app:srcCompat="@android:drawable/ic_menu_send"
+            android:id="@+id/sever_save_password"/>
+
+    </LinearLayout>
+
 </LinearLayout>

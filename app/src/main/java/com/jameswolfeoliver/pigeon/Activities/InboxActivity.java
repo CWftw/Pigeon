@@ -1,6 +1,7 @@
 package com.jameswolfeoliver.pigeon.Activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -20,6 +22,7 @@ import com.jameswolfeoliver.pigeon.Fragment.InboxFragment;
 import com.jameswolfeoliver.pigeon.Fragment.SettingsFragment;
 import com.jameswolfeoliver.pigeon.Presenters.InboxPresenter;
 import com.jameswolfeoliver.pigeon.R;
+import com.jameswolfeoliver.pigeon.Server.TextServer;
 import com.wang.avi.AVLoadingIndicatorView;
 
 public class InboxActivity extends AppCompatActivity {
@@ -31,7 +34,9 @@ public class InboxActivity extends AppCompatActivity {
     private FrameLayout spinnerWrapper;
     private ImageButton settingsButton;
     private Switch serverSwitch;
-
+    public static Context context;
+    
+    private InboxPresenter inboxPresenter;
 
     private InboxFragment inboxFragment;
     private SettingsFragment settingsFragment;
@@ -40,6 +45,8 @@ public class InboxActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
+        inboxPresenter = new InboxPresenter();
+        context = this;
 
         // Set root view and show spinner
         root = (RelativeLayout) findViewById(R.id.root_layout);
@@ -73,11 +80,20 @@ public class InboxActivity extends AppCompatActivity {
                 goToSettings();
             }
         });
-        this.serverSwitch.setOnClickListener(new View.OnClickListener() {
+        this.serverSwitch.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (serverSwitch.isChecked()) {
-                    showSetupServerDialog();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    showSpinner();
+                    inboxPresenter.startServer(new TextServer.ServerCallback() {
+                        @Override
+                        public void onComplete() {
+                            hideSpinner();
+                            showConnectToPcDialog(TextServer.getServerUri() + "/login");
+                        }
+                    });
+                } else {
+                    inboxPresenter.tearDownServer();
                 }
             }
         });
@@ -96,20 +112,14 @@ public class InboxActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        InboxPresenter.getInstance().startServer(this, new InboxPresenter.Callbacks() {
-            @Override
-            public void onServerStarted(String serverLoginUrl) {
-                showConnectToPcDialog(serverLoginUrl);
-            }
-        });
-        InboxPresenter.getInstance().startReceiver();
+        inboxPresenter.startReceiver();
         hideSpinner();
     }
 
     @Override
     public void onDestroy() {
-        InboxPresenter.getInstance().tearDownServer();
-        InboxPresenter.getInstance().stopReceiver();
+        inboxPresenter.tearDownServer();
+        inboxPresenter.stopReceiver();
         super.onDestroy();
     }
 
@@ -144,10 +154,6 @@ public class InboxActivity extends AppCompatActivity {
 
         AlertDialog connectToPcDialog = builder.create();
         connectToPcDialog.show();
-    }
-
-    private void showSetupServerDialog() {
-        showConnectToPcDialog("");
     }
 
     private void goToSettings() {

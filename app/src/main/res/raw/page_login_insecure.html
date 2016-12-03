@@ -1,0 +1,81 @@
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="Text Messaging, With a Twist" content="">
+    <meta name="James" content="">
+    <link rel="icon" href="http://www.iconarchive.com/download/i83644/pelfusion/long-shadow-media/Message-Bubble.ico">
+    <title>Pigeon</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div class="container" style="position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;">
+    <img src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/0XXXZEHMI2.jpg" alt="background" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto; min-width: 50%; min-height: 50%;">
+</div>
+<div class="container col-xs-12" align="center" style="z-index: 10; position:absolute; top: 28vh; opacity: 0.9;">
+    <div class="row">
+        <div class="is-Responsive Absolute-Center">
+            <div class="col-xs-4"> </div>
+            <div class="col-xs-4" style="background: rgba(47, 79, 79, 0.6); border-radius: 25px">
+                <h2 align="center" style="color: #FFFFFF;">Pigeon</h2>
+                <p id="loginFeedback" style="color: #FFFFFF;" align="left"> </p>
+                <form id="loginForm">
+                    <div class="checkbox">
+                        <label>
+                            <input id="termsCheckbox" type="checkbox"> <span style="color: #FFFFFF;">I agree to the </span><a style="color: #FFFFFF;" href="#">Terms and Conditions</a>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" onclick="loginPost();" class="btn btn-def btn-block btn-success">Authenticate</button>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <p style="color: #FFFFFF;">Checkout the <a style="color: #FFFFFF;" href="https://github.com/jameswolfeoliver/Pigeon">Github Repo</a></p>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-4"> </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript">
+		function loginPost() {
+		    var URL = window.location.href;
+		    console.log(URL);
+		    var terms = document.getElementById("termsCheckbox").checked;
+		    console.log(terms);
+		    var data = {};
+		    data.hasAgreedToTerms = terms;
+		    console.log(data);
+		    var errorFeedback = document.getElementById("loginFeedback");
+		   	errorFeedback.innerHTML = "";
+		    $.post(URL,data, function( dataRecieved ) {
+			    var errorFeedback = document.getElementById("loginFeedback");
+	  			var error = dataRecieved.error;
+	  			var wasSuccessful = dataRecieved.successful;
+	  			if (!wasSuccessful) {
+	  				switch (dataRecieved.error) {
+		  				case 1:
+		  					errorFeedback.innerHTML = "Host denied authentication attempt";
+		  					break;
+		  				case 2:
+                            errorFeedback.innerHTML = "Please agree to the terms of service to continue";
+                            break;
+                        case 3:
+                            errorFeedback.innerHTML = "Please have Pigeon open on host device";
+                            break;
+                        default:
+                            errorFeedback.innerHTML = "Server error, please try again";
+                    }
+                } else {
+                    var inboxUrl = URL.replace("/login", "/inbox");
+	  				window.location.replace(inboxUrl);
+                }
+
+            }, "json");
+		}
+	</script>
+</body></html>
