@@ -1,19 +1,11 @@
 package com.jameswolfeoliver.pigeon.Presenters;
 
 
-import android.app.Service;
-import android.content.Context;
 import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
-import android.text.format.Formatter;
-import android.util.Log;
-import com.jameswolfeoliver.pigeon.R;
+
 import com.jameswolfeoliver.pigeon.Server.TextServer;
-import com.jameswolfeoliver.pigeon.Tasks.DownloadHtml;
 import com.jameswolfeoliver.pigeon.Utilities.NetworkStateReceiver;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
-import java.io.IOException;
-import fi.iki.elonen.NanoHTTPD;
 
 public class InboxPresenter implements NetworkStateReceiver.NetworkStateReceiverListener {
     private static final String LOG_TAG = InboxPresenter.class.getSimpleName();
@@ -23,7 +15,7 @@ public class InboxPresenter implements NetworkStateReceiver.NetworkStateReceiver
     }
 
     public void startServer(TextServer.ServerCallback callback) {
-        TextServer.getInstance().start(true, callback);
+        TextServer.getInstance().start(false, callback);
     }
 
     public void tearDownServer() {

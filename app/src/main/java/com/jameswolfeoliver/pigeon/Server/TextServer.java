@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.text.format.Formatter;
 
 import com.jameswolfeoliver.pigeon.Managers.KeystoreHelper;
+import com.jameswolfeoliver.pigeon.Managers.PageCacheManager;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.InboxEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.InsecureLoginEndpoint;
@@ -126,7 +127,7 @@ public class TextServer extends NanoHTTPD {
             @Override
             public void run() {
                 try {
-                    LOGIN_SECURE = readRawFile(R.raw.page_login_secure);
+                    LOGIN_SECURE = PageCacheManager.loadPageFromStorage(PageCacheManager.SECURE_LOGIN_FILE_NAME);
                     System.setProperty("javax.net.ssl.trustStore", "keystore.jks");
                     TextServer.getInstance().makeSecure(makeSSLSocketFactory(), null);
                     TextServer.getInstance().start();
@@ -150,7 +151,7 @@ public class TextServer extends NanoHTTPD {
 
     private boolean initInsecureServer() {
         try {
-            LOGIN_INSECURE = readRawFile(R.raw.page_login_insecure);
+            LOGIN_INSECURE = PageCacheManager.loadPageFromStorage(PageCacheManager.INSECURE_LOGIN_FILE_NAME);
             start();
             return true;
         } catch (IOException io) {
@@ -160,10 +161,38 @@ public class TextServer extends NanoHTTPD {
     }
 
     private void initDefaultResponses() {
-        NOT_FOUND = PigeonApplication.getAppContext().getResources().getString(R.string.page_not_found);
-        BAD_REQUEST = PigeonApplication.getAppContext().getResources().getString(R.string.page_bad_request);
-        FORBIDDEN = PigeonApplication.getAppContext().getResources().getString(R.string.page_forbidden);
-        INTERNAL_ERROR = PigeonApplication.getAppContext().getResources().getString(R.string.page_internal_error);
+        String generalError;
+        try {
+            generalError = PageCacheManager.loadPageFromStorage(PageCacheManager.ERROR_FILE_NAME);
+        } catch (IOException e) {
+            e.printStackTrace();
+            generalError = PigeonApplication.getAppContext().getResources().getString(R.string.general_error);
+        }
+        NOT_FOUND = transformGeneralToSpecificError(generalError, 404);
+        BAD_REQUEST = transformGeneralToSpecificError(generalError, 400);
+        FORBIDDEN = transformGeneralToSpecificError(generalError, 403);
+        INTERNAL_ERROR = transformGeneralToSpecificError(generalError, 500);
+    }
+
+    private String transformGeneralToSpecificError(String generalError, int error) {
+        String message;
+        switch (error) {
+            case 400:
+                message = PigeonApplication.getAppContext().getString(R.string.message_400);
+                break;
+            case 403:
+                message = PigeonApplication.getAppContext().getString(R.string.message_403);
+                break;
+            case 404:
+                message = PigeonApplication.getAppContext().getString(R.string.message_404);
+                break;
+            case 500:
+                message = PigeonApplication.getAppContext().getString(R.string.message_500);
+                break;
+            default:
+                message = "-_-";
+        }
+        return generalError.replace("{CODE}", Integer.toString(error)).replace("{MESSAGE}", message);
     }
     // endregion ServerSetup
 
@@ -199,18 +228,6 @@ public class TextServer extends NanoHTTPD {
             default:
                 return Endpoint.buildHtmlResponse(NOT_FOUND, Response.Status.NOT_FOUND);
         }
-    }
-
-    private static String readRawFile(int rawId) throws IOException {
-        InputStream is = PigeonApplication.getAppContext().getResources().openRawResource(rawId);
-        BufferedReader buf = new BufferedReader(new InputStreamReader(is));
-        String line = buf.readLine();
-        StringBuilder sb = new StringBuilder();
-        while(line != null) {
-            sb.append(line).append("\n");
-            line = buf.readLine();
-        }
-        return sb.toString();
     }
 
     // Callback interface for time consuming tasks

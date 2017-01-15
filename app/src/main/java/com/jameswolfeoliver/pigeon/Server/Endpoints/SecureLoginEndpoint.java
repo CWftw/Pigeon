@@ -1,14 +1,13 @@
 package com.jameswolfeoliver.pigeon.Server.Endpoints;
 
-import android.os.Build;
-import android.util.Log;
 import com.jameswolfeoliver.pigeon.Managers.SecurityHelper;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
+import com.jameswolfeoliver.pigeon.Server.Models.Requests.LoginRequest;
+import com.jameswolfeoliver.pigeon.Server.Models.Responses.LoginResponse;
 import com.jameswolfeoliver.pigeon.Server.TextServer;
+import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jaredrummler.android.device.DeviceName;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import fi.iki.elonen.NanoHTTPD;
@@ -42,41 +41,31 @@ public class SecureLoginEndpoint extends Endpoint {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        bodyMap = session.getParms();
-        return buildJsonResponse(buildLogInResponse(bodyMap), NanoHTTPD.Response.Status.OK);
+
+
+        return buildJsonResponse(buildLogInResponse(
+                PigeonApplication.getGson().fromJson(session.getQueryParameterString(),
+                        LoginRequest.class)),
+                NanoHTTPD.Response.Status.OK);
     }
 
     private static NanoHTTPD.Response onGet() {
         return buildHtmlResponse(TextServer.getLoginSecure(), NanoHTTPD.Response.Status.OK);
     }
 
-    private static String buildLogInResponse(Map<String, String> bodyMap)  {
-        int error = NO_ERROR;
-        final String deviceName = bodyMap.get("deviceName").trim();
-        final String password = bodyMap.get("password").trim();
-        final boolean termsChecked = bodyMap.get("hasAgreedToTerms").equals("true");
-        JSONObject responseJson = new JSONObject();
+    private static String buildLogInResponse(LoginRequest request)  {
+        LoginResponse response = new LoginResponse(false, NO_ERROR);
 
-        Log.d(LOG_TAG, String.format("On Thread: %s", Thread.currentThread().getName()));
-        Log.d(LOG_TAG, String.format("DEVICE_NAME: %s password: %s checkBox: %b", deviceName, password, termsChecked));
-
-        try {
-            responseJson.put("successful", false);
-            if (!termsChecked) {
-                error = TERMS_UNCHECKED;
-            } else if (!deviceName.equals(DEVICE_NAME)) {
-                error = INVALID_CREDENTIALS;
-            } else if (!SecurityHelper.getInstance().checkUserPassword(password)) {
-                error = INVALID_CREDENTIALS;
-            } else {
-                responseJson.put("successful", true);
-            }
-            responseJson.put("error", error);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (!request.hasUserAgreed()) {
+            response.setErrorCode(TERMS_UNCHECKED);
+        } else if (!request.getDeviceName().equals(DEVICE_NAME)) {
+            response.setErrorCode(INVALID_CREDENTIALS);
+        } else if (!SecurityHelper.getInstance().checkUserPassword(request.getPassword())) {
+            response.setErrorCode(INVALID_CREDENTIALS);
+        } else {
+            response.setWasSuccessful(true);
         }
 
-        Log.d(LOG_TAG, responseJson.toString());
-        return responseJson.toString();
+        return PigeonApplication.getGson().toJson(response, LoginResponse.class);
     }
 }

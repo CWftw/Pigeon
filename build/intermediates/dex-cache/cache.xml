@@ -3,291 +3,327 @@
 
     <item
         is-multidex="false"
-        jar="/home/wemesh/.gradle/caches/modules-2/files-2.1/com.flaviofaria/kenburnsview/1.0.7/ce4e8bba9e026dd29f8110b2f6bb1fc4ecbdd9b1/kenburnsview-1.0.7.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="ce4e8bba9e026dd29f8110b2f6bb1fc4ecbdd9b1">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/kenburnsview-1.0.7_f98973fd57088c2933a387580af2a0482cb7b110.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="fcc945a86ebcbf527429acb8216ec7dae2c06417">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-utils-24.2.0_7f2da057fbf16d2df850d14192f3911483c8adae.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/design/24.2.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="23eb0d2998a782213b56168cbf23a0688b9111d9">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-design-24.2.0_46bff18f6708307831aadf9fa290cb1d858659c6.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="45f5eda279825ff470e3f51019d374d1ef61e000">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-24.2.0_e5679170dcbd707980692435a4bb499d54139718.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="c84e216d9bf618464d6b9564d71d9a656433e7c4">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-ui-24.2.0_b2a295c29f5fd1bcfbbe237e783b3b1800ba38c0.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/library-2.4.0_b999f54c3077f694497d9f091ee3e9c32d64a1dd.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.volley/volley/1.0.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="2cd4b982617e544728de0782d718a58ce1b06e3f">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.volley-volley-1.0.0_c3c4be1bc7c8cee077008e83b52fdabd9811fa0e.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.github.ksoichiro/android-observablescrollview/1.6.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="d125b199a427e5cc8d4234f7d8673c9a27ef6336">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.github.ksoichiro-android-observablescrollview-1.6.0_e4177bb0d4bb186162bd301b6015d85eb8d54d21.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="f9b41622897665678d31d78e57a361cb0cebcb0d">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-compat-24.2.0_2c08019070087eff249393445022a486cdad5b13.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="c3c638be6e650b165ab9ae144857b64e82787fad">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-24.2.0_373436185ffe665d716d31ca46380a1f9e25c680.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.0/jars/libs/internal_impl-24.2.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="032a4b53def5e2ceedfc2e793b126c0163cfa1dd">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_e60d74bf03224fb0b8b7dda829df7f19b9f434e2.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/pg/1.51.0.0/597a22ac4d21069afce4d101ff4b027a19ef1a2/pg-1.51.0.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="0597a22ac4d21069afce4d101ff4b027a19ef1a2">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/pg-1.51.0.0_cb84e767765727f1ae7276ed401073dc14256a83.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.0/jars/libs/internal_impl-24.2.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="771b3cc0e597b54da25f8086ba73180c59c6bc71">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_15bf87f506f65dfa2e4e3bf72e87164a56050e68.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.0/jars/libs/internal_impl-24.2.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="60d7b23621d31e6f42f4f76f16af467e57a20cda">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_a3fbc01af25ab0629b9c934b562806714d15c9d4.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/prov/1.51.0.0/6755081df770180856ca48694b40cd34c2208128/prov-1.51.0.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="6755081df770180856ca48694b40cd34c2208128">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/prov-1.51.0.0_76b96a3464b8f5830a88576e93304fe4cea0acc6.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="d8bd2268fdcbfd52c76ade65d9900cd8def93a44">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-fragment-24.2.0_6b459a4d5f02d1fd339ab92c6b56ad6ce2f3f478.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/24.2.0/support-annotations-24.2.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="6be858a75633b1f0a2d24cad740db57775cb6871">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/support-annotations-24.2.0_bf760f567e3f34f10ec0c0dd794920a437e09678.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="f3ee23ef25c9a8fe3d40246d0b7097267963a612">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-24.2.0_076226b9de83382cb254ed1a457ec6bce2c2e776.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/3.7.0/9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4/glide-3.7.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/glide-3.7.0_4bd8dd89a79a6f3ed5887d96311c5cc5705d8b1d.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.0/jars/classes.jar"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.0/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.2"
         sha1="beac40bcc8a320a896dd15f5109cfcaea5e1e0e3">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-24.2.0_a3eb13e6312505c3b3ee2bb39ceed2e7d6227b5b.jar" />
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-24.2.0_9182bf51619a35e15ec92edd61e7209dc3dbc49f.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.jpardogo.materialtabstrip/library/1.1.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="611c7708cd3df0d7ae99105d4df5af8eb25c4b32">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.jpardogo.materialtabstrip-library-1.1.0_4bfe6c85837c20269dcf26cc93f1148f81f93fed.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.3.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="82ce13fd19cdfde0e392f03c27edeba8d4333648">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-cardview-v7-23.3.0_a865f53d25d4de9aa08f5592bb6b555e150f3547.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/24.2.0/jars/classes.jar"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/24.2.0/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.2"
         sha1="c755536e5a100d9c76c8ea0b72f76c018f7a9de2">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-24.2.0_3e18f03aa51756148c093120bbee261064a1874a.jar" />
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-24.2.0_7e1b6c467ccec7fc3b1048fc8a03842aaa0f7b41.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.github.florent37/materialviewpager/1.2.0/jars/classes.jar"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.jpardogo.materialtabstrip/library/1.1.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="611c7708cd3df0d7ae99105d4df5af8eb25c4b32">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.jpardogo.materialtabstrip-library-1.1.0_290c0d08abe24bf1c5589d62b27208d93da6ddae.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/converter-gson/2.1.0/aa557d71ead91cbf26e0c316a0f593d168303309/converter-gson-2.1.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="aa557d71ead91cbf26e0c316a0f593d168303309">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/converter-gson-2.1.0_b1a5df7119d1d85e0ddc07e07841a4bd61ab0026.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.11.0/840897fcd7223a8143f1d9b6f69714e7be34fd50/okio-1.11.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="840897fcd7223a8143f1d9b6f69714e7be34fd50">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/okio-1.11.0_68116712e900e28b7bab3c7ba4a3766774aefd55.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.flaviofaria/kenburnsview/1.0.7/ce4e8bba9e026dd29f8110b2f6bb1fc4ecbdd9b1/kenburnsview-1.0.7.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="ce4e8bba9e026dd29f8110b2f6bb1fc4ecbdd9b1">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/kenburnsview-1.0.7_23941f57ecff3777a114cc0c65ff42b2f5a593fb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/prov/1.51.0.0/6755081df770180856ca48694b40cd34c2208128/prov-1.51.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="6755081df770180856ca48694b40cd34c2208128">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/prov-1.51.0.0_72c1765cd5f76d7bda44766425a207cf52024acb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/design/24.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="23eb0d2998a782213b56168cbf23a0688b9111d9">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-design-24.2.0_1958d65018b11c18d4e34f081353faf540965a74.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="c3c638be6e650b165ab9ae144857b64e82787fad">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-24.2.0_0d564cf7436d6c7615dcdf4b448e0042f50451ac.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/retrofit/2.1.0/2de7cd8b95b7021b1d597f049bcb422055119f2c/retrofit-2.1.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="2de7cd8b95b7021b1d597f049bcb422055119f2c">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/retrofit-2.1.0_f157af759bf5c332e50a92b250f53649d193f8eb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.github.florent37/materialviewpager/1.2.0/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.2"
         sha1="e021a1a8f5600d1924bd69cd2b007c8d118d3ea7">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.github.florent37-materialviewpager-1.2.0_8d6d0a83295e8c272bc7a14c639a5e4646c32c32.jar" />
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.github.florent37-materialviewpager-1.2.0_3d1cafa04b5ccd14cace9aef861f2706bc3502e1.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/home/wemesh/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/core/1.51.0.0/f642963312ea0e615ad65f28adc5a5b3a2a0862/core-1.51.0.0.jar"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.5.0/4b0bb6bfbecbdd42b97ff400af342bfe7f32bc83/okhttp-3.5.0.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.2"
-        sha1="0f642963312ea0e615ad65f28adc5a5b3a2a0862">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/core-1.51.0.0_2fa8e1706db9e10fe5dae586e6d9f72564c0367e.jar" />
+        sha1="4b0bb6bfbecbdd42b97ff400af342bfe7f32bc83">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/okhttp-3.5.0_475d6254e64987fe7d772df2f142f232f365ac92.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.0/jars/libs/internal_impl-24.2.0.jar"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/pg/1.51.0.0/597a22ac4d21069afce4d101ff4b027a19ef1a2/pg-1.51.0.0.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.2"
-        sha1="045be695d968dd707691cc55d23746dbf8cf569a">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_baa23c38c177d4d09c48e5f1d1e19be5e71f877a.jar" />
+        sha1="0597a22ac4d21069afce4d101ff4b027a19ef1a2">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/pg-1.51.0.0_676c631ab8c8d05f389cae7e9d9efe9cddbe2d7c.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.0/jars/classes.jar"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.0/jars/libs/internal_impl-24.2.0.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.2"
-        sha1="6eb9107eb34d2fe2b020662b7fbbec991dcba846">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-media-compat-24.2.0_da59324e438c6b482a679aa38a26d64a396f0ff1.jar" />
+        sha1="60d7b23621d31e6f42f4f76f16af467e57a20cda">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_b65cdbf3ce27f327ee8a40247a6cc788f51e5037.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/home/wemesh/.gradle/caches/modules-2/files-2.1/org.nanohttpd/nanohttpd/2.3.1/a8d54d1ca554a77f377eff6bf9e16ca8383c8f6c/nanohttpd-2.3.1.jar"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.0/jars/libs/internal_impl-24.2.0.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.2"
-        sha1="a8d54d1ca554a77f377eff6bf9e16ca8383c8f6c">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/nanohttpd-2.3.1_3bbcb4d0b29149c54749753051c6199551488775.jar" />
+        sha1="771b3cc0e597b54da25f8086ba73180c59c6bc71">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_ac08f3b849b2c8085486270dc3f5e35b00e79936.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.jaredrummler/android-device-names/1.1.2/jars/classes.jar"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.0/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.2"
-        sha1="2cd93393040858db766bdf9c3ee5cfb66ac0be4d">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.jaredrummler-android-device-names-1.1.2_517224e400240f5baeccc3fdb3fc128754434498.jar" />
+        sha1="c84e216d9bf618464d6b9564d71d9a656433e7c4">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-ui-24.2.0_3587e4bc6fa9122ec575674574acb23d3fa244c3.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.0/jars/libs/internal_impl-24.2.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.2"
-        sha1="6e02e34594ebe9c0501ffda8dd48497f81b82977">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_880f71de9fba8141e5046f0ef1a7a7d58ae319ed.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/wemesh/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/pkix/1.51.0.0/40a445852ca58187fc616e3a8b42de463bf14b8b/pkix-1.51.0.0.jar"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/pkix/1.51.0.0/40a445852ca58187fc616e3a8b42de463bf14b8b/pkix-1.51.0.0.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.2"
         sha1="40a445852ca58187fc616e3a8b42de463bf14b8b">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/pkix-1.51.0.0_d34cd8a907b9985a27bd9b2cf8568e890f375ea0.jar" />
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/pkix-1.51.0.0_bd222b85668ff5d432224c34bb5328028082e19c.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/home/wemesh/James/Pigeon/app/build/intermediates/exploded-aar/com.wang.avi/library/2.1.3/jars/classes.jar"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="f9b41622897665678d31d78e57a361cb0cebcb0d">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-compat-24.2.0_fa6c3242e0fc2fa96d19db322c41c770c79ce256.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.0/jars/libs/internal_impl-24.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="032a4b53def5e2ceedfc2e793b126c0163cfa1dd">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_f38755f1f51011f10fc793f42a381033f173865f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.0/jars/libs/internal_impl-24.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="6e02e34594ebe9c0501ffda8dd48497f81b82977">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_c5992c7492baeb626c163339acf62d61a0074575.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="fcc945a86ebcbf527429acb8216ec7dae2c06417">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-utils-24.2.0_d0e2595850f5feec63fdd329892e576032e92927.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="6eb9107eb34d2fe2b020662b7fbbec991dcba846">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-media-compat-24.2.0_5f3fcce04f84f81629091feb07c131bc1be3c510.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.7/751f548c85fa49f330cecbb1875893f971b33c4e/gson-2.7.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="751f548c85fa49f330cecbb1875893f971b33c4e">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/gson-2.7_470a901209e9ada6a18fc6175062247a1150fb2c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d8bd2268fdcbfd52c76ade65d9900cd8def93a44">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-fragment-24.2.0_0c968d9a7c3c90c8ae5ccf6467376fe4731743c1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.0/jars/libs/internal_impl-24.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="045be695d968dd707691cc55d23746dbf8cf569a">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_da6ac701d8f7599656e4dc8dfc4ce6b7ed358d0f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/24.2.0/support-annotations-24.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="6be858a75633b1f0a2d24cad740db57775cb6871">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/support-annotations-24.2.0_d1c459b35b7cb9a8e774c8b0875938e53c5d269e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.github.ksoichiro/android-observablescrollview/1.6.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d125b199a427e5cc8d4234f7d8673c9a27ef6336">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.github.ksoichiro-android-observablescrollview-1.6.0_0cc7756a91e3cac313c920fabfeb8d616c445839.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/org.nanohttpd/nanohttpd/2.3.1/a8d54d1ca554a77f377eff6bf9e16ca8383c8f6c/nanohttpd-2.3.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="a8d54d1ca554a77f377eff6bf9e16ca8383c8f6c">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/nanohttpd-2.3.1_39891a62ff30e7c3db35f14a0db5b9718cea8ccd.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="f3ee23ef25c9a8fe3d40246d0b7097267963a612">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-24.2.0_60353d6867d91947e66552fc185ffc12b59fef10.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/3.7.0/9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4/glide-3.7.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/glide-3.7.0_f7d2ee8451b4ad251fdf224083ca462d3aaee623.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="45f5eda279825ff470e3f51019d374d1ef61e000">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-24.2.0_d07bdb8d400f9c0be5f98d500f541e110d879155.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.wang.avi/library/2.1.3/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.2"
         sha1="e699699fae0092703de1d02b217f43803d0f7e0a">
-        <dex dex="/home/wemesh/James/Pigeon/app/build/intermediates/pre-dexed/debug/com.wang.avi-library-2.1.3_dc4c786ca3bcf9ed49c7c8a307d932e1ddc9f9d2.jar" />
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.wang.avi-library-2.1.3_365ddbe8eba8cd593b73582f73bee65841bc5456.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.jaredrummler/android-device-names/1.1.2/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="2cd93393040858db766bdf9c3ee5cfb66ac0be4d">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.jaredrummler-android-device-names-1.1.2_e5dc73f7c83b5ef0d2ccb026af000ee9d743107d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/library-2.4.0_be86031074970cefef1f03f3952ab705f9f8d0c3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="82ce13fd19cdfde0e392f03c27edeba8d4333648">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/com.android.support-cardview-v7-23.3.0_b4ee4e5021906da97c428d593b6c3af2d61c3eff.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/james/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/core/1.51.0.0/f642963312ea0e615ad65f28adc5a5b3a2a0862/core-1.51.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.2"
+        sha1="0f642963312ea0e615ad65f28adc5a5b3a2a0862">
+        <dex dex="/home/james/Code/Android/Projex/Pigeon/app/build/intermediates/pre-dexed/debug/core-1.51.0.0_2243b38b6562d883ad50c2a02d043a099ef94524.jar" />
     </item>
 
 </items>
