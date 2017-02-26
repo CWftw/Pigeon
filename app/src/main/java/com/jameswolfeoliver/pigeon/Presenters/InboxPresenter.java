@@ -10,12 +10,10 @@ import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 public class InboxPresenter implements NetworkStateReceiver.NetworkStateReceiverListener {
     private static final String LOG_TAG = InboxPresenter.class.getSimpleName();
     private NetworkStateReceiver networkStateReceiver;
-    public InboxPresenter() {
+    public InboxPresenter() {}
 
-    }
-
-    public void startServer(TextServer.ServerCallback callback) {
-        TextServer.getInstance().start(false, callback);
+    public void startServer(final boolean secure, final TextServer.ServerCallback callback) {
+        TextServer.getInstance().start(secure, callback);
     }
 
     public void tearDownServer() {
@@ -44,8 +42,5 @@ public class InboxPresenter implements NetworkStateReceiver.NetworkStateReceiver
         if (isAvailable && server != null && !server.wasStarted()) {
             startServer(PigeonApplication.getAppContext(), null);
         }*/
-    }
-    public interface Callbacks {
-        public void onServerStarted(String serverLoginUrl);
     }
 }

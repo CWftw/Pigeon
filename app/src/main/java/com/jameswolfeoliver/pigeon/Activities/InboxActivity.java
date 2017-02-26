@@ -84,14 +84,7 @@ public class InboxActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    showSpinner();
-                    inboxPresenter.startServer(new TextServer.ServerCallback() {
-                        @Override
-                        public void onComplete() {
-                            hideSpinner();
-                            showConnectToPcDialog(TextServer.getServerUri() + "/login");
-                        }
-                    });
+                    showServerSetupDialog();
                 } else {
                     inboxPresenter.tearDownServer();
                 }
@@ -142,10 +135,15 @@ public class InboxActivity extends AppCompatActivity {
 
     private void showConnectToPcDialog(String loginUrl){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (loginUrl.contains("https")) {
+            builder.setIcon(R.drawable.ic_https);
+        } else {
+            builder.setIcon(R.drawable.ic_http);
+        }
         builder.setMessage(loginUrl)
-                .setTitle("Pigeon")
+                .setTitle(R.string.app_name)
                 .setIcon(R.drawable.app_icon)
-                .setPositiveButton("OK" , new DialogInterface.OnClickListener(){
+                .setPositiveButton(android.R.string.ok , new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -154,6 +152,49 @@ public class InboxActivity extends AppCompatActivity {
 
         AlertDialog connectToPcDialog = builder.create();
         connectToPcDialog.show();
+    }
+
+    private void showServerSetupDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(InboxActivity.this);
+        builder.setIcon(R.drawable.ic_devices_black);
+        builder.setTitle(getString(R.string.setup_connection));
+        builder.setMessage(getString(R.string.setup_connection_message));
+
+
+        String positiveText = getString(R.string.setup_encrypted);
+        builder.setPositiveButton(positiveText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showSpinner();
+                        inboxPresenter.startServer(true, new TextServer.ServerCallback() {
+                            @Override
+                            public void onComplete() {
+                                hideSpinner();
+                                showConnectToPcDialog(TextServer.getServerUri() + "/login");
+                            }
+                        });
+                    }
+                });
+
+        String negativeText = getString(R.string.setup_normal);
+        builder.setNegativeButton(negativeText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showSpinner();
+                        inboxPresenter.startServer(false, new TextServer.ServerCallback() {
+                            @Override
+                            public void onComplete() {
+                                hideSpinner();
+                                showConnectToPcDialog(TextServer.getServerUri() + "/login");
+                            }
+                        });
+                    }
+                });
+
+        AlertDialog securityDialog = builder.create();
+        securityDialog.show();
     }
 
     private void goToSettings() {

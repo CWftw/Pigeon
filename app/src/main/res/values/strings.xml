@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Pigeon</string>
+    <string name="setup_connection">Setup your connection&#8230;</string>
+    <string name="setup_connection_message">If you\'re on a public network, choose https. If you want a speedy setup, use http.</string>
+    <string name="setup_encrypted">https</string>
+    <string name="setup_normal">http</string>
     <string name="server_settings">Server&#8230;</string>
     <string name="server_device_name">Device Name</string>
     <string name="server_device_password">Password</string>
