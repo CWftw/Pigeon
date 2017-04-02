@@ -7,6 +7,8 @@ import com.jameswolfeoliver.pigeon.Activities.InboxActivity;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.TextServer;
+import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -93,7 +95,7 @@ public class InsecureLoginEndpoint extends Endpoint{
         TextServer.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                AlertDialog.Builder promptUser = new AlertDialog.Builder(InboxActivity.context);
+                AlertDialog.Builder promptUser = new AlertDialog.Builder(PigeonApplication.getAppContext());
                 promptUser.setTitle("Allow PC Connection?")
                         .setIcon(R.drawable.app_icon)
                         .setMessage(String.format("%s (IP: %s) would like to connect. Trust this computer?", clientName, clientIp))

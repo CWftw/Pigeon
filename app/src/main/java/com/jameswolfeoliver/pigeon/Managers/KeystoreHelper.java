@@ -1,5 +1,6 @@
 package com.jameswolfeoliver.pigeon.Managers;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import org.spongycastle.asn1.x500.X500Name;
@@ -49,12 +50,15 @@ public class KeystoreHelper {
     }
 
     public InputStream getKeystoreAsInputStream() {
-        final File keystoreFile = new File(PigeonApplication.getAppContext().getFilesDir(), KeystoreManager.KEYSTORE_FILE_NAME);
         try {
             if (!manager.keystoreExists()) {
-                KeystoreHelper.getInstance().manager.generateKeystore(new FileOutputStream(keystoreFile));
+                KeystoreHelper.getInstance().manager.generateKeystore(
+                        PigeonApplication
+                                .getAppContext()
+                                .openFileOutput(KeystoreManager.KEYSTORE_FILE_NAME,
+                                        Context.MODE_PRIVATE));
             }
-            return new FileInputStream(keystoreFile);
+            return PigeonApplication.getAppContext().openFileInput(KeystoreManager.KEYSTORE_FILE_NAME);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -100,7 +104,7 @@ public class KeystoreHelper {
         }
 
         private boolean keystoreExists() {
-            return new File(PigeonApplication.getAppContext().getFilesDir(), KEYSTORE_FILE_NAME).exists();
+            return PigeonApplication.getAppContext().getFileStreamPath(KeystoreManager.KEYSTORE_FILE_NAME).exists();
         }
 
         private void generateKeystore(FileOutputStream keystoreOutputStream) throws NoSuchAlgorithmException, OperatorCreationException, CertificateException, KeyStoreException, NoSuchProviderException, IOException {

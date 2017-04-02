@@ -18,6 +18,7 @@
         android:id="@+id/app_logo"
         android:layout_above="@+id/app_name"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:visibility="visible"
         android:src="@drawable/app_icon"/>
 

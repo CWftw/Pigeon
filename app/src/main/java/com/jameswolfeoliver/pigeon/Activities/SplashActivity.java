@@ -1,23 +1,25 @@
 package com.jameswolfeoliver.pigeon.Activities;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.jameswolfeoliver.pigeon.Managers.PageCacheManager;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Rest.RestServer;
+import com.jameswolfeoliver.pigeon.Utilities.PermissionsManager;
 import com.wang.avi.AVLoadingIndicatorView;
+import java.util.ArrayList;
+import io.github.jameswolfeoliver.library.Activities.PermissionActivity;
+import io.github.jameswolfeoliver.library.Permission.Permission;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends PermissionActivity {
 
     private ImageView logo;
     private AVLoadingIndicatorView spinner;
@@ -40,13 +42,14 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         PageCacheManager.maybeUpdateLocalPageCache(new RestServer.RestCallback<Boolean>() {
             @Override
             public void onResult(Boolean success) {
-                Log.d("James", success.toString());
-                transitionToInbox();
+                if (usePermissions()) {
+                    transitionToInbox();
+                }
             }
         });
     }
@@ -90,5 +93,28 @@ public class SplashActivity extends AppCompatActivity {
             }
         };
         handler.postDelayed(runnable, 1000);
+    }
+
+    @Override
+    public ArrayList<Permission> buildRequiredPermissions() {
+        final ArrayList<Permission> permissions = new ArrayList<>();
+        permissions.add(PermissionsManager.getPermissionMap().get(Manifest.permission.SEND_SMS));
+        permissions.add(PermissionsManager.getPermissionMap().get(Manifest.permission.READ_CONTACTS));
+        return permissions;
+    }
+
+    @Override
+    public void onPermissionDenied(String[] permissions) {
+        // Todo handle rejection
+    }
+
+    @Override
+    public void onPermissionAlwaysDenied(String[] permissions) {
+        // Todo handle rejection
+    }
+
+    @Override
+    public void onPermissionGranted(String[] permissions) {
+        transitionToInbox();
     }
 }

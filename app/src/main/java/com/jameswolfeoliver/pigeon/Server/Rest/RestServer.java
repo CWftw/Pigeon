@@ -24,8 +24,7 @@ public class RestServer {
                 if (response.isSuccessful() && response.body() != null ) {
                     callback.onResult(response.body());
                 } else {
-                    Log.d(LOG_TAG, String.format("Failed to GET %s. Error: %d", call.request().url().toString(), response.code()));
-                    callback.onResult(null);
+                    onFailure(call, new Throwable(Integer.toString(response.code())));
                 }
             }
 
@@ -46,8 +45,7 @@ public class RestServer {
                         if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                             callback.onResult(response.body());
                         } else {
-                            Log.d(LOG_TAG, String.format("Failed to GET %s. Error: %d", call.request().url().toString(), response.code()));
-                            callback.onResult(null);
+                            onFailure(call, new Throwable(Integer.toString(response.code())));
                         }
                     }
 

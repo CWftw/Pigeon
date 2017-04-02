@@ -1,19 +1,26 @@
 <resources>
     <string name="app_name">Pigeon</string>
+
+    <!--Connection-->
     <string name="setup_connection">Setup your connection&#8230;</string>
+    <string name="setup_connection_error">Error</string>
     <string name="setup_connection_message">If you\'re on a public network, choose https. If you want a speedy setup, use http.</string>
+    <string name="setup_connection_wifi_error_message">A wifi connection is required to enable this feature. Please connect to a trusted wifi network.</string>
     <string name="setup_encrypted">https</string>
     <string name="setup_normal">http</string>
+
     <string name="server_settings">Server&#8230;</string>
     <string name="server_device_name">Device Name</string>
     <string name="server_device_password">Password</string>
+
     <string name="status_updating">Updating&#8230;</string>
     <string name="status_loading">Loading&#8230;</string>
+
+    <!--Web errors-->
     <string name="message_400">Bad Request</string>
     <string name="message_404">Oops, looks like this page doesn\'t exist anymore&#8230;</string>
     <string name="message_403">We both know you shouldn\'t be here&#8230;</string>
     <string name="message_500">Our server done goofed, sorry eh</string>
-
     <string name="general_error">
         <![CDATA[
         <html>\n
@@ -24,5 +31,11 @@
         </html>
         ]]>
     </string>
+
+    <!--Permissions-->
+    <string name="permission_sms_title">SMS</string>
+    <string name="permission_sms_rational">We need your permission to send and receive SMS messages. Don\'t worry, you have completely control over your texts.</string>
+    <string name="permission_contacts_title">CONTACTS</string>
+    <string name="permission_contacts_rational">We need access to your contacts to match messages to who sent them. Don\'t worry, we won\'t modify contact info.</string>
 
 </resources>

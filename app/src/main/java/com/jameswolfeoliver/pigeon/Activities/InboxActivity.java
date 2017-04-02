@@ -1,9 +1,14 @@
 package com.jameswolfeoliver.pigeon.Activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -11,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -22,8 +28,16 @@ import com.jameswolfeoliver.pigeon.Fragment.InboxFragment;
 import com.jameswolfeoliver.pigeon.Fragment.SettingsFragment;
 import com.jameswolfeoliver.pigeon.Presenters.InboxPresenter;
 import com.jameswolfeoliver.pigeon.R;
+import com.jameswolfeoliver.pigeon.Server.Models.Contact;
+import com.jameswolfeoliver.pigeon.Server.Models.Conversation;
 import com.jameswolfeoliver.pigeon.Server.TextServer;
+import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
+import com.jameswolfeoliver.pigeon.SqlWrappers.ConversationWrapper;
+import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 public class InboxActivity extends AppCompatActivity {
 
@@ -34,8 +48,7 @@ public class InboxActivity extends AppCompatActivity {
     private FrameLayout spinnerWrapper;
     private ImageButton settingsButton;
     private Switch serverSwitch;
-    public static Context context;
-    
+
     private InboxPresenter inboxPresenter;
 
     private InboxFragment inboxFragment;
@@ -46,7 +59,6 @@ public class InboxActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
         inboxPresenter = new InboxPresenter();
-        context = this;
 
         // Set root view and show spinner
         root = (RelativeLayout) findViewById(R.id.root_layout);
@@ -63,6 +75,23 @@ public class InboxActivity extends AppCompatActivity {
 
 
         initViews();
+        new ContactsWrapper().getAllContacts(new WeakReference<Activity>(this), 23, new SqlCallback<Contact>() {
+            @Override
+            public void onQueryComplete(ArrayList<Contact> results) {
+                for(Contact contact : results) {
+                    Log.d("Contact", contact.toString());
+                }
+                new ConversationWrapper().getAllConversations(new WeakReference<Activity>(InboxActivity.this), 23, new SqlCallback<Conversation>() {
+                    @Override
+                    public void onQueryComplete(ArrayList<Conversation> results) {
+                        for(Conversation conversation : results) {
+                            Log.d("Conversation", conversation.toString());
+                        }
+                    }
+                });
+            }
+        });
+
     }
 
     private void initViews(){
@@ -155,46 +184,67 @@ public class InboxActivity extends AppCompatActivity {
     }
 
     private void showServerSetupDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(InboxActivity.this);
-        builder.setIcon(R.drawable.ic_devices_black);
-        builder.setTitle(getString(R.string.setup_connection));
-        builder.setMessage(getString(R.string.setup_connection_message));
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            builder.setIcon(R.drawable.ic_devices_black);
+            builder.setTitle(getString(R.string.setup_connection));
+            builder.setMessage(getString(R.string.setup_connection_message));
 
 
-        String positiveText = getString(R.string.setup_encrypted);
-        builder.setPositiveButton(positiveText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        showSpinner();
-                        inboxPresenter.startServer(true, new TextServer.ServerCallback() {
-                            @Override
-                            public void onComplete() {
-                                hideSpinner();
-                                showConnectToPcDialog(TextServer.getServerUri() + "/login");
-                            }
-                        });
-                    }
-                });
+            String positiveText = getString(R.string.setup_encrypted);
+            builder.setPositiveButton(positiveText,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showSpinner();
+                            inboxPresenter.startServer(true, new TextServer.ServerCallback() {
+                                @Override
+                                public void onComplete() {
+                                    hideSpinner();
+                                    showConnectToPcDialog(TextServer.getServerUri() + "/login");
+                                }
+                            });
+                        }
+                    });
 
-        String negativeText = getString(R.string.setup_normal);
-        builder.setNegativeButton(negativeText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        showSpinner();
-                        inboxPresenter.startServer(false, new TextServer.ServerCallback() {
-                            @Override
-                            public void onComplete() {
-                                hideSpinner();
-                                showConnectToPcDialog(TextServer.getServerUri() + "/login");
-                            }
-                        });
-                    }
-                });
+            String negativeText = getString(R.string.setup_normal);
+            builder.setNegativeButton(negativeText,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showSpinner();
+                            inboxPresenter.startServer(false, new TextServer.ServerCallback() {
+                                @Override
+                                public void onComplete() {
+                                    hideSpinner();
+                                    showConnectToPcDialog(TextServer.getServerUri() + "/login");
+                                }
+                            });
+                        }
+                    });
 
-        AlertDialog securityDialog = builder.create();
-        securityDialog.show();
+            final AlertDialog securityDialog = builder.create();
+            securityDialog.show();
+        } else {
+            // Connect to wifi
+            builder.setIcon(R.drawable.ic_signal_wifi_off);
+            builder.setTitle(getString(R.string.setup_connection));
+            builder.setMessage(getString(R.string.setup_connection_wifi_error_message));
+
+            String positiveText = getString(android.R.string.ok);
+            builder.setPositiveButton(positiveText,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
+                        }
+                    });
+
+            final AlertDialog networkDialog = builder.create();
+            networkDialog.show();
+        }
     }
 
     private void goToSettings() {

@@ -108,7 +108,7 @@ public class TextServer extends NanoHTTPD {
     }
 
     public void start(boolean secure, ServerCallback callback) {
-        WifiManager wm = (WifiManager) PigeonApplication.getAppContext().getSystemService(Service.WIFI_SERVICE);
+        WifiManager wm = (WifiManager) PigeonApplication.getAppContext().getApplicationContext().getSystemService(Service.WIFI_SERVICE);
         serverIp = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         serverUri = String.format("http%s://%s:%s", (secure ? "s" : ""), serverIp, PORT);
         initDefaultResponses();
