@@ -23,9 +23,9 @@ public class ConversationWrapper implements LoaderManager.LoaderCallbacks<Cursor
     private static final int TYPE_INDEX = 5;
     private static final int READ_INDEX = 6;
     private static final int STATUS_INDEX = 7;
-
+    private static final String SELECTION_SUFFIX = " LIKE ?";
+    private static final String SORT_ORDER = "date desc";
     private final Uri CONVERSATIONS_CONTENT_URI = Uri.parse("content://mms-sms/conversations");
-
     private static final String[] PROJECTION = new String[] {
             "address",
             "person",
@@ -36,7 +36,7 @@ public class ConversationWrapper implements LoaderManager.LoaderCallbacks<Cursor
             "read",
             "status"};
 
-    private static final String SELECTION_SUFFIX = " LIKE ?";
+
 
     private SparseArray<SqlCallback<Conversation>> listeners;
 
@@ -63,13 +63,13 @@ public class ConversationWrapper implements LoaderManager.LoaderCallbacks<Cursor
     public void getAllConversations(WeakReference<Activity> activity, int callerId,
                                     SqlCallback<Conversation> conversationCallback) {
         this.listeners.put(callerId, conversationCallback);
-        activity.get().getLoaderManager().initLoader(1, null, this);
+        activity.get().getLoaderManager().initLoader(CursorIds.CONVERSATIONS_WRAPPER_ID, null, this);
     }
 
     public void queryConversations(String selectionDimension, String query, int callerId,
                               WeakReference<Activity> activity, SqlCallback<Conversation> conversationCallback) {
         this.listeners.put(callerId, conversationCallback);
-        activity.get().getLoaderManager().initLoader(0, null, this);
+        activity.get().getLoaderManager().initLoader(CursorIds.CONVERSATIONS_WRAPPER_ID, null, this);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ConversationWrapper implements LoaderManager.LoaderCallbacks<Cursor
                 PROJECTION,
                 selection,
                 selectionArgs,
-                null
+                SORT_ORDER
         );
     }
 

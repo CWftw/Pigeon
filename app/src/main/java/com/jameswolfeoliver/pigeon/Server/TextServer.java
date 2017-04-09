@@ -8,17 +8,16 @@ import android.text.format.Formatter;
 import com.jameswolfeoliver.pigeon.Managers.KeystoreHelper;
 import com.jameswolfeoliver.pigeon.Managers.PageCacheManager;
 import com.jameswolfeoliver.pigeon.R;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Contacts.AvatarEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Contacts.ContactsEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Endpoints;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.InboxEndpoint;
-import com.jameswolfeoliver.pigeon.Server.Endpoints.InsecureLoginEndpoint;
-import com.jameswolfeoliver.pigeon.Server.Endpoints.SecureLoginEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Login.InsecureLoginEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Login.SecureLoginEndpoint;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.security.KeyStore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -32,9 +31,6 @@ public class TextServer extends NanoHTTPD {
     private final static int PORT = 8080;
     private static AtomicBoolean isSecure = new AtomicBoolean(false);
 
-    //URI's
-    private final static String LOGIN_URI = "/login";
-    private final static String INBOX_URI = "/inbox";
     private static String serverIp;
     private static String serverUri;
 
@@ -217,14 +213,18 @@ public class TextServer extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
-        switch (session.getUri()) {
-            case LOGIN_URI:
+        switch (Endpoints.getEndpoint(session.getUri())) {
+            case Endpoints.LOGIN_ENDPOINT:
                 if (isSecure.get()) {
                     return SecureLoginEndpoint.serve(session);
                 }
                 return InsecureLoginEndpoint.serve(session);
-            case INBOX_URI:
+            case Endpoints.INBOX_ENDPOINT:
                 return InboxEndpoint.serve(session);
+            case Endpoints.AVATAR_ENDPOINT:
+                return AvatarEndpoint.serve(session);
+            case Endpoints.CONTACTS_ENDPOINT:
+                return ContactsEndpoint.serve(session);
             default:
                 return Endpoint.buildHtmlResponse(NOT_FOUND, Response.Status.NOT_FOUND);
         }

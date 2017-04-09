@@ -1,0 +1,21 @@
+<resources>
+    <dimen name="material_vertical_padding">16dp</dimen>
+    <dimen name="material_horizontal_padding">16dp</dimen>
+
+    <dimen name="permission_text_padding">16dp</dimen>
+    <dimen name="permission_text_padding_bottom">38dp</dimen>
+    <dimen name="permission_text_line_spacing">3sp</dimen>
+    <dimen name="permission_text_size">16sp</dimen>
+
+    <dimen name="permission_icon_padding">15dp</dimen>
+    <dimen name="permission_icon_size">100dp</dimen>
+
+    <dimen name="permission_title_text_size">24sp</dimen>
+    <dimen name="permission_title_padding_top">8dp</dimen>
+
+    <dimen name="arc_height">30dp</dimen>
+
+    <dimen name="action_button_vertical_padding">8dp</dimen>
+    <dimen name="action_button_horizontal_padding">16dp</dimen>
+    <dimen name="action_button_text_size">20sp</dimen>
+</resources>

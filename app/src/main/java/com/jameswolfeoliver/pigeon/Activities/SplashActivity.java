@@ -3,6 +3,7 @@ package com.jameswolfeoliver.pigeon.Activities;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
@@ -11,10 +12,13 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.jameswolfeoliver.pigeon.Managers.PageCacheManager;
+import com.jameswolfeoliver.pigeon.Managers.UserCacheManager;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Rest.RestServer;
 import com.jameswolfeoliver.pigeon.Utilities.PermissionsManager;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import io.github.jameswolfeoliver.library.Activities.PermissionActivity;
 import io.github.jameswolfeoliver.library.Permission.Permission;
@@ -48,6 +52,7 @@ public class SplashActivity extends PermissionActivity {
             @Override
             public void onResult(Boolean success) {
                 if (usePermissions()) {
+                    UserCacheManager.getInstance().update(new WeakReference<Activity>(SplashActivity.this));
                     transitionToInbox();
                 }
             }
@@ -115,6 +120,7 @@ public class SplashActivity extends PermissionActivity {
 
     @Override
     public void onPermissionGranted(String[] permissions) {
+        UserCacheManager.getInstance().update(new WeakReference<Activity>(this));
         transitionToInbox();
     }
 }

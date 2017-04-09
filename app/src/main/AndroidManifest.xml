@@ -39,6 +39,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.InboxActivity">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

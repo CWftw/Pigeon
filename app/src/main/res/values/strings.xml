@@ -36,6 +36,6 @@
     <string name="permission_sms_title">SMS</string>
     <string name="permission_sms_rational">We need your permission to send and receive SMS messages. Don\'t worry, you have completely control over your texts.</string>
     <string name="permission_contacts_title">CONTACTS</string>
-    <string name="permission_contacts_rational">We need access to your contacts to match messages to who sent them. Don\'t worry, we won\'t modify contact info.</string>
+    <string name="permission_contacts_rational">We need access to your contactsToSort to match messages to who sent them. Don\'t worry, we won\'t modify contact info.</string>
 
 </resources>

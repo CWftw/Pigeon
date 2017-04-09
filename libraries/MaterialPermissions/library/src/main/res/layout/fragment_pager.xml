@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whiteBackground">
+
+    <TextView
+        android:id="@+id/permission_title"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:layout_gravity="top|left|start"
+        android:fontFamily="sans-serif"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/permission_title_text_size"
+        android:textIsSelectable="false"
+        android:paddingTop="@dimen/permission_title_padding_top"
+        android:paddingEnd="@dimen/permission_text_padding"
+        android:paddingRight="@dimen/permission_text_padding"
+        android:paddingLeft="@dimen/permission_text_padding"
+        android:paddingStart="@dimen/permission_text_padding"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="3">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/item_circle"
+            android:layout_gravity="center_horizontal|center_vertical">
+
+            <ImageView
+                android:id="@+id/permission_icon"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:padding="@dimen/permission_icon_padding"
+                android:layout_width="@dimen/permission_icon_size"
+                android:layout_height="@dimen/permission_icon_size"/>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/permission_text_padding_bottom"
+                android:scrollbars="none">
+                <TextView
+                    android:id="@+id/permission_rational"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="@dimen/permission_text_line_spacing"
+                    android:paddingTop="@dimen/permission_text_padding"
+                    android:paddingEnd="@dimen/permission_text_padding"
+                    android:paddingRight="@dimen/permission_text_padding"
+                    android:paddingLeft="@dimen/permission_text_padding"
+                    android:paddingStart="@dimen/permission_text_padding"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/textColour"
+                    android:textSize="@dimen/permission_text_size"
+                    android:textIsSelectable="false" />
+            </ScrollView>
+        </FrameLayout>
+
+    </LinearLayout>
+</LinearLayout>
+

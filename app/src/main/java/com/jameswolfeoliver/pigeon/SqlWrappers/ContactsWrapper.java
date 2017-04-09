@@ -57,13 +57,13 @@ public class ContactsWrapper implements LoaderManager.LoaderCallbacks<Cursor> {
     public void getAllContacts(WeakReference<Activity> activity, int callerId,
                                SqlCallback<Contact> contactsCallback) {
         this.listeners.put(callerId, contactsCallback);
-        activity.get().getLoaderManager().initLoader(0, null, this);
+        activity.get().getLoaderManager().initLoader(CursorIds.CONTACTS_WRAPPER_ID, null, this);
     }
 
     public void queryContacts(String selectionDimension, String query, int callerId,
                               SqlCallback<Contact> contactsCallback, WeakReference<Activity> activity) {
         this.listeners.put(callerId, contactsCallback);
-        activity.get().getLoaderManager().initLoader(0, null, this);
+        activity.get().getLoaderManager().initLoader(CursorIds.CONTACTS_WRAPPER_ID, null, this);
     }
 
     @Override

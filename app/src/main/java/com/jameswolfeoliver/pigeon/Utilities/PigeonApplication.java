@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jameswolfeoliver.pigeon.Server.Rest.RestServer;
@@ -34,6 +35,7 @@ public class PigeonApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+        Fresco.initialize(this);
     }
 
     public static SharedPreferences getSharedPreferences(){

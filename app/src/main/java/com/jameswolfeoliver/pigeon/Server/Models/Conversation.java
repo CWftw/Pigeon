@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Objects;
 
 public class Conversation {
+    public static final int TYPE_SENDER = 1;
+    public static final int TYPE_USER = 2;
+
     @SerializedName("person")
     private int person;
 

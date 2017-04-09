@@ -30,12 +30,15 @@ import com.jameswolfeoliver.pigeon.Presenters.InboxPresenter;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Models.Contact;
 import com.jameswolfeoliver.pigeon.Server.Models.Conversation;
+import com.jameswolfeoliver.pigeon.Server.Models.Message;
 import com.jameswolfeoliver.pigeon.Server.TextServer;
 import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
 import com.jameswolfeoliver.pigeon.SqlWrappers.ConversationWrapper;
+import com.jameswolfeoliver.pigeon.SqlWrappers.MessagesWrapper;
 import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 import com.wang.avi.AVLoadingIndicatorView;
 
+import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -75,23 +78,6 @@ public class InboxActivity extends AppCompatActivity {
 
 
         initViews();
-        new ContactsWrapper().getAllContacts(new WeakReference<Activity>(this), 23, new SqlCallback<Contact>() {
-            @Override
-            public void onQueryComplete(ArrayList<Contact> results) {
-                for(Contact contact : results) {
-                    Log.d("Contact", contact.toString());
-                }
-                new ConversationWrapper().getAllConversations(new WeakReference<Activity>(InboxActivity.this), 23, new SqlCallback<Conversation>() {
-                    @Override
-                    public void onQueryComplete(ArrayList<Conversation> results) {
-                        for(Conversation conversation : results) {
-                            Log.d("Conversation", conversation.toString());
-                        }
-                    }
-                });
-            }
-        });
-
     }
 
     private void initViews(){
