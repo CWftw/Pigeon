@@ -9,15 +9,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
-
-import com.jameswolfeoliver.pigeon.Server.Models.Conversation;
 import com.jameswolfeoliver.pigeon.Server.Models.Message;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class MessagesWrapper implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MessagesWrapper implements Wrapper<Message>, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int ADDRESS_INDEX = 0;
     private static final int PERSON_INDEX = 1;
@@ -44,41 +42,51 @@ public class MessagesWrapper implements LoaderManager.LoaderCallbacks<Cursor> {
             "status"};
 
     private SparseArray<SqlCallback<Message>> listeners;
+    private WeakReference<Activity> activity;
+    private long lastReceivedDate = -1L;
+    private String threadId;
 
-    public MessagesWrapper() {
+    public MessagesWrapper(Activity activity, String threadId) {
+        super();
+        this.activity = new WeakReference<>(activity);
         this.listeners = new SparseArray<>();
+        this.threadId = threadId;
     }
 
-    private String getSelection(String lastReceivedDate, String threadId) {
-        if (lastReceivedDate != null) {
+
+    @Override
+    public void get(int callerId, SqlCallback<Message> messageCallback, String... args) {
+        getPaginatedMessages(callerId, messageCallback);
+    }
+
+    @Override
+    public void find(int callerId, SqlCallback<Message> messageCallback, String... args) {
+
+    }
+
+    public void getPaginatedMessages(int callerId,
+                                     SqlCallback<Message> messageCallback) {
+        if (activity == null || activity.get() == null) {
+            throw new IllegalStateException("Cannot user LoaderManager without activity reference");
+        }
+        this.listeners.put(callerId, messageCallback);
+        Bundle bundle = new Bundle();
+        bundle.putString(SELECTION_BUNDLE_KEY, getSelection(lastReceivedDate, threadId));
+        if (activity.get().getLoaderManager()
+                .getLoader(CursorIds.MESSAGES_WRAPPER_ID) != null) {
+            activity.get().getLoaderManager().restartLoader(CursorIds.MESSAGES_WRAPPER_ID, bundle, this);
+        } else {
+            activity.get().getLoaderManager().initLoader(CursorIds.MESSAGES_WRAPPER_ID, bundle, this);
+        }
+    }
+
+    private String getSelection(long lastReceivedDate, String threadId) {
+        if (lastReceivedDate != -1) {
+            Log.d("message", "date" + LESS_THAN + lastReceivedDate + AND + "thread_id" + EQUALS + threadId);
             return "date" + LESS_THAN + lastReceivedDate + AND + "thread_id" + EQUALS + threadId;
         } else {
             return "thread_id" + EQUALS + threadId;
         }
-    }
-
-    public void unregisterCallback(int callerId) {
-        if (listeners != null
-                && listeners.size() != 0
-                && listeners.indexOfKey(callerId) > 0) {
-            listeners.remove(callerId);
-        }
-    }
-
-    /**
-     *
-     * @param lastReceivedDate null if initial call
-     * @param threadId conversation thread
-     * @param callerId identity of caller
-     * @param activity activity with available loader manager
-     * @param conversationCallback a callback for after messages are loaded
-     */
-    public void getPaginatedMessages(String lastReceivedDate, String threadId, int callerId,
-                                   WeakReference<Activity> activity, SqlCallback<Message> conversationCallback) {
-        this.listeners.put(callerId, conversationCallback);
-        Bundle bundle = new Bundle();
-        bundle.putString(SELECTION_BUNDLE_KEY, getSelection(lastReceivedDate, threadId));
-        activity.get().getLoaderManager().initLoader(CursorIds.MESSAGES_WRAPPER_ID, bundle, this);
     }
 
     @Override
@@ -99,6 +107,7 @@ public class MessagesWrapper implements LoaderManager.LoaderCallbacks<Cursor> {
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (listeners != null && listeners.size() != 0) {
             ArrayList<Message> messages = new ArrayList<>();
+            int index = 0;
             while (cursor.moveToNext()) {
                 Message.Builder builder = new Message.Builder(cursor.getInt(THREAD_ID_INDEX))
                         .setAddress(cursor.getLong(ADDRESS_INDEX))
@@ -108,7 +117,12 @@ public class MessagesWrapper implements LoaderManager.LoaderCallbacks<Cursor> {
                         .setBody(cursor.getString(SNIPPET_INDEX))
                         .setStatus(cursor.getInt(STATUS_INDEX))
                         .setRead(cursor.getInt(READ_INDEX));
-                messages.add(builder.build());
+                messages.add(index, builder.build());
+                if (cursor.getLong(DATE_INDEX) < lastReceivedDate
+                        || lastReceivedDate == -1) {
+                    lastReceivedDate = cursor.getLong(DATE_INDEX);
+                }
+                index++;
             }
             for (int i = 0; i <listeners.size(); i++) {
                 SqlCallback<Message> listener = listeners.valueAt(i);
@@ -120,5 +134,12 @@ public class MessagesWrapper implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    public void unregisterCallback(int callerId) {
+        if (listeners != null
+                && listeners.size() != 0) {
+            listeners.remove(callerId);
+        }
     }
 }

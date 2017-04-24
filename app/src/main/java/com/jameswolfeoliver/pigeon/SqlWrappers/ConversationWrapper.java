@@ -63,13 +63,24 @@ public class ConversationWrapper implements LoaderManager.LoaderCallbacks<Cursor
     public void getAllConversations(WeakReference<Activity> activity, int callerId,
                                     SqlCallback<Conversation> conversationCallback) {
         this.listeners.put(callerId, conversationCallback);
-        activity.get().getLoaderManager().initLoader(CursorIds.CONVERSATIONS_WRAPPER_ID, null, this);
-    }
+        if (activity.get()
+                .getLoaderManager()
+                .getLoader(CursorIds.CONVERSATIONS_WRAPPER_ID) != null) {
+            activity.get().getLoaderManager().restartLoader(CursorIds.CONVERSATIONS_WRAPPER_ID, null, this);
+        } else {
+            activity.get().getLoaderManager().initLoader(CursorIds.CONVERSATIONS_WRAPPER_ID, null, this);
+        }    }
 
     public void queryConversations(String selectionDimension, String query, int callerId,
                               WeakReference<Activity> activity, SqlCallback<Conversation> conversationCallback) {
         this.listeners.put(callerId, conversationCallback);
-        activity.get().getLoaderManager().initLoader(CursorIds.CONVERSATIONS_WRAPPER_ID, null, this);
+        if (activity.get()
+                .getLoaderManager()
+                .getLoader(CursorIds.CONVERSATIONS_WRAPPER_ID) != null) {
+            activity.get().getLoaderManager().restartLoader(CursorIds.CONVERSATIONS_WRAPPER_ID, null, this);
+        } else {
+            activity.get().getLoaderManager().initLoader(CursorIds.CONVERSATIONS_WRAPPER_ID, null, this);
+        }
     }
 
     @Override

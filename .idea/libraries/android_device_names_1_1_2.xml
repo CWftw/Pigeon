@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="android-device-names-1.1.2">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.android/build-cache/7a1ea935be8581b1a1c9aaa452ace8a0395fceb0/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/7a1ea935be8581b1a1c9aaa452ace8a0395fceb0/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jaredrummler/android-device-names/1.1.2/2a37882cdfbb94ba527e531c25976613e9e971b1/android-device-names-1.1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

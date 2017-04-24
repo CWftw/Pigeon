@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 
 public class Contact {
@@ -110,7 +111,7 @@ public class Contact {
             return this;
         }
 
-        public Builder addPhoneNumbers(ArrayList<PhoneNumber> phoneNumbers) {
+        public Builder addPhoneNumbers(List<PhoneNumber> phoneNumbers) {
             this.contact.phoneNumbers.addAll(phoneNumbers);
             return this;
         }
@@ -141,6 +142,10 @@ public class Contact {
                     .replace(")", "")
                     .replace(" ", "")
                     .trim();
+        }
+
+        public String getPrettyNumber() {
+            return Long.toString(number);
         }
 
         @Override

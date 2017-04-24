@@ -1,7 +1,5 @@
 package com.jameswolfeoliver.pigeon.Server;
 
-import java.util.regex.Pattern;
-
 import fi.iki.elonen.NanoHTTPD;
 
 public abstract class Endpoint {

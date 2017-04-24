@@ -36,6 +36,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.Conversation
         notifyDataSetChanged();
     }
 
+    public Conversation getConversation(int position) {
+        return conversations.get(position);
+    }
+
     @Override
     public ConversationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ConversationHolder(LayoutInflater.from(context).inflate(R.layout.view_inbox_item, parent, false));

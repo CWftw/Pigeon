@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:inputType="none"
         android:text="@string/server_settings"
-        android:id="@+id/server_label"
         android:background="@color/colorAccent"
         android:textColor="@android:color/white"
         android:paddingStart="8dp"

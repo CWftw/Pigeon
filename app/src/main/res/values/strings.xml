@@ -3,7 +3,6 @@
 
     <!--Connection-->
     <string name="setup_connection">Setup your connection&#8230;</string>
-    <string name="setup_connection_error">Error</string>
     <string name="setup_connection_message">If you\'re on a public network, choose https. If you want a speedy setup, use http.</string>
     <string name="setup_connection_wifi_error_message">A wifi connection is required to enable this feature. Please connect to a trusted wifi network.</string>
     <string name="setup_encrypted">https</string>

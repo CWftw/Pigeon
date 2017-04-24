@@ -4,9 +4,10 @@ import android.annotation.SuppressLint;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Conversation {
+public class Conversation implements Serializable {
     public static final int TYPE_SENDER = 1;
     public static final int TYPE_USER = 2;
 

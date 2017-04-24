@@ -21,7 +21,6 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!--End Dangerous Permissions-->
 
-
     <application
         android:name="com.jameswolfeoliver.pigeon.Utilities.PigeonApplication"
         android:allowBackup="true"
@@ -34,19 +33,21 @@
             android:theme="@style/AppTheme.launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.InboxActivity">
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.APP_MESSAGING" />
-            </intent-filter>
+        <activity
+            android:name=".Activities.InboxActivity">
+
         </activity>
 
-    </application>
+        <activity
+            android:name=".Activities.ConversationActivity"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".Activities.InboxActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
 
+        </activity>
+    </application>
 </manifest>

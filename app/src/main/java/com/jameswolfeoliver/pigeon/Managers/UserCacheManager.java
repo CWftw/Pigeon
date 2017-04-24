@@ -11,6 +11,7 @@ import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class UserCacheManager {
     private static UserCacheManager instance;
@@ -43,7 +44,15 @@ public class UserCacheManager {
     }
 
     public Contact getContact(long phoneNumber) {
-        return contacts.get(phoneNumber, contacts.get(prependOne(phoneNumber), null));
+        return contacts.get(phoneNumber, contacts.get(prependOne(phoneNumber), makeAnonContact(phoneNumber)));
+    }
+
+    private Contact makeAnonContact(long number) {
+        Contact.PhoneNumber phoneNumber = new Contact.PhoneNumber("mobile", Long.toString(number));
+        return new Contact.Builder(phoneNumber.getPrettyNumber())
+                .addPhoneNumbers(Collections.singletonList(phoneNumber))
+                .setThumbnailUri("")
+                .build();
     }
 
     private Long prependOne(long phoneNumber) {
