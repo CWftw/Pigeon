@@ -3,7 +3,7 @@ package com.jameswolfeoliver.pigeon.Server.Rest;
 
 import android.util.Log;
 
-import com.jameswolfeoliver.pigeon.Server.Models.Requests.VersionResponse;
+import Models.VersionResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;

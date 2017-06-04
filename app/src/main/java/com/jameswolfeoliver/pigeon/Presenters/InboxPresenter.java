@@ -16,6 +16,10 @@ public class InboxPresenter implements NetworkStateReceiver.NetworkStateReceiver
         TextServer.getInstance().start(secure, callback);
     }
 
+    public boolean isServerRunning() {
+        return TextServer.getInstance().isStarted();
+    }
+
     public void tearDownServer() {
         TextServer.getInstance().stop();
     }

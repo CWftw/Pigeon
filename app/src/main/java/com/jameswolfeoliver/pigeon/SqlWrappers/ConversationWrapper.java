@@ -8,8 +8,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.SparseArray;
-import com.jameswolfeoliver.pigeon.Server.Models.Conversation;
+
+import Models.Conversation;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 

@@ -1,7 +1,25 @@
 <resources>
     <string name="app_name">Pigeon</string>
 
+    <!--Actions-->
+    <string name="undo">Undo</string>
+
+    <!--Toolbars-->
+    <string name="inbox">Inbox</string>
+    <string name="settings">Settings</string>
+
+    <!--Messages-->
+    <string name="message_notification_summary" formatted="false">%s: %s</string>
+
     <!--Connection-->
+    <string name="connections">Connections</string>
+    <string name="pending_connections">Pending</string>
+    <string name="active_connections">History</string>
+    <string name="connect_to_pc">Connect to pc</string>
+    <string name="connected_message">You\'re connected! Go to %s</string>
+    <string name="connection_requested" formatted="false">Connection requested</string>
+    <string name="user_connection_requested" formatted="false">%s (ip %s) is trying to connect</string>
+    <string name="disconnect">Disconnect</string>
     <string name="setup_connection">Setup your connection&#8230;</string>
     <string name="setup_connection_message">If you\'re on a public network, choose https. If you want a speedy setup, use http.</string>
     <string name="setup_connection_wifi_error_message">A wifi connection is required to enable this feature. Please connect to a trusted wifi network.</string>

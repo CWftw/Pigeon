@@ -3,7 +3,9 @@ package com.jameswolfeoliver.pigeon.Managers;
 import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Log;
+
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -11,6 +13,7 @@ import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 

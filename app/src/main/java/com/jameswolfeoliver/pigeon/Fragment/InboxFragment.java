@@ -7,24 +7,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.jameswolfeoliver.pigeon.Activities.ConversationActivity;
-import com.jameswolfeoliver.pigeon.Activities.InboxActivity;
 import com.jameswolfeoliver.pigeon.Adapters.InboxAdapter;
 import com.jameswolfeoliver.pigeon.Listeners.RecyclerItemClickListener;
 import com.jameswolfeoliver.pigeon.R;
-import com.jameswolfeoliver.pigeon.Managers.SecurityHelper;
-import com.jameswolfeoliver.pigeon.Server.Models.Conversation;
-import com.jameswolfeoliver.pigeon.Server.Models.Message;
+import Models.Conversation;
 import com.jameswolfeoliver.pigeon.SqlWrappers.ConversationWrapper;
-import com.jameswolfeoliver.pigeon.SqlWrappers.MessagesWrapper;
 import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 
 import java.lang.ref.WeakReference;

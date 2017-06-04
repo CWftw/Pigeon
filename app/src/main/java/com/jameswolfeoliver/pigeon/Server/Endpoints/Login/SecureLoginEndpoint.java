@@ -2,14 +2,15 @@ package com.jameswolfeoliver.pigeon.Server.Endpoints.Login;
 
 import com.jameswolfeoliver.pigeon.Managers.SecurityHelper;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
-import com.jameswolfeoliver.pigeon.Server.Models.Requests.LoginRequest;
-import com.jameswolfeoliver.pigeon.Server.Models.Responses.LoginResponse;
+import Models.ClientRequests.LoginRequest;
+import Models.ClientResponses.LoginResponse;
 import com.jameswolfeoliver.pigeon.Server.TextServer;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jaredrummler.android.device.DeviceName;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import fi.iki.elonen.NanoHTTPD;
 
 public class SecureLoginEndpoint extends Endpoint {

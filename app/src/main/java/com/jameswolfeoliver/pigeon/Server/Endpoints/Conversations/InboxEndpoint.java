@@ -1,4 +1,4 @@
-package com.jameswolfeoliver.pigeon.Server.Endpoints;
+package com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations;
 
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.TextServer;

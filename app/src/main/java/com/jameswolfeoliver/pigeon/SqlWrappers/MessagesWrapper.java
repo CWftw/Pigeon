@@ -9,7 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
-import com.jameswolfeoliver.pigeon.Server.Models.Message;
+
+import Models.Message;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import java.lang.ref.WeakReference;
@@ -29,7 +30,6 @@ public class MessagesWrapper implements Wrapper<Message>, LoaderManager.LoaderCa
     private static final String AND = " AND ";
     private static final String EQUALS = " = ";
     private static final String SORT_ORDER = "date desc limit 25";
-    private static final String SELECTION_BUNDLE_KEY = "selection";
     private final Uri MESSAGES_CONTENT_URI = Uri.parse("content://mms-sms/complete-conversations");
     private static final String[] PROJECTION = new String[] {
             "address",
@@ -56,16 +56,16 @@ public class MessagesWrapper implements Wrapper<Message>, LoaderManager.LoaderCa
 
     @Override
     public void get(int callerId, SqlCallback<Message> messageCallback, String... args) {
-        getPaginatedMessages(callerId, messageCallback);
+        getPaginatedMessages(callerId, messageCallback, lastReceivedDate);
     }
 
     @Override
     public void find(int callerId, SqlCallback<Message> messageCallback, String... args) {
-
+        getPaginatedMessages(callerId, messageCallback, Long.parseLong(args[0]));
     }
 
-    public void getPaginatedMessages(int callerId,
-                                     SqlCallback<Message> messageCallback) {
+    private void getPaginatedMessages(int callerId,
+                                     SqlCallback<Message> messageCallback, long specifiedDate) {
         if (activity == null || activity.get() == null) {
             throw new IllegalStateException("Cannot user LoaderManager without activity reference");
         }

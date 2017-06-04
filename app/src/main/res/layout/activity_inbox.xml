@@ -1,48 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Activities.InboxActivity"
-    android:id="@+id/root_layout">
-
-    <include
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/action_bar_inbox" />
+    tools:context=".Activities.InboxActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/abc_action_bar_default_height_material">
+        android:id="@+id/fragment_container"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <FrameLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/fragment_container"/>
-        </RelativeLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:id="@+id/spinner_wrapper"
+        android:visibility="gone">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorWhite"
-            android:id="@+id/spinner_wrapper"
-            android:visibility="gone">
-
-            <com.wang.avi.AVLoadingIndicatorView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner"
-                style="@style/AVLoadingIndicatorView"
-                app:indicatorColor="@color/colorAccent"
-                app:indicatorName="BallTrianglePathIndicator"
-                android:layout_gravity="center" />
-        </FrameLayout>
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:id="@+id/spinner"
+            android:layout_gravity="center" />
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -55,5 +34,4 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="@dimen/fab_margin" />
-
-</RelativeLayout>
+</FrameLayout>

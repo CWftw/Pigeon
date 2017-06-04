@@ -1,32 +1,30 @@
 package com.jameswolfeoliver.pigeon.Activities;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Handler;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
 import com.jameswolfeoliver.pigeon.Managers.PageCacheManager;
-import com.jameswolfeoliver.pigeon.Managers.UserCacheManager;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Rest.RestServer;
+import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
 import com.jameswolfeoliver.pigeon.Utilities.PermissionsManager;
-import com.wang.avi.AVLoadingIndicatorView;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
 import io.github.jameswolfeoliver.library.Activities.PermissionActivity;
 import io.github.jameswolfeoliver.library.Permission.Permission;
 
 public class SplashActivity extends PermissionActivity {
 
     private ImageView logo;
-    private AVLoadingIndicatorView spinner;
+    private ProgressBar spinner;
     private TextView status;
 
     @Override
@@ -34,8 +32,13 @@ public class SplashActivity extends PermissionActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
         logo = (ImageView) findViewById(R.id.app_logo);
-        spinner = (AVLoadingIndicatorView) findViewById(R.id.spinner);
+        spinner = (ProgressBar) findViewById(R.id.spinner);
         status = (TextView) findViewById(R.id.status);
 
         logo.setImageResource(R.drawable.app_icon);
@@ -52,7 +55,8 @@ public class SplashActivity extends PermissionActivity {
             @Override
             public void onResult(Boolean success) {
                 if (usePermissions()) {
-                    UserCacheManager.getInstance().update(new WeakReference<Activity>(SplashActivity.this));
+                    ContactsWrapper contactsWrapper = new ContactsWrapper(SplashActivity.this);
+                    ContactCacheManager.getInstance().update(contactsWrapper);
                     transitionToInbox();
                 }
             }
@@ -62,42 +66,10 @@ public class SplashActivity extends PermissionActivity {
     private void transitionToInbox() {
         status.setText(R.string.status_loading);
         spinner.setVisibility(View.INVISIBLE);
-        Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                ObjectAnimator animation = ObjectAnimator.ofFloat(logo, "rotationY", 0.0f, 180f);
-                animation.setDuration(1000);
-                animation.setInterpolator(new LinearInterpolator());
-                animation.start();
-                animation.addListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        Intent inboxIntent = new Intent(SplashActivity.this, InboxActivity.class);
-                        inboxIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(inboxIntent);
-                        finish();
-                        SplashActivity.this.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                });
-            }
-        };
-        handler.postDelayed(runnable, 1000);
+        Intent inboxIntent = new Intent(SplashActivity.this, InboxActivity.class);
+        startActivity(inboxIntent);
+        finish();
+        SplashActivity.this.overridePendingTransition(R.anim.fade_grow_in, R.anim.fade_shrink_out);
     }
 
     @Override
@@ -120,7 +92,8 @@ public class SplashActivity extends PermissionActivity {
 
     @Override
     public void onPermissionGranted(String[] permissions) {
-        UserCacheManager.getInstance().update(new WeakReference<Activity>(this));
+        ContactsWrapper contactsWrapper = new ContactsWrapper(this);
+        ContactCacheManager.getInstance().update(contactsWrapper);
         transitionToInbox();
     }
 }

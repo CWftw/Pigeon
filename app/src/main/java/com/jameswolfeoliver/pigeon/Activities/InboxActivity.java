@@ -1,57 +1,39 @@
 package com.jameswolfeoliver.pigeon.Activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.Switch;
+import android.widget.ProgressBar;
 
 import com.jameswolfeoliver.pigeon.Fragment.InboxFragment;
 import com.jameswolfeoliver.pigeon.Fragment.SettingsFragment;
+import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
 import com.jameswolfeoliver.pigeon.Presenters.InboxPresenter;
 import com.jameswolfeoliver.pigeon.R;
-import com.jameswolfeoliver.pigeon.Server.Models.Contact;
-import com.jameswolfeoliver.pigeon.Server.Models.Conversation;
-import com.jameswolfeoliver.pigeon.Server.Models.Message;
 import com.jameswolfeoliver.pigeon.Server.TextServer;
 import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
-import com.jameswolfeoliver.pigeon.SqlWrappers.ConversationWrapper;
-import com.jameswolfeoliver.pigeon.SqlWrappers.MessagesWrapper;
-import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
-import com.wang.avi.AVLoadingIndicatorView;
-
-import java.io.FileInputStream;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
+import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 public class InboxActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = InboxActivity.class.getSimpleName();
 
-    private RelativeLayout root;
     private FloatingActionButton fab;
     private FrameLayout spinnerWrapper;
-    private ImageButton settingsButton;
-    private Switch serverSwitch;
-
+    private ContactsWrapper contactsWrapper;
     private InboxPresenter inboxPresenter;
 
     private InboxFragment inboxFragment;
@@ -64,7 +46,6 @@ public class InboxActivity extends AppCompatActivity {
         inboxPresenter = new InboxPresenter();
 
         // Set root view and show spinner
-        root = (RelativeLayout) findViewById(R.id.root_layout);
         spinnerWrapper = (FrameLayout) findViewById(R.id.spinner_wrapper);
         showSpinner();
 
@@ -72,39 +53,19 @@ public class InboxActivity extends AppCompatActivity {
         this.settingsFragment = new SettingsFragment();
         this.inboxFragment = new InboxFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container,
-                        this.inboxFragment)
+                .add(R.id.fragment_container, inboxFragment)
                 .commit();
 
-
         initViews();
+
+        contactsWrapper = new ContactsWrapper(this);
     }
 
     private void initViews(){
         // Set Action Bar
-        Toolbar inboxActionBar = (Toolbar) findViewById(R.id.inbox_action_bar);
-        this.setSupportActionBar(inboxActionBar);
+        getSupportActionBar().setTitle(getString(R.string.inbox));
+        getSupportActionBar().setHomeButtonEnabled(false);
 
-        this.serverSwitch = (Switch) findViewById(R.id.server_switch);
-        this.settingsButton= (ImageButton) findViewById(R.id.settings_button);
-
-        // Set Action Bar onClicks
-        this.settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToSettings();
-            }
-        });
-        this.serverSwitch.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    showServerSetupDialog();
-                } else {
-                    inboxPresenter.tearDownServer();
-                }
-            }
-        });
 
         // Set FAB
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -122,6 +83,7 @@ public class InboxActivity extends AppCompatActivity {
         super.onStart();
         inboxPresenter.startReceiver();
         hideSpinner();
+        ContactCacheManager.getInstance().update(contactsWrapper);
     }
 
     @Override
@@ -131,42 +93,83 @@ public class InboxActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.action_settings:
+                goToSettings();
+                return true;
+            case R.id.action_view_connections:
+                Intent confirmConnectionIntent = new Intent(PigeonApplication.getAppContext(), ConnectionActivity.class);
+                PigeonApplication.getAppContext().startActivity(confirmConnectionIntent);
+                return true;
+            case R.id.action_connect_to_pc:
+                showConnectionStatus();
+                return true;
+            default:
+                return (super.onOptionsItemSelected(menuItem));
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_inbox, menu);
+        return true;
+    }
+
     private void showSpinner() {
         if (spinnerWrapper != null && spinnerWrapper.getVisibility() != View.VISIBLE) {
-            AVLoadingIndicatorView spinner = (AVLoadingIndicatorView) spinnerWrapper.findViewById(R.id.spinner);
-            spinner.hide();
+            ProgressBar spinner = (ProgressBar) spinnerWrapper.findViewById(R.id.spinner);
             spinnerWrapper.setVisibility(View.VISIBLE);
-            spinner.smoothToShow();
         }
     }
 
     private void hideSpinner() {
         if (spinnerWrapper != null && spinnerWrapper.getVisibility() != View.GONE) {
-            AVLoadingIndicatorView spinner = (AVLoadingIndicatorView) spinnerWrapper.findViewById(R.id.spinner);
-            spinner.smoothToHide();
+            ProgressBar spinner = (ProgressBar) spinnerWrapper.findViewById(R.id.spinner);
             spinnerWrapper.setVisibility(View.GONE);
         }
     }
 
-    private void showConnectToPcDialog(String loginUrl){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if (loginUrl.contains("https")) {
-            builder.setIcon(R.drawable.ic_https);
-        } else {
-            builder.setIcon(R.drawable.ic_http);
-        }
-        builder.setMessage(loginUrl)
-                .setTitle(R.string.app_name)
-                .setIcon(R.drawable.app_icon)
-                .setPositiveButton(android.R.string.ok , new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+    private void showConnectionStatus() {
+        if (inboxPresenter.isServerRunning()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(String.format(getString(R.string.connected_message), TextServer.getServerUri() + "/inbox"))
+                    .setTitle(R.string.connect_to_pc)
+                    .setIcon(R.drawable.ic_phonelink_dark)
+                    .setPositiveButton(android.R.string.ok , new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(R.string.disconnect, new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            inboxPresenter.tearDownServer();
+                        }
+                    });
 
-        AlertDialog connectToPcDialog = builder.create();
-        connectToPcDialog.show();
+            AlertDialog connectToPcDialog = builder.create();
+            connectToPcDialog.show();
+        } else {
+            showServerSetupDialog();
+        }
+    }
+
+    private void showConnectionSuccess(String loginUrl){
+        Snackbar.make(fab, String.format(getString(R.string.connected_message), loginUrl), Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        inboxPresenter.tearDownServer();
+                    }
+                })
+                .show();
     }
 
     private void showServerSetupDialog() {
@@ -174,7 +177,7 @@ public class InboxActivity extends AppCompatActivity {
         final ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-            builder.setIcon(R.drawable.ic_devices_black);
+            builder.setIcon(R.drawable.ic_phonelink_dark);
             builder.setTitle(getString(R.string.setup_connection));
             builder.setMessage(getString(R.string.setup_connection_message));
 
@@ -189,7 +192,7 @@ public class InboxActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete() {
                                     hideSpinner();
-                                    showConnectToPcDialog(TextServer.getServerUri() + "/login");
+                                    showConnectionSuccess(TextServer.getServerUri() + "/login");
                                 }
                             });
                         }
@@ -205,7 +208,7 @@ public class InboxActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete() {
                                     hideSpinner();
-                                    showConnectToPcDialog(TextServer.getServerUri() + "/login");
+                                    showConnectionSuccess(TextServer.getServerUri() + "/login");
                                 }
                             });
                         }
@@ -234,36 +237,9 @@ public class InboxActivity extends AppCompatActivity {
     }
 
     private void goToSettings() {
-        swapFragment(this.settingsFragment);
-        this.settingsButton.setImageResource(R.drawable.ic_arrow_back);
-        this.serverSwitch.setVisibility(View.GONE);
-        this.settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backToInbox();
-            }
-        });
-    }
-
-    private void backToInbox() {
-        swapFragment(this.inboxFragment);
-        this.settingsButton.setImageResource(R.drawable.ic_settings);
-        this.serverSwitch.setVisibility(View.VISIBLE);
-        this.settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToSettings();
-            }
-        });
-    }
-
-    private void swapFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (fragment.equals(this.inboxFragment)) {
-            fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-        } else {
-            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        }
-        fragmentTransaction.replace(R.id.fragment_container, fragment).commit();
+        fragmentTransaction.addToBackStack(getString(R.string.settings))
+                .add(R.id.fragment_container, settingsFragment)
+                .commit();
     }
 }

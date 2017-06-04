@@ -1,4 +1,4 @@
-package com.jameswolfeoliver.pigeon.Server.Models;
+package Models;
 
 import android.annotation.SuppressLint;
 
@@ -85,12 +85,14 @@ public class Message {
             return false;
         }
         Message message = (Message) object;
-        return Objects.equals(this.threadId, message.threadId);
+        return Objects.equals(this.threadId, message.threadId)
+                && Objects.equals(this.body, message.body)
+                && Objects.equals(this.date, message.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(threadId, body);
+        return Objects.hash(threadId, body, date);
     }
 
     public static class Builder {

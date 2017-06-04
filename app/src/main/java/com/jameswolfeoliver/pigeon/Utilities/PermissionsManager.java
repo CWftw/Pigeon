@@ -1,9 +1,12 @@
 package com.jameswolfeoliver.pigeon.Utilities;
 
 import android.Manifest;
+
 import com.jameswolfeoliver.pigeon.R;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import io.github.jameswolfeoliver.library.Permission.Permission;
 
 public class PermissionsManager {

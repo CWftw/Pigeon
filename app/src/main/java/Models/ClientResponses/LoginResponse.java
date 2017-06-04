@@ -1,4 +1,4 @@
-package com.jameswolfeoliver.pigeon.Server.Models.Responses;
+package Models.ClientResponses;
 
 import com.google.gson.annotations.SerializedName;
 

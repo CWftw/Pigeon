@@ -1,8 +1,9 @@
-package com.jameswolfeoliver.pigeon.Server.Models;
+package Models;
 
 import android.annotation.SuppressLint;
+
 import com.google.gson.annotations.SerializedName;
-import java.util.ArrayList;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;

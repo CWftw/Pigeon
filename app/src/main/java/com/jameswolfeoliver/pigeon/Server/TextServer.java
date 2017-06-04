@@ -10,8 +10,9 @@ import com.jameswolfeoliver.pigeon.Managers.PageCacheManager;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Contacts.AvatarEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Contacts.ContactsEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations.InboxEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations.MessagesEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Endpoints;
-import com.jameswolfeoliver.pigeon.Server.Endpoints.InboxEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Login.InsecureLoginEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Login.SecureLoginEndpoint;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
@@ -23,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLServerSocketFactory;
+
 import fi.iki.elonen.NanoHTTPD;
 
 public class TextServer extends NanoHTTPD {
@@ -30,6 +32,7 @@ public class TextServer extends NanoHTTPD {
     private final static String CHARSET_UTF8 = "UTF-8";
     private final static int PORT = 8080;
     private static AtomicBoolean isSecure = new AtomicBoolean(false);
+    private boolean isStarted = false;
 
     private static String serverIp;
     private static String serverUri;
@@ -66,6 +69,9 @@ public class TextServer extends NanoHTTPD {
     }
     public static String getInternalError() {
         return INTERNAL_ERROR;
+    }
+    public boolean isStarted() {
+        return isStarted;
     }
     // endregion Getters
 
@@ -116,6 +122,7 @@ public class TextServer extends NanoHTTPD {
             callback.onComplete();
         }
         isSecure.compareAndSet(false, secure);
+        isStarted = true;
     }
 
     private boolean initSecureServer(final ServerCallback callback) {
@@ -225,6 +232,8 @@ public class TextServer extends NanoHTTPD {
                 return AvatarEndpoint.serve(session);
             case Endpoints.CONTACTS_ENDPOINT:
                 return ContactsEndpoint.serve(session);
+            case Endpoints.MESSAGES_ENDPOINT:
+                return MessagesEndpoint.serve(session);
             default:
                 return Endpoint.buildHtmlResponse(NOT_FOUND, Response.Status.NOT_FOUND);
         }

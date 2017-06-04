@@ -1,4 +1,4 @@
-package com.jameswolfeoliver.pigeon.Server.Models;
+package Models;
 
 import android.annotation.SuppressLint;
 
@@ -10,6 +10,8 @@ import java.util.Objects;
 public class Conversation implements Serializable {
     public static final int TYPE_SENDER = 1;
     public static final int TYPE_USER = 2;
+
+    public static final int THREAD_ID_NONE = -1;
 
     @SerializedName("person")
     private int person;

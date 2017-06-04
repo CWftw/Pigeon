@@ -33,7 +33,7 @@ public class AvatarEndpoint extends Endpoint {
         if (avatarUri != null) {
             InputStream inputStream = getAvatarInputStream(avatarUri);
             if (inputStream != null) {
-                return NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, "image/jpeg", inputStream);
+                return NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, MIME_JPEG, inputStream);
             }
         }
         return buildHtmlResponse(TextServer.getNotFound(), NanoHTTPD.Response.Status.NOT_FOUND);

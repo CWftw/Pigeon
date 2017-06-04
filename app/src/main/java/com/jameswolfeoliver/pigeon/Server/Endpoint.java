@@ -4,9 +4,9 @@ import fi.iki.elonen.NanoHTTPD;
 
 public abstract class Endpoint {
     // MIME Types
-    private final static String MIME_JSON = "application/json";
-    private final static String MIME_HTML = "text/html";
-    private final static String MIME_JPEG = "image/jpeg";
+    protected final static String MIME_JSON = "application/json";
+    protected final static String MIME_HTML = "text/html";
+    protected final static String MIME_JPEG = "image/jpeg";
 
     // TODO: implement cookies
     // response.addHeader("Set-Cookie", "pigeonId=123456789; Domain=" + TextServer.getServerIp());

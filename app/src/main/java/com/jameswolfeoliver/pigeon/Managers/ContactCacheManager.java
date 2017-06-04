@@ -1,44 +1,41 @@
 package com.jameswolfeoliver.pigeon.Managers;
 
-
-import android.app.Activity;
 import android.os.Handler;
 import android.util.LongSparseArray;
 
-import com.jameswolfeoliver.pigeon.Server.Models.Contact;
 import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
 import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class UserCacheManager {
-    private static UserCacheManager instance;
+import Models.Contact;
+
+public class ContactCacheManager {
+    private static ContactCacheManager instance;
     private static final int ID = 44;
-    private ContactsWrapper contactsWrapper;
     private final LongSparseArray<Contact> contacts;
     private Handler handler;
 
-    private UserCacheManager() {
-        contactsWrapper = new ContactsWrapper();
+    private ContactCacheManager() {
         handler = new Handler();
-        handler.getLooper().getThread().setName(getClass().getSimpleName());
+        // handler.getLooper().getThread().setName(getClass().getSimpleName());
         contacts = new LongSparseArray<Contact>();
     }
 
-    public static UserCacheManager getInstance() {
+    public static ContactCacheManager getInstance() {
         if (instance == null) {
-            instance = new UserCacheManager();
+            instance = new ContactCacheManager();
         }
         return instance;
     }
 
-    public void update(WeakReference<Activity> activity) {
-        contactsWrapper.getAllContacts(activity, ID, new SqlCallback<Contact>() {
+    public void update(ContactsWrapper contactsWrapper) {
+        contactsWrapper.get(ID, new SqlCallback<Contact>() {
             @Override
             public void onQueryComplete(ArrayList<Contact> results) {
                 handler.post(new ContactsSorter(results));
+
             }
         });
     }

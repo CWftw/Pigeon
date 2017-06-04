@@ -3,7 +3,6 @@ package com.jameswolfeoliver.pigeon.Listeners;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.jameswolfeoliver.pigeon.SqlWrappers.CursorIds;
 import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 import com.jameswolfeoliver.pigeon.SqlWrappers.Wrapper;
 

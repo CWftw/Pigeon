@@ -10,13 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.jameswolfeoliver.pigeon.Managers.UserCacheManager;
+import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
 import com.jameswolfeoliver.pigeon.R;
-import com.jameswolfeoliver.pigeon.Server.Models.Contact;
-import com.jameswolfeoliver.pigeon.Server.Models.Conversation;
-import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
+import Models.Contact;
+import Models.Conversation;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -48,7 +46,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.Conversation
     @Override
     public void onBindViewHolder(ConversationHolder holder, int position) {
         Conversation conversation = conversations.get(position);
-        Contact contact = UserCacheManager.getInstance().getContact(conversation.getAddress());
+        Contact contact = ContactCacheManager.getInstance().getContact(conversation.getAddress());
         if (contact != null) {
             holder.setViews(conversation, contact);
         } else {

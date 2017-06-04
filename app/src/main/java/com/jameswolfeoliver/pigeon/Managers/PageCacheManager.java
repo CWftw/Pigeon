@@ -3,7 +3,8 @@ package com.jameswolfeoliver.pigeon.Managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.jameswolfeoliver.pigeon.Server.Models.Requests.VersionResponse;
+
+import Models.VersionResponse;
 import com.jameswolfeoliver.pigeon.Server.Rest.RestServer;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 

@@ -1,10 +1,9 @@
 package com.jameswolfeoliver.pigeon.Server.Endpoints.Login;
 
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.content.Intent;
 
-import com.jameswolfeoliver.pigeon.R;
+import com.jameswolfeoliver.pigeon.Activities.ConnectionActivity;
+import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.TextServer;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
@@ -14,15 +13,11 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 import fi.iki.elonen.NanoHTTPD;
 
 public class InsecureLoginEndpoint extends Endpoint{
     public static final String LOG_TAG = InsecureLoginEndpoint.class.getSimpleName();
-
-    private static final int USER_WAIT_IN_MILLIS = 1000;
-    private static AtomicBoolean userAnsweredPrompt = new AtomicBoolean(false);
-    private static AtomicBoolean accessDenied = new AtomicBoolean(true);
 
     // Login errors
     private final static int NO_ERROR = 0;
@@ -61,63 +56,30 @@ public class InsecureLoginEndpoint extends Endpoint{
         final boolean termsChecked = bodyMap.get("hasAgreedToTerms").equals("true");
         JSONObject responseJson = new JSONObject();
 
-        Log.d(LOG_TAG, String.format("On Thread: %s", Thread.currentThread().getName()));
-        Log.d(LOG_TAG, String.format("checkBox: %b", termsChecked));
-
         try {
             responseJson.put("successful", false);
+            // todo handle user approval
             if (!termsChecked) {
                 error = TERMS_UNCHECKED;
             } else {
                 promptUserForClientAccess(name, ip);
-                while (!userAnsweredPrompt.get()) {
-                    try {
-                        Thread.sleep(USER_WAIT_IN_MILLIS);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (accessDenied.get()) {
-                    error = DENIED;
-                } else {
-                    responseJson.put("successful", true);
-                }
             }
             responseJson.put("error", error);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Log.d(LOG_TAG, responseJson.toString());
         return responseJson.toString();
     }
 
     private static void promptUserForClientAccess(final String clientName, final String clientIp) {
-        TextServer.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog.Builder promptUser = new AlertDialog.Builder(PigeonApplication.getAppContext());
-                promptUser.setTitle("Allow PC Connection?")
-                        .setIcon(R.drawable.app_icon)
-                        .setMessage(String.format("%s (IP: %s) would like to connect. Trust this computer?", clientName, clientIp))
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                userAnsweredPrompt.compareAndSet(false, true);
-                                accessDenied.compareAndSet(true, false);
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                userAnsweredPrompt.compareAndSet(false, true);
-                                accessDenied.compareAndSet(true, true);
-                            }
-                        });
-                promptUser.show();
-            }
-        });
+        if (PigeonApplication.isApplicationVisible()) {
+            // Don't recreate if the user is already there
+            Intent confirmConnectionIntent = new Intent(PigeonApplication.getAppContext(), ConnectionActivity.class);
+            confirmConnectionIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            PigeonApplication.getAppContext().startActivity(confirmConnectionIntent);
+        } else {
+            NotificationsManager.createNotificationForRemoteLogin(clientName, clientIp);
+        }
     }
-
-
 }

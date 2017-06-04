@@ -10,12 +10,15 @@ import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.util.SparseArray;
-import com.jameswolfeoliver.pigeon.Server.Models.Contact;
+
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class ContactsWrapper implements LoaderManager.LoaderCallbacks<Cursor> {
+import Models.Contact;
+
+public class ContactsWrapper implements LoaderManager.LoaderCallbacks<Cursor>, Wrapper<Contact> {
 
     private static final int CONTACT_ID_INDEX = 0;
     private static final int LOOKUP_KEY_INDEX = 1;
@@ -33,8 +36,11 @@ public class ContactsWrapper implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String SELECTION_SUFFIX = " LIKE ?";
 
     private SparseArray<SqlCallback<Contact>> listeners;
+    private WeakReference<Activity> activity;
 
-    public ContactsWrapper() {
+    public ContactsWrapper(Activity activity) {
+        super();
+        this.activity = new WeakReference<>(activity);
         this.listeners = new SparseArray<>();
     }
 
@@ -54,29 +60,42 @@ public class ContactsWrapper implements LoaderManager.LoaderCallbacks<Cursor> {
         }
     }
 
-    public void getAllContacts(WeakReference<Activity> activity, int callerId,
-                               SqlCallback<Contact> contactsCallback) {
-        this.listeners.put(callerId, contactsCallback);
-        activity.get().getLoaderManager().initLoader(CursorIds.CONTACTS_WRAPPER_ID, null, this);
+    public void get(int callerId, SqlCallback<Contact> contactsCallback, String... args) {
+        getContacts(callerId, contactsCallback, null);
     }
 
-    public void queryContacts(String selectionDimension, String query, int callerId,
-                              SqlCallback<Contact> contactsCallback, WeakReference<Activity> activity) {
+    public void find(int callerId, SqlCallback<Contact> contactsCallback, String... args) {
+        getContacts(callerId, contactsCallback, null);
+    }
+
+    private void getContacts(int callerId, SqlCallback<Contact> contactsCallback, String selection) {
+        if (activity == null || activity.get() == null) {
+            throw new IllegalStateException("Cannot user LoaderManager without activity reference");
+        }
         this.listeners.put(callerId, contactsCallback);
-        activity.get().getLoaderManager().initLoader(CursorIds.CONTACTS_WRAPPER_ID, null, this);
+        Bundle bundle = new Bundle();
+        bundle.putString(SELECTION_BUNDLE_KEY, getSelection());
+        if (activity.get().getLoaderManager().getLoader(CursorIds.CONTACTS_WRAPPER_ID) != null) {
+            activity.get().getLoaderManager().restartLoader(CursorIds.CONTACTS_WRAPPER_ID, bundle, this);
+        } else {
+            activity.get().getLoaderManager().initLoader(CursorIds.CONTACTS_WRAPPER_ID, bundle, this);
+        }
+    }
+
+    private String getSelection() {
+        return null;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        String selection = null;
-        String[] selectionArgs = null;
+        String selection = bundle.getString(SELECTION_BUNDLE_KEY);
 
         return new CursorLoader(
                 PigeonApplication.getAppContext(),
                 Contacts.CONTENT_URI,
                 PROJECTION,
                 selection,
-                selectionArgs,
+                null,
                 null
         );
     }
