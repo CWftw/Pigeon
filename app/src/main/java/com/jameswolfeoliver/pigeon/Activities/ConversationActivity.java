@@ -1,6 +1,8 @@
 package com.jameswolfeoliver.pigeon.Activities;
 
-import android.app.NotificationManager;
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -38,6 +40,10 @@ public class ConversationActivity extends AppCompatActivity
         implements View.OnFocusChangeListener, View.OnClickListener {
     public static final String CONVERSATION_EXTRA = "extra_conversation";
     private static final String LOG_TAG = ConversationActivity.class.getSimpleName();
+    private static final String SENT_ACTION = "SMS_SENT_ACTION";
+    private static final String DELIVERED_ACTION = "SMS_DELIVERED_ACTION";
+    private static final int LISTENER_ID = 55;
+
 
     private AppCompatEditText chatEditText;
     private RecyclerView messageRecyclerView;
@@ -80,8 +86,9 @@ public class ConversationActivity extends AppCompatActivity
         this.messageAdapter = new MessageAdapter(ConversationActivity.this, new ArrayList<Message>(), contact);
         this.messageRecyclerView.setAdapter(messageAdapter);
 
-        this.paginatedScrollListener = new PaginatedScrollListener<Message>(linearLayoutManager, 5, messagesWrapper) {
+        this.paginatedScrollListener = new PaginatedScrollListener<Message>(linearLayoutManager, LISTENER_ID, 5, messagesWrapper) {
             private int lastLoadingItem;
+
             @Override
             protected void paginated(final ArrayList<Message> messages) {
                 messageAdapter.removeLoading(lastLoadingItem);
@@ -94,7 +101,7 @@ public class ConversationActivity extends AppCompatActivity
                         }
                     });
                 }
-                Log.d("James", "Paginated");
+                Log.i(LOG_TAG, "Paginated");
             }
 
             @Override
@@ -106,7 +113,7 @@ public class ConversationActivity extends AppCompatActivity
                         messageRecyclerView.scrollToPosition(lastLoadingItem);
                     }
                 });
-                Log.d("James", "Paginating...");
+                Log.i(LOG_TAG, "Paginating...");
             }
         };
         messageRecyclerView.addOnScrollListener(paginatedScrollListener);
@@ -124,7 +131,7 @@ public class ConversationActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
         }
         return (super.onOptionsItemSelected(menuItem));
     }
@@ -141,28 +148,78 @@ public class ConversationActivity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.action_send:
-                sendTextMessage(chatEditText.getText().toString());
-                chatEditText.setText("");
+                String message = chatEditText.getText().toString().trim();
+                if (!message.isEmpty()) {
+                    sendTextMessage(message);
+                    chatEditText.setText("");
+                }
                 break;
         }
     }
 
     private void sendTextMessage(String message) {
         ArrayList<String> messageParts = SmsManager.getDefault().divideMessage(message);
-        SmsManager.getDefault().sendMultipartTextMessage(Long.toString(conversation.getAddress()), null, messageParts, null, null);
-        Message newMessage = new Message.Builder(conversation.getThreadId())
-                .setAddress(conversation.getAddress())
-                .setBody(message)
-                .setDate(System.currentTimeMillis())
-                .setType(Conversation.TYPE_USER)
-                .build();
-        messageAdapter.onNewMessage(newMessage);
-        messageRecyclerView.post(new Runnable() {
+
+        SmsBroadcastReceiver sentSmsBroadcastReceiver = new SmsBroadcastReceiver(messageParts.size()) {
+            MessageInfo messageInfo = new MessageInfo();
             @Override
-            public void run() {
-                messageRecyclerView.scrollToPosition(0);
+            public void onReceive(Context context, Intent intent) {
+                switch (getResultCode()) {
+                    case Activity.RESULT_OK:
+                        break;
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        messageInfo.fail("Error - Generic failure");
+                        break;
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        messageInfo.fail("Error - No Service");
+                        break;
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        messageInfo.fail("Error - Null PDU");
+                        break;
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        messageInfo.fail("Error - Radio off");
+                        break;
+                }
+
+                numberOfMessageParts--;
+                if (numberOfMessageParts <= 0) {
+                    unregisterReceiver(this);
+                    if (messageInfo.isFailed()) {
+                        Log.d(LOG_TAG, "Send SMS Failure");
+                    } else {
+                        Log.d(LOG_TAG, "Send SMS Success");
+                    }
+                }
             }
-        });
+        };
+
+        SmsBroadcastReceiver deliveredSmsBroadcastReceiver = new SmsBroadcastReceiver(messageParts.size()) {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                numberOfMessageParts--;
+                if (numberOfMessageParts <= 0) {
+                    unregisterReceiver(this);
+                    getNewMessages();
+                    Log.d(LOG_TAG, "SMS Delivered");
+                }
+            }
+        };
+
+        ArrayList<PendingIntent> sentPendingIntents = new ArrayList<PendingIntent>(messageParts.size());
+        Intent sentIntent = new Intent(SENT_ACTION);
+
+        ArrayList<PendingIntent> deliveredPendingIntents = new ArrayList<PendingIntent>(messageParts.size());
+        Intent deliveredIntent = new Intent(DELIVERED_ACTION);
+
+        for (int i = 0; i < messageParts.size(); i++) {
+            sentPendingIntents.add(PendingIntent.getBroadcast(this, 0, sentIntent, 0));
+            deliveredPendingIntents.add(PendingIntent.getBroadcast(this, 0, deliveredIntent, 0));
+        }
+
+        registerReceiver(sentSmsBroadcastReceiver, new IntentFilter(SENT_ACTION));
+        registerReceiver(deliveredSmsBroadcastReceiver, new IntentFilter(DELIVERED_ACTION));
+        SmsManager.getDefault().sendMultipartTextMessage(Long.toString(conversation.getAddress()),
+                null, messageParts, sentPendingIntents, deliveredPendingIntents);
     }
 
     @Override
@@ -180,31 +237,35 @@ public class ConversationActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        NotificationsManager.removeAllNotficationsforConversation(conversation.getThreadId(), this);
+        NotificationsManager.removeAllNotificationsForConversation(conversation.getThreadId(), this);
 
         if (messageAdapter.getItemCount() == 0) {
             // Manually do first call
             paginatedScrollListener.forcePaginate();
         } else {
-            messagesWrapper.find(101, new SqlCallback<Message>() {
-                @Override
-                public void onQueryComplete(ArrayList<Message> results) {
-                    messageAdapter.filteredPrepend(results);
-                    messageRecyclerView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            messageRecyclerView.scrollToPosition(0);
-                        }
-                    });
-                    messagesWrapper.unregisterCallback(101);
-                }
-            }, String.valueOf(System.currentTimeMillis()));
+           getNewMessages();
         }
 
         // Register sms broadcast receiver
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.provider.Telephony.SMS_RECEIVED");
         registerReceiver(smsReceiver, filter);
+    }
+
+    private void getNewMessages() {
+        messagesWrapper.find(LISTENER_ID, new SqlCallback<Message>() {
+            @Override
+            public void onQueryComplete(ArrayList<Message> results) {
+                messageAdapter.filteredPrepend(results);
+                messageRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        messageRecyclerView.scrollToPosition(0);
+                    }
+                });
+                messagesWrapper.unregisterCallback(LISTENER_ID);
+            }
+        }, String.valueOf(System.currentTimeMillis()));
     }
 
     private void onMessageReceived(Message message) {
@@ -231,7 +292,7 @@ public class ConversationActivity extends AppCompatActivity
                             .setDate(messageDate)
                             .setType(Conversation.TYPE_SENDER)
                             .build();
-                    ConversationActivity.this.runOnUiThread(new Runnable() {
+                    runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             onMessageReceived(message);
@@ -240,6 +301,29 @@ public class ConversationActivity extends AppCompatActivity
                     abortBroadcast();
                 }
             }
+        }
+    }
+
+    private abstract class SmsBroadcastReceiver extends BroadcastReceiver {
+        protected int numberOfMessageParts;
+
+        private SmsBroadcastReceiver(int numberOfMessageParts) {
+            this.numberOfMessageParts = numberOfMessageParts;
+        }
+    }
+
+
+    private class MessageInfo {
+        String reason;
+        boolean failed;
+
+        private void fail(String reason) {
+            this.reason = reason;
+            failed = true;
+        }
+
+        private boolean isFailed() {
+            return failed;
         }
     }
 }

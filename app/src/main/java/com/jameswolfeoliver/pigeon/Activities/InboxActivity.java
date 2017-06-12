@@ -10,31 +10,31 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.jameswolfeoliver.pigeon.Fragment.InboxFragment;
 import com.jameswolfeoliver.pigeon.Fragment.SettingsFragment;
 import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
-import com.jameswolfeoliver.pigeon.Presenters.InboxPresenter;
+import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
+import com.jameswolfeoliver.pigeon.Presenters.BasePresenter;
 import com.jameswolfeoliver.pigeon.R;
-import com.jameswolfeoliver.pigeon.Server.TextServer;
+import com.jameswolfeoliver.pigeon.Services.TextService;
 import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
-public class InboxActivity extends AppCompatActivity {
+public class InboxActivity extends BaseActivity {
 
     private static final String LOG_TAG = InboxActivity.class.getSimpleName();
 
     private FloatingActionButton fab;
     private FrameLayout spinnerWrapper;
     private ContactsWrapper contactsWrapper;
-    private InboxPresenter inboxPresenter;
 
     private InboxFragment inboxFragment;
     private SettingsFragment settingsFragment;
@@ -43,7 +43,6 @@ public class InboxActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
-        inboxPresenter = new InboxPresenter();
 
         // Set root view and show spinner
         spinnerWrapper = (FrameLayout) findViewById(R.id.spinner_wrapper);
@@ -61,7 +60,7 @@ public class InboxActivity extends AppCompatActivity {
         contactsWrapper = new ContactsWrapper(this);
     }
 
-    private void initViews(){
+    private void initViews() {
         // Set Action Bar
         getSupportActionBar().setTitle(getString(R.string.inbox));
         getSupportActionBar().setHomeButtonEnabled(false);
@@ -81,16 +80,9 @@ public class InboxActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        inboxPresenter.startReceiver();
         hideSpinner();
         ContactCacheManager.getInstance().update(contactsWrapper);
-    }
-
-    @Override
-    public void onDestroy() {
-        inboxPresenter.tearDownServer();
-        inboxPresenter.stopReceiver();
-        super.onDestroy();
+        NotificationsManager.removeAllNotifications(this);
     }
 
     @Override
@@ -136,40 +128,34 @@ public class InboxActivity extends AppCompatActivity {
     }
 
     private void showConnectionStatus() {
-        if (inboxPresenter.isServerRunning()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(String.format(getString(R.string.connected_message), TextServer.getServerUri() + "/inbox"))
-                    .setTitle(R.string.connect_to_pc)
-                    .setIcon(R.drawable.ic_phonelink_dark)
-                    .setPositiveButton(android.R.string.ok , new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setNegativeButton(R.string.disconnect, new DialogInterface.OnClickListener(){
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            inboxPresenter.tearDownServer();
-                        }
-                    });
+        basePresenter.isServerRunning(new BasePresenter.ServerStatusCallback() {
+            @Override
+            public void onInfoReceived(final String uri, final boolean secure, final int status) {
+                if (status == TextService.Status.RUNNING) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(InboxActivity.this);
+                    builder.setMessage(String.format(getString(R.string.connected_message), uri + "/inbox"))
+                            .setTitle(R.string.connect_to_pc)
+                            .setIcon(R.drawable.ic_phonelink_dark)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton(R.string.disconnect, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    basePresenter.tearDownServer(null);
+                                }
+                            });
 
-            AlertDialog connectToPcDialog = builder.create();
-            connectToPcDialog.show();
-        } else {
-            showServerSetupDialog();
-        }
-    }
-
-    private void showConnectionSuccess(String loginUrl){
-        Snackbar.make(fab, String.format(getString(R.string.connected_message), loginUrl), Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        inboxPresenter.tearDownServer();
-                    }
-                })
-                .show();
+                    AlertDialog connectToPcDialog = builder.create();
+                    connectToPcDialog.show();
+                } else {
+                    showServerSetupDialog();
+                }
+            }
+        });
     }
 
     private void showServerSetupDialog() {
@@ -181,18 +167,21 @@ public class InboxActivity extends AppCompatActivity {
             builder.setTitle(getString(R.string.setup_connection));
             builder.setMessage(getString(R.string.setup_connection_message));
 
-
             String positiveText = getString(R.string.setup_encrypted);
             builder.setPositiveButton(positiveText,
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             showSpinner();
-                            inboxPresenter.startServer(true, new TextServer.ServerCallback() {
+                            basePresenter.startServer(true, new BasePresenter.ServerStatusCallback() {
                                 @Override
-                                public void onComplete() {
+                                public void onInfoReceived(String uri, boolean secure, int status) {
                                     hideSpinner();
-                                    showConnectionSuccess(TextServer.getServerUri() + "/login");
+                                    if (status == TextService.Status.RUNNING) {
+                                        showConnectionSuccess(uri);
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
                         }
@@ -204,11 +193,15 @@ public class InboxActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             showSpinner();
-                            inboxPresenter.startServer(false, new TextServer.ServerCallback() {
+                            basePresenter.startServer(true, new BasePresenter.ServerStatusCallback() {
                                 @Override
-                                public void onComplete() {
+                                public void onInfoReceived(String uri, boolean secure, int status) {
                                     hideSpinner();
-                                    showConnectionSuccess(TextServer.getServerUri() + "/login");
+                                    if (status == TextService.Status.RUNNING) {
+                                        showConnectionSuccess(uri);
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
                         }
@@ -241,5 +234,10 @@ public class InboxActivity extends AppCompatActivity {
         fragmentTransaction.addToBackStack(getString(R.string.settings))
                 .add(R.id.fragment_container, settingsFragment)
                 .commit();
+    }
+
+    @Override
+    public void onNetworkStateChange(boolean isAvailable) {
+
     }
 }

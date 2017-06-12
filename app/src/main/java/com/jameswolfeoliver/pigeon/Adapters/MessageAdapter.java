@@ -60,9 +60,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.BaseHold
         int rangeEnd = 0;
         for (int i = 0; i < messages.size(); i++) {
             if (messages.get(i).equals(dataSet.get(0))) {
-                rangeEnd = i-1;
                 break;
             } else {
+                rangeEnd++;
                 dataSet.add(i, messages.get(i));
             }
         }

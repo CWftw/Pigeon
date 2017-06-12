@@ -9,19 +9,21 @@ import com.jameswolfeoliver.pigeon.SqlWrappers.Wrapper;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 public abstract class PaginatedScrollListener<T> extends RecyclerView.OnScrollListener {
 
     protected final AtomicBoolean loading;
     private final int LOADING_THRESHOLD;
     private final Wrapper<T> loaderManager;
+    private int callerId;
     private LinearLayoutManager layoutManager;
 
     public PaginatedScrollListener(LinearLayoutManager layoutManager,
+                                   int callerId,
                                    int LOADING_THRESHOLD,
                                    Wrapper<T> loaderManager) {
         super();
         this.layoutManager = layoutManager;
+        this.callerId = callerId;
         this.LOADING_THRESHOLD = LOADING_THRESHOLD;
         this.loaderManager = loaderManager;
         this.loading = new AtomicBoolean(false);
@@ -53,7 +55,7 @@ public abstract class PaginatedScrollListener<T> extends RecyclerView.OnScrollLi
 
     protected void paginate() {
         paginating();
-        loaderManager.get(99, new SqlCallback<T>() {
+        loaderManager.get(callerId, new SqlCallback<T>() {
             @Override
             public void onQueryComplete(ArrayList<T> results) {
                 paginated(results);

@@ -9,7 +9,7 @@ import android.util.Log;
 
 public class IncomingMessageReceiver extends BroadcastReceiver {
     private static final String LOG_TAG = IncomingMessageReceiver.class.getSimpleName();
-    private static final String MESSAGE_EXTRA = "pdus";
+    protected String MESSAGE_EXTRA = "pdus";
     private static final String FORMAT_EXTRA = "format";
 
     protected String messageBody;

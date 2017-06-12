@@ -17,6 +17,8 @@
     <string name="active_connections">History</string>
     <string name="connect_to_pc">Connect to pc</string>
     <string name="connected_message">You\'re connected! Go to %s</string>
+    <string name="connection_failed">Server connection failed</string>
+    <string name="server_running">Server is running</string>
     <string name="connection_requested" formatted="false">Connection requested</string>
     <string name="user_connection_requested" formatted="false">%s (ip %s) is trying to connect</string>
     <string name="disconnect">Disconnect</string>

@@ -4,6 +4,7 @@ import android.app.Service;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.text.format.Formatter;
+import android.util.Log;
 
 import com.jameswolfeoliver.pigeon.Managers.KeystoreHelper;
 import com.jameswolfeoliver.pigeon.Managers.PageCacheManager;
@@ -20,6 +21,8 @@ import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.net.ssl.KeyManagerFactory;
@@ -31,11 +34,10 @@ public class TextServer extends NanoHTTPD {
     public static final String LOG_TAG = TextServer.class.getSimpleName();
     private final static String CHARSET_UTF8 = "UTF-8";
     private final static int PORT = 8080;
-    private static AtomicBoolean isSecure = new AtomicBoolean(false);
-    private boolean isStarted = false;
-
-    private static String serverIp;
-    private static String serverUri;
+    private AtomicBoolean isSecure = new AtomicBoolean(false);
+    private AtomicBoolean isStarted = new AtomicBoolean(false);
+    private String serverIp;
+    private String serverUri;
 
     // Default HTML Response
     private static String BAD_REQUEST;
@@ -46,10 +48,10 @@ public class TextServer extends NanoHTTPD {
     private static String LOGIN_INSECURE;
 
     // region Getters
-    public static String getServerUri() {
+    public String getServerUri() {
         return serverUri;
     }
-    public static String getServerIp() {
+    public String getServerIp() {
         return serverIp;
     }
     public static String getForbidden() {
@@ -71,21 +73,17 @@ public class TextServer extends NanoHTTPD {
         return INTERNAL_ERROR;
     }
     public boolean isStarted() {
-        return isStarted;
+        return isStarted.get();
+    }
+    public boolean getIsSecure() {
+        return isSecure.get();
     }
     // endregion Getters
 
     // region Server Setup
-    private static TextServer instance;
-    private TextServer() {
+    public TextServer() {
         super(PORT);
-    }
-
-    public static TextServer getInstance() {
-        if (instance == null) {
-            instance = new TextServer();
-        }
-        return instance;
+        helperThread = Executors.newSingleThreadExecutor();
     }
 
     private static SSLServerSocketFactory makeSSLSocketFactory() {
@@ -109,58 +107,86 @@ public class TextServer extends NanoHTTPD {
         }
     }
 
-    public void start(boolean secure, ServerCallback callback) {
+    @Override
+    public void stop() {
+        super.stop();
+        isStarted.compareAndSet(true, false);
+        isSecure.set(false);
+        serverUri = "";
+        serverIp = "";
+    }
+
+    public void start(boolean secure, StartServerCallback callback) {
         WifiManager wm = (WifiManager) PigeonApplication.getAppContext().getApplicationContext().getSystemService(Service.WIFI_SERVICE);
-        serverIp = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        this.serverIp = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        this.isSecure.compareAndSet(false, secure);
         serverUri = String.format("http%s://%s:%s", (secure ? "s" : ""), serverIp, PORT);
         initDefaultResponses();
-        // TODO: handle init failures
         if (secure) {
             initSecureServer(callback);
         } else {
-            initInsecureServer();
-            callback.onComplete();
+            initInsecureServer(callback);
         }
-        isSecure.compareAndSet(false, secure);
-        isStarted = true;
     }
 
-    private boolean initSecureServer(final ServerCallback callback) {
+    private void initSecureServer(final StartServerCallback callback) {
         Runnable textServerInitRunnable = new Runnable() {
             @Override
             public void run() {
                 try {
                     LOGIN_SECURE = PageCacheManager.loadPageFromStorage(PageCacheManager.SECURE_LOGIN_FILE_NAME);
                     System.setProperty("javax.net.ssl.trustStore", "keystore.jks");
-                    TextServer.getInstance().makeSecure(makeSSLSocketFactory(), null);
-                    TextServer.getInstance().start();
-                    runOnUiThread(callback);
-                } catch (IOException io) {
-                    io.printStackTrace();
-                    runOnUiThread(callback);
+                    TextServer.this.makeSecure(makeSSLSocketFactory(), null);
+                    TextServer.this.start();
+                    isStarted.set(true);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onSuccess();
+                        }
+                    });
+                } catch (final IOException io) {
+                    Log.e(LOG_TAG, "Error while starting insecure server: " + io.getLocalizedMessage());
+                    isStarted.set(false);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onFailure(io);
+                        }
+                    });
                 }
             }
         };
-        if (helperThread  != null && helperThread.isAlive() && !helperThread.isInterrupted()) {
-            helperThread.interrupt();
-            return false;
-        } else {
-            helperThread = new Thread(textServerInitRunnable);
-            helperThread.setName(THREAD_NAME);
-            helperThread.start();
-            return true;
-        }
+        helperThread.submit(textServerInitRunnable);
     }
 
-    private boolean initInsecureServer() {
-        try {
-            LOGIN_INSECURE = PageCacheManager.loadPageFromStorage(PageCacheManager.INSECURE_LOGIN_FILE_NAME);
-            start();
-            return true;
-        } catch (IOException io) {
-            io.printStackTrace();
-            return false;
-        }
+    private void initInsecureServer(final StartServerCallback callback) {
+        Runnable textServerInitRunnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    LOGIN_INSECURE = PageCacheManager.loadPageFromStorage(PageCacheManager.INSECURE_LOGIN_FILE_NAME);
+                    start();
+                    isStarted.set(true);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onSuccess();
+                        }
+                    });
+                } catch (final IOException io) {
+                    Log.e(LOG_TAG, "Error while starting insecure server: " + io.getLocalizedMessage());
+                    isStarted.set(false);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onFailure(io);
+                        }
+                    });
+                }
+            }
+        };
+        helperThread.submit(textServerInitRunnable);
     }
 
     private void initDefaultResponses() {
@@ -200,19 +226,8 @@ public class TextServer extends NanoHTTPD {
     // endregion ServerSetup
 
     // region Helper Thread
-    private Thread helperThread;
-    private final static String THREAD_NAME = "TextServer Helper Thread";
-    public static void runOnUiThread(final ServerCallback callback) {
-        Handler uiHandler = new Handler(PigeonApplication.getAppContext().getMainLooper());
-        Runnable runOnUi = new Runnable() {
-            @Override
-            public void run() {
-                callback.onComplete();
-            }
-        };
-        uiHandler.post(runOnUi);
-    }
-    public static void runOnUiThread(final Runnable runOnUi) {
+    private ExecutorService helperThread;
+    public static void runOnUiThread(Runnable runOnUi) {
         Handler uiHandler = new Handler(PigeonApplication.getAppContext().getMainLooper());
         uiHandler.post(runOnUi);
     }
@@ -240,7 +255,8 @@ public class TextServer extends NanoHTTPD {
     }
 
     // Callback interface for time consuming tasks
-    public interface ServerCallback {
-        void onComplete();
+    public interface StartServerCallback<E> {
+        void onSuccess(E... e);
+        void onFailure(Exception e);
     }
 }

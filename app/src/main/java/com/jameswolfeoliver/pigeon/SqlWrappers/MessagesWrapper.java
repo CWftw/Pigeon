@@ -71,7 +71,7 @@ public class MessagesWrapper implements Wrapper<Message>, LoaderManager.LoaderCa
         }
         this.listeners.put(callerId, messageCallback);
         Bundle bundle = new Bundle();
-        bundle.putString(SELECTION_BUNDLE_KEY, getSelection(lastReceivedDate, threadId));
+        bundle.putString(SELECTION_BUNDLE_KEY, getSelection(specifiedDate, threadId));
         if (activity.get().getLoaderManager()
                 .getLoader(CursorIds.MESSAGES_WRAPPER_ID) != null) {
             activity.get().getLoaderManager().restartLoader(CursorIds.MESSAGES_WRAPPER_ID, bundle, this);
@@ -82,7 +82,6 @@ public class MessagesWrapper implements Wrapper<Message>, LoaderManager.LoaderCa
 
     private String getSelection(long lastReceivedDate, String threadId) {
         if (lastReceivedDate != -1) {
-            Log.d("message", "date" + LESS_THAN + lastReceivedDate + AND + "thread_id" + EQUALS + threadId);
             return "date" + LESS_THAN + lastReceivedDate + AND + "thread_id" + EQUALS + threadId;
         } else {
             return "thread_id" + EQUALS + threadId;
@@ -124,6 +123,7 @@ public class MessagesWrapper implements Wrapper<Message>, LoaderManager.LoaderCa
                 }
                 index++;
             }
+            cursor.close();
             for (int i = 0; i <listeners.size(); i++) {
                 SqlCallback<Message> listener = listeners.valueAt(i);
                 listener.onQueryComplete(messages);

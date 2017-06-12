@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.jameswolfeoliver.pigeon.Adapters.ConnectionsAdapter;
+import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
 import com.jameswolfeoliver.pigeon.R;
 
 import java.util.ArrayList;
@@ -20,6 +21,12 @@ public class ConnectionActivity extends AppCompatActivity {
     private RecyclerView connectionsRecyclerView;
     private ArrayList<Connection> connections;
     private ConnectionsAdapter connectionsAdapter;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        NotificationsManager.removeAllNotificationsForRemoteClient(this);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
