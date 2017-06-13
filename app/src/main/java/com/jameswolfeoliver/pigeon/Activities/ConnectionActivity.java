@@ -12,7 +12,7 @@ import com.jameswolfeoliver.pigeon.R;
 
 import java.util.ArrayList;
 
-import Models.Connection;
+import com.jameswolfeoliver.pigeon.Models.Connection;
 
 public class ConnectionActivity extends AppCompatActivity {
 

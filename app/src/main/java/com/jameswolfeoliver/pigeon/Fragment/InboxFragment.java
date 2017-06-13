@@ -15,7 +15,7 @@ import com.jameswolfeoliver.pigeon.Activities.ConversationActivity;
 import com.jameswolfeoliver.pigeon.Adapters.InboxAdapter;
 import com.jameswolfeoliver.pigeon.Listeners.RecyclerItemClickListener;
 import com.jameswolfeoliver.pigeon.R;
-import Models.Conversation;
+import com.jameswolfeoliver.pigeon.Models.Conversation;
 import com.jameswolfeoliver.pigeon.SqlWrappers.ConversationWrapper;
 import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 

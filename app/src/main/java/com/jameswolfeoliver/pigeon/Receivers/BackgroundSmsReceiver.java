@@ -9,9 +9,9 @@ import android.net.Uri;
 import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
 import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
 
-import Models.Contact;
-import Models.Conversation;
-import Models.Message;
+import com.jameswolfeoliver.pigeon.Models.Contact;
+import com.jameswolfeoliver.pigeon.Models.Conversation;
+import com.jameswolfeoliver.pigeon.Models.Message;
 
 public class BackgroundSmsReceiver extends IncomingMessageReceiver {
     @Override
@@ -41,7 +41,7 @@ public class BackgroundSmsReceiver extends IncomingMessageReceiver {
 
             final Contact contact = ContactCacheManager.getInstance().getContact(phoneNumber.getNumber());
 
-            NotificationsManager.createNotificationForMessageReceived(conversation, message, contact);
+            NotificationsManager.createNotificationForMessageReceived(context, conversation, message, contact);
 
             abortBroadcast();
         }

@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.SparseArray;
 
-import Models.Conversation;
+import com.jameswolfeoliver.pigeon.Models.Conversation;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import java.lang.ref.WeakReference;

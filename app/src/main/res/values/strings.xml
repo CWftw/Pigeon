@@ -10,6 +10,8 @@
 
     <!--Messages-->
     <string name="message_notification_summary" formatted="false">%s: %s</string>
+    <string name="message_reply">Reply</string>
+    <string name="message_label">label</string>
 
     <!--Connection-->
     <string name="connections">Connections</string>

@@ -7,10 +7,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 
-import Models.Message;
+import com.jameswolfeoliver.pigeon.Models.Message;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import java.lang.ref.WeakReference;

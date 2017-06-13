@@ -16,7 +16,7 @@ import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import java.util.ArrayList;
 import java.util.Date;
 
-import Models.Connection;
+import com.jameswolfeoliver.pigeon.Models.Connection;
 
 
 public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.ConnectionHolder> {

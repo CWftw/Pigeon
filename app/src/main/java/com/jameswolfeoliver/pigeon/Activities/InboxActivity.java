@@ -83,6 +83,9 @@ public class InboxActivity extends BaseActivity {
         hideSpinner();
         ContactCacheManager.getInstance().update(contactsWrapper);
         NotificationsManager.removeAllNotifications(this);
+        if (!PigeonApplication.isDefaultSmsApp()) {
+            PigeonApplication.promptUserToChangeDefaultSmsApp();
+        }
     }
 
     @Override

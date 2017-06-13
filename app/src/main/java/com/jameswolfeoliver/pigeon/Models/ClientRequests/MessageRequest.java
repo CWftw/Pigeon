@@ -1,6 +1,6 @@
-package Models.ClientRequests;
+package com.jameswolfeoliver.pigeon.Models.ClientRequests;
 
-import Models.Conversation;
+import com.jameswolfeoliver.pigeon.Models.Conversation;
 
 /**
  * Created by james on 22/05/17.

@@ -24,17 +24,19 @@ import com.jameswolfeoliver.pigeon.Adapters.MessageAdapter;
 import com.jameswolfeoliver.pigeon.Listeners.PaginatedScrollListener;
 import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
 import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
+import com.jameswolfeoliver.pigeon.Models.MessageInfo;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Receivers.IncomingMessageReceiver;
+import com.jameswolfeoliver.pigeon.Receivers.SmsBroadcastReceiver;
 import com.jameswolfeoliver.pigeon.SqlWrappers.MessagesWrapper;
 import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import java.util.ArrayList;
 
-import Models.Contact;
-import Models.Conversation;
-import Models.Message;
+import com.jameswolfeoliver.pigeon.Models.Contact;
+import com.jameswolfeoliver.pigeon.Models.Conversation;
+import com.jameswolfeoliver.pigeon.Models.Message;
 
 public class ConversationActivity extends AppCompatActivity
         implements View.OnFocusChangeListener, View.OnClickListener {
@@ -301,29 +303,6 @@ public class ConversationActivity extends AppCompatActivity
                     abortBroadcast();
                 }
             }
-        }
-    }
-
-    private abstract class SmsBroadcastReceiver extends BroadcastReceiver {
-        protected int numberOfMessageParts;
-
-        private SmsBroadcastReceiver(int numberOfMessageParts) {
-            this.numberOfMessageParts = numberOfMessageParts;
-        }
-    }
-
-
-    private class MessageInfo {
-        String reason;
-        boolean failed;
-
-        private void fail(String reason) {
-            this.reason = reason;
-            failed = true;
-        }
-
-        private boolean isFailed() {
-            return failed;
         }
     }
 }

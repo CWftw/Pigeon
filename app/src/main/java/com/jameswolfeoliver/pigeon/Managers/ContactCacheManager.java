@@ -9,7 +9,7 @@ import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import Models.Contact;
+import com.jameswolfeoliver.pigeon.Models.Contact;
 
 public class ContactCacheManager {
     private static ContactCacheManager instance;

@@ -128,7 +128,7 @@ public class TextService extends Service {
         PendingIntent stopIntent = PendingIntent.getService(this, 0, serviceIntent, 0);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, ConnectionActivity.class), 0);
         return new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.app_icon_circle)
+                .setSmallIcon(R.drawable.app_icon)
                 .setWhen(System.currentTimeMillis())
                 .addAction(R.drawable.ic_phonelink_off_light, getString(R.string.disconnect), stopIntent)
                 .setOngoing(true)

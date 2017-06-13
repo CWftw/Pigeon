@@ -3,8 +3,10 @@ package com.jameswolfeoliver.pigeon.Utilities;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Telephony;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
@@ -60,6 +62,18 @@ public class PigeonApplication extends Application implements Application.Activi
         }
         return restServer;
     }
+
+    public static boolean isDefaultSmsApp() {
+        return Telephony.Sms.getDefaultSmsPackage(getAppContext()).equals(getAppContext().getPackageName());
+    }
+
+    public static void promptUserToChangeDefaultSmsApp() {
+        Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+        intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, getAppContext().getPackageName());
+        getAppContext().startActivity(intent);
+    }
+
+
 
     public static boolean isApplicationVisible() {
         return started > stopped;

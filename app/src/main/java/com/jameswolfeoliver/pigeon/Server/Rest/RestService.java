@@ -1,7 +1,7 @@
 package com.jameswolfeoliver.pigeon.Server.Rest;
 
 
-import Models.VersionResponse;
+import com.jameswolfeoliver.pigeon.Models.VersionResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

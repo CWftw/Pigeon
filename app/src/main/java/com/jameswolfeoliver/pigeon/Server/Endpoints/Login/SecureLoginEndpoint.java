@@ -2,8 +2,8 @@ package com.jameswolfeoliver.pigeon.Server.Endpoints.Login;
 
 import com.jameswolfeoliver.pigeon.Managers.SecurityHelper;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
-import Models.ClientRequests.LoginRequest;
-import Models.ClientResponses.LoginResponse;
+import com.jameswolfeoliver.pigeon.Models.ClientRequests.LoginRequest;
+import com.jameswolfeoliver.pigeon.Models.ClientResponses.LoginResponse;
 import com.jameswolfeoliver.pigeon.Server.TextServer;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jaredrummler.android.device.DeviceName;

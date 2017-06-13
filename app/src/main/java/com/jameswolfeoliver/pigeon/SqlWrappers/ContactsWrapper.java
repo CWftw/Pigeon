@@ -16,7 +16,7 @@ import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import Models.Contact;
+import com.jameswolfeoliver.pigeon.Models.Contact;
 
 public class ContactsWrapper implements LoaderManager.LoaderCallbacks<Cursor>, Wrapper<Contact> {
 

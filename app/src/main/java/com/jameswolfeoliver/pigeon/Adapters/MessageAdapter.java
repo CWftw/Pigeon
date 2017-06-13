@@ -17,9 +17,9 @@ import com.jameswolfeoliver.pigeon.Utilities.Utils;
 
 import java.util.ArrayList;
 
-import Models.Contact;
-import Models.Conversation;
-import Models.Message;
+import com.jameswolfeoliver.pigeon.Models.Contact;
+import com.jameswolfeoliver.pigeon.Models.Conversation;
+import com.jameswolfeoliver.pigeon.Models.Message;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.BaseHolder> {
 
