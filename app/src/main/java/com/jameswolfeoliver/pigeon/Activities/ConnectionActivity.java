@@ -8,11 +8,10 @@ import android.support.v7.widget.RecyclerView;
 
 import com.jameswolfeoliver.pigeon.Adapters.ConnectionsAdapter;
 import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
+import com.jameswolfeoliver.pigeon.Models.Connection;
 import com.jameswolfeoliver.pigeon.R;
 
 import java.util.ArrayList;
-
-import com.jameswolfeoliver.pigeon.Models.Connection;
 
 public class ConnectionActivity extends AppCompatActivity {
 

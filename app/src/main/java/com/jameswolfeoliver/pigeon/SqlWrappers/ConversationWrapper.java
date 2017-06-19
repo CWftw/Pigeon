@@ -27,8 +27,7 @@ public class ConversationWrapper implements LoaderManager.LoaderCallbacks<Cursor
     private static final int STATUS_INDEX = 7;
     private static final String SELECTION_SUFFIX = " LIKE ?";
     private static final String SORT_ORDER = "date desc";
-    private final Uri CONVERSATIONS_CONTENT_URI = Uri.parse("content://mms-sms/conversations");
-    private static final String[] PROJECTION = new String[] {
+    private static final String[] PROJECTION = new String[]{
             "address",
             "person",
             "date",
@@ -37,9 +36,7 @@ public class ConversationWrapper implements LoaderManager.LoaderCallbacks<Cursor
             "type",
             "read",
             "status"};
-
-
-
+    private final Uri CONVERSATIONS_CONTENT_URI = Uri.parse("content://mms-sms/conversations");
     private SparseArray<SqlCallback<Conversation>> listeners;
 
     public ConversationWrapper() {
@@ -51,7 +48,7 @@ public class ConversationWrapper implements LoaderManager.LoaderCallbacks<Cursor
     }
 
     private String[] getSelectionArgs(String query) {
-        return new String[] {"%" + query + "%"};
+        return new String[]{"%" + query + "%"};
     }
 
     public void unregisterCallback(int callerId) {
@@ -71,10 +68,11 @@ public class ConversationWrapper implements LoaderManager.LoaderCallbacks<Cursor
             activity.get().getLoaderManager().restartLoader(CursorIds.CONVERSATIONS_WRAPPER_ID, null, this);
         } else {
             activity.get().getLoaderManager().initLoader(CursorIds.CONVERSATIONS_WRAPPER_ID, null, this);
-        }    }
+        }
+    }
 
     public void queryConversations(String selectionDimension, String query, int callerId,
-                              WeakReference<Activity> activity, SqlCallback<Conversation> conversationCallback) {
+                                   WeakReference<Activity> activity, SqlCallback<Conversation> conversationCallback) {
         this.listeners.put(callerId, conversationCallback);
         if (activity.get()
                 .getLoaderManager()
@@ -115,7 +113,7 @@ public class ConversationWrapper implements LoaderManager.LoaderCallbacks<Cursor
                         .setRead(cursor.getInt(READ_INDEX));
                 conversations.add(builder.build());
             }
-            for (int i = 0; i <listeners.size(); i++) {
+            for (int i = 0; i < listeners.size(); i++) {
                 SqlCallback<Conversation> listener = listeners.valueAt(i);
                 listener.onQueryComplete(conversations);
             }

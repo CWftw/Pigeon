@@ -14,18 +14,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestClient {
+    private static final String BASE_URL = "http://jameswolfeoliver.github.io/assets/pigeon/";
+    private static RestClient instance;
     private RestService restService;
     private RestService stringResponseRestService;
-    private static RestClient instance;
-    private static final String BASE_URL = "http://jameswolfeoliver.github.io/assets/pigeon/";
 
-    private RestClient() {}
-
-    private RestService buildRestService(Converter.Factory factory) {
-        return this.restService = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(factory)
-                .build().create(RestService.class);
+    private RestClient() {
     }
 
     public static RestClient getInstance() {
@@ -33,6 +27,13 @@ public class RestClient {
             instance = new RestClient();
         }
         return instance;
+    }
+
+    private RestService buildRestService(Converter.Factory factory) {
+        return this.restService = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(factory)
+                .build().create(RestService.class);
     }
 
     public RestService getRestService() {

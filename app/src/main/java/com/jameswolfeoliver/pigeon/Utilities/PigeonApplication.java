@@ -37,15 +37,7 @@ public class PigeonApplication extends Application implements Application.Activi
         return context;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = getApplicationContext();
-        Fresco.initialize(this);
-        registerActivityLifecycleCallbacks(this);
-    }
-
-    public static SharedPreferences getSharedPreferences(){
+    public static SharedPreferences getSharedPreferences() {
         return context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
     }
 
@@ -73,14 +65,21 @@ public class PigeonApplication extends Application implements Application.Activi
         getAppContext().startActivity(intent);
     }
 
-
-
     public static boolean isApplicationVisible() {
         return started > stopped;
     }
 
     @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
+    public void onCreate() {
+        super.onCreate();
+        context = getApplicationContext();
+        Fresco.initialize(this);
+        registerActivityLifecycleCallbacks(this);
+    }
+
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+    }
 
     @Override
     public void onActivityStarted(Activity activity) {
@@ -88,10 +87,12 @@ public class PigeonApplication extends Application implements Application.Activi
     }
 
     @Override
-    public void onActivityResumed(Activity activity) {}
+    public void onActivityResumed(Activity activity) {
+    }
 
     @Override
-    public void onActivityPaused(Activity activity) {}
+    public void onActivityPaused(Activity activity) {
+    }
 
     @Override
     public void onActivityStopped(Activity activity) {
@@ -99,8 +100,10 @@ public class PigeonApplication extends Application implements Application.Activi
     }
 
     @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+    }
 
     @Override
-    public void onActivityDestroyed(Activity activity) {}
+    public void onActivityDestroyed(Activity activity) {
+    }
 }

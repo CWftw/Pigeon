@@ -24,7 +24,7 @@ public class PageCacheManager {
     public static final String INSECURE_LOGIN_FILE_NAME = "login_insecure.html";
     public static final String INBOX_FILE_NAME = "inbox.html";
     public static final String ERROR_FILE_NAME = "error.html";
-    
+
     private static void updateCacheIndex(final String index, final int version) {
         SharedPreferences sharedPrefs = PigeonApplication.getSharedPreferences();
         sharedPrefs.edit().putInt(index, version).apply();
@@ -46,81 +46,81 @@ public class PageCacheManager {
     }
 
     private static void updatePages(final VersionResponse serverVersion,
-                                   final RestServer.RestCallback<Boolean> updateCallback) {
+                                    final RestServer.RestCallback<Boolean> updateCallback) {
         SharedPreferences sharedPrefs = PigeonApplication.getSharedPreferences();
         if (sharedPrefs.getInt(INSECURE_LOGIN_KEY, 0)
                 < serverVersion.getLoginInsecureVersion()) {
             PigeonApplication.getRestServer().getPage(RestServer.INSECURE_LOGIN_PATH,
                     serverVersion.getLoginInsecureVersion(),
                     new RestServer.RestCallback<String>() {
-                @Override
-                public void onResult(String page) {
-                    if (page != null && !page.isEmpty()) {
-                        if (updatePage(INSECURE_LOGIN_FILE_NAME, page)) {
-                        updateCacheIndex(INSECURE_LOGIN_KEY, serverVersion.getLoginInsecureVersion());
-                        updatePages(serverVersion, updateCallback);
-                            return;
+                        @Override
+                        public void onResult(String page) {
+                            if (page != null && !page.isEmpty()) {
+                                if (updatePage(INSECURE_LOGIN_FILE_NAME, page)) {
+                                    updateCacheIndex(INSECURE_LOGIN_KEY, serverVersion.getLoginInsecureVersion());
+                                    updatePages(serverVersion, updateCallback);
+                                    return;
+                                }
+                            }
+                            updateCallback.onResult(Boolean.FALSE);
                         }
-                    }
-                    updateCallback.onResult(Boolean.FALSE);
-                }
-            });
+                    });
         } else if (sharedPrefs.getInt(SECURE_LOGIN_KEY, 0)
                 < serverVersion.getLoginSercureVersion()) {
             PigeonApplication.getRestServer().getPage(RestServer.SECURE_LOGIN_PATH,
                     serverVersion.getLoginSercureVersion(),
                     new RestServer.RestCallback<String>() {
-                @Override
-                public void onResult(String page) {
-                    if (page != null && !page.isEmpty()) {
-                        if (updatePage(SECURE_LOGIN_FILE_NAME, page)) {
-                            updateCacheIndex(SECURE_LOGIN_KEY, serverVersion.getLoginSercureVersion());
-                            updatePages(serverVersion, updateCallback);
-                            return;
+                        @Override
+                        public void onResult(String page) {
+                            if (page != null && !page.isEmpty()) {
+                                if (updatePage(SECURE_LOGIN_FILE_NAME, page)) {
+                                    updateCacheIndex(SECURE_LOGIN_KEY, serverVersion.getLoginSercureVersion());
+                                    updatePages(serverVersion, updateCallback);
+                                    return;
+                                }
+                            }
+                            updateCallback.onResult(Boolean.FALSE);
                         }
-                    }
-                    updateCallback.onResult(Boolean.FALSE);
-                }
-            });
+                    });
         } else if (sharedPrefs.getInt(INBOX_KEY, 0)
                 < serverVersion.getInboxVersion()) {
             PigeonApplication.getRestServer().getPage(RestServer.INBOX_PATH,
                     serverVersion.getInboxVersion(),
                     new RestServer.RestCallback<String>() {
-                @Override
-                public void onResult(String page) {
-                    if (page != null && !page.isEmpty()) {
-                        if (updatePage(INBOX_FILE_NAME, page)) {
-                            updateCacheIndex(INBOX_KEY, serverVersion.getLoginInsecureVersion());
-                            updatePages(serverVersion, updateCallback);
-                            return;
+                        @Override
+                        public void onResult(String page) {
+                            if (page != null && !page.isEmpty()) {
+                                if (updatePage(INBOX_FILE_NAME, page)) {
+                                    updateCacheIndex(INBOX_KEY, serverVersion.getLoginInsecureVersion());
+                                    updatePages(serverVersion, updateCallback);
+                                    return;
+                                }
+                            }
+                            updateCallback.onResult(Boolean.FALSE);
                         }
-                    }
-                    updateCallback.onResult(Boolean.FALSE);
-                }
-            });
+                    });
         } else if (sharedPrefs.getInt(ERROR_KEY, 0)
                 < serverVersion.getErrorVersion()) {
             PigeonApplication.getRestServer().getPage(RestServer.ERROR_PATH,
                     serverVersion.getErrorVersion(),
                     new RestServer.RestCallback<String>() {
-                @Override
-                public void onResult(String page) {
-                    if (page != null && !page.isEmpty()) {
-                        if (updatePage(ERROR_FILE_NAME, page)) {
-                            updateCacheIndex(ERROR_KEY, serverVersion.getErrorVersion());
-                            updatePages(serverVersion, updateCallback);
-                            return;
+                        @Override
+                        public void onResult(String page) {
+                            if (page != null && !page.isEmpty()) {
+                                if (updatePage(ERROR_FILE_NAME, page)) {
+                                    updateCacheIndex(ERROR_KEY, serverVersion.getErrorVersion());
+                                    updatePages(serverVersion, updateCallback);
+                                    return;
+                                }
+                            }
+                            updateCallback.onResult(Boolean.FALSE);
                         }
-                    }
-                    updateCallback.onResult(Boolean.FALSE);
-                }
-            });
+                    });
         } else {
             updateCallback.onResult(Boolean.TRUE);
         }
     }
-    
+
     private static boolean updatePage(final String fileName, final String updatedPage) {
         FileOutputStream fileIO = null;
         boolean succeeded = false;
@@ -154,7 +154,7 @@ public class PageCacheManager {
         String line = buf.readLine();
         StringBuilder sb = new StringBuilder();
 
-        while(line != null) {
+        while (line != null) {
             sb.append(line).append("\n");
             line = buf.readLine();
         }

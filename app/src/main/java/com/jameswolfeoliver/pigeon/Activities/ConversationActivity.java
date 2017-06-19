@@ -2,7 +2,6 @@ package com.jameswolfeoliver.pigeon.Activities;
 
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -24,6 +23,9 @@ import com.jameswolfeoliver.pigeon.Adapters.MessageAdapter;
 import com.jameswolfeoliver.pigeon.Listeners.PaginatedScrollListener;
 import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
 import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
+import com.jameswolfeoliver.pigeon.Models.Contact;
+import com.jameswolfeoliver.pigeon.Models.Conversation;
+import com.jameswolfeoliver.pigeon.Models.Message;
 import com.jameswolfeoliver.pigeon.Models.MessageInfo;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Receivers.IncomingMessageReceiver;
@@ -33,10 +35,6 @@ import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import java.util.ArrayList;
-
-import com.jameswolfeoliver.pigeon.Models.Contact;
-import com.jameswolfeoliver.pigeon.Models.Conversation;
-import com.jameswolfeoliver.pigeon.Models.Message;
 
 public class ConversationActivity extends AppCompatActivity
         implements View.OnFocusChangeListener, View.OnClickListener {
@@ -93,7 +91,12 @@ public class ConversationActivity extends AppCompatActivity
 
             @Override
             protected void paginated(final ArrayList<Message> messages) {
-                messageAdapter.removeLoading(lastLoadingItem);
+                messageRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        messageAdapter.removeLoading(lastLoadingItem);
+                    }
+                });
                 if (!messages.isEmpty()) {
                     messageRecyclerView.post(new Runnable() {
                         @Override
@@ -108,11 +111,10 @@ public class ConversationActivity extends AppCompatActivity
 
             @Override
             protected void paginating() {
-                lastLoadingItem = messageAdapter.appendLoading();
                 messageRecyclerView.post(new Runnable() {
                     @Override
                     public void run() {
-                        messageRecyclerView.scrollToPosition(lastLoadingItem);
+                        lastLoadingItem = messageAdapter.appendLoading();
                     }
                 });
                 Log.i(LOG_TAG, "Paginating...");
@@ -164,6 +166,7 @@ public class ConversationActivity extends AppCompatActivity
 
         SmsBroadcastReceiver sentSmsBroadcastReceiver = new SmsBroadcastReceiver(messageParts.size()) {
             MessageInfo messageInfo = new MessageInfo();
+
             @Override
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()) {
@@ -245,7 +248,7 @@ public class ConversationActivity extends AppCompatActivity
             // Manually do first call
             paginatedScrollListener.forcePaginate();
         } else {
-           getNewMessages();
+            getNewMessages();
         }
 
         // Register sms broadcast receiver
@@ -300,7 +303,6 @@ public class ConversationActivity extends AppCompatActivity
                             onMessageReceived(message);
                         }
                     });
-                    abortBroadcast();
                 }
             }
         }

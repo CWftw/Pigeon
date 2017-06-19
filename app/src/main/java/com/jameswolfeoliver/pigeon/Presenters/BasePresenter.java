@@ -22,7 +22,7 @@ public class BasePresenter {
                 boolean secure = intent.getBooleanExtra(TextService.Broadcast.SERVER_SECURE_KEY, false);
                 String uri = intent.getStringExtra(TextService.Broadcast.SERVER_ADDRESS_KEY);
                 PigeonApplication.getAppContext().unregisterReceiver(this);
-                if (callback != null ) callback.onInfoReceived(uri, secure, status);
+                if (callback != null) callback.onInfoReceived(uri, secure, status);
             }
         };
         PigeonApplication.getAppContext().registerReceiver(serviceInfoReceiver,
@@ -40,7 +40,7 @@ public class BasePresenter {
                 boolean secure = intent.getBooleanExtra(TextService.Broadcast.SERVER_SECURE_KEY, false);
                 String uri = intent.getStringExtra(TextService.Broadcast.SERVER_ADDRESS_KEY);
                 PigeonApplication.getAppContext().unregisterReceiver(this);
-                if (callback != null ) callback.onInfoReceived(uri, secure, status);
+                if (callback != null) callback.onInfoReceived(uri, secure, status);
             }
         };
         PigeonApplication.getAppContext().registerReceiver(serviceInfoReceiver,
@@ -58,7 +58,7 @@ public class BasePresenter {
                 boolean secure = intent.getBooleanExtra(TextService.Broadcast.SERVER_SECURE_KEY, false);
                 String uri = intent.getStringExtra(TextService.Broadcast.SERVER_ADDRESS_KEY);
                 PigeonApplication.getAppContext().unregisterReceiver(this);
-                if (callback != null ) callback.onInfoReceived(uri, secure, status);
+                if (callback != null) callback.onInfoReceived(uri, secure, status);
             }
         };
         PigeonApplication.getAppContext().registerReceiver(serviceInfoReceiver,

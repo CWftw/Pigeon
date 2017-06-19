@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="12dp"
     android:layout_marginBottom="12dp"
-    android:layout_weight="1">
+    android:layout_marginTop="12dp"
+    android:layout_weight="1"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="horizontal">
 
     <FrameLayout
         android:layout_width="0dp"
-        android:layout_weight="0.2"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="0.2">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/avatar"
@@ -20,41 +20,41 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal|top"
             fresco:actualImageScaleType="fitCenter"
-            fresco:placeholderImage="@drawable/ic_friend"
-            fresco:placeholderImageScaleType="fitCenter"
             fresco:failureImage="@drawable/ic_friend"
             fresco:failureImageScaleType="fitCenter"
-            fresco:roundAsCircle="true"/>
+            fresco:placeholderImage="@drawable/ic_friend"
+            fresco:placeholderImageScaleType="fitCenter"
+            fresco:roundAsCircle="true" />
     </FrameLayout>
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="0.8"
         android:layout_height="wrap_content"
+        android:layout_weight="0.8"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/address"
             android:layout_width="wrap_content"
-            android:paddingBottom="5dp"
+            android:layout_height="match_parent"
             android:maxLines="1"
-            android:textSize="15sp"
-            android:layout_height="match_parent" />
+            android:paddingBottom="5dp"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/snippet"
             android:layout_width="wrap_content"
-            android:paddingBottom="5dp"
+            android:layout_height="match_parent"
             android:maxLines="3"
-            android:textSize="13sp"
-            android:layout_height="match_parent" />
+            android:paddingBottom="5dp"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:maxLines="1"
-            android:textSize="12sp"
             android:textColor="@android:color/tertiary_text_dark"
-            android:layout_height="match_parent" />
+            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

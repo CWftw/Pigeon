@@ -3,17 +3,16 @@ package com.jameswolfeoliver.pigeon.Managers;
 import android.os.Handler;
 import android.util.LongSparseArray;
 
+import com.jameswolfeoliver.pigeon.Models.Contact;
 import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
 import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.jameswolfeoliver.pigeon.Models.Contact;
-
 public class ContactCacheManager {
-    private static ContactCacheManager instance;
     private static final int ID = 44;
+    private static ContactCacheManager instance;
     private final LongSparseArray<Contact> contacts;
     private Handler handler;
 

@@ -54,6 +54,7 @@ public class MessageReplyService extends Service {
 
         SmsBroadcastReceiver sentSmsBroadcastReceiver = new SmsBroadcastReceiver(messageParts.size()) {
             MessageInfo messageInfo = new MessageInfo();
+
             @Override
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()) {

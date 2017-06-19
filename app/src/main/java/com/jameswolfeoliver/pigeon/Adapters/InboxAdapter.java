@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
-import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Models.Contact;
 import com.jameswolfeoliver.pigeon.Models.Conversation;
+import com.jameswolfeoliver.pigeon.R;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -10,13 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jameswolfeoliver.pigeon.Activities.ConnectionActivity;
+import com.jameswolfeoliver.pigeon.Models.Connection;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import com.jameswolfeoliver.pigeon.Models.Connection;
 
 
 public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionsAdapter.ConnectionHolder> {

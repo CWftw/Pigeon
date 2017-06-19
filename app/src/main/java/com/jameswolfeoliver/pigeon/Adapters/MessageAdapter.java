@@ -11,15 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.jameswolfeoliver.pigeon.Models.Contact;
+import com.jameswolfeoliver.pigeon.Models.Conversation;
+import com.jameswolfeoliver.pigeon.Models.Message;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jameswolfeoliver.pigeon.Utilities.Utils;
 
 import java.util.ArrayList;
-
-import com.jameswolfeoliver.pigeon.Models.Contact;
-import com.jameswolfeoliver.pigeon.Models.Conversation;
-import com.jameswolfeoliver.pigeon.Models.Message;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.BaseHolder> {
 
@@ -87,7 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.BaseHold
 
     @Override
     public void onBindViewHolder(BaseHolder baseHolder, int position) {
-        if(baseHolder.getType() == TYPE_MESSAGE && baseHolder instanceof MessageHolder) {
+        if (baseHolder.getType() == TYPE_MESSAGE && baseHolder instanceof MessageHolder) {
             MessageHolder holder = ((MessageHolder) baseHolder);
             if (dataSet.get(position + 1) != null) {
                 holder.setMessage(dataSet.get(position), contact, dataSet.get(position + 1).getType());

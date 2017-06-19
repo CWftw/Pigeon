@@ -5,13 +5,15 @@
         android:id="@+id/action_connect_to_pc"
         android:icon="@drawable/ic_phonelink_light"
         android:title="@string/connect_to_pc"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <!-- Settings, should always be in the overflow -->
-    <item android:id="@+id/action_view_connections"
+    <item
+        android:id="@+id/action_view_connections"
         android:title="@string/connections"
-        app:showAsAction="never"/>
-    <item android:id="@+id/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
         android:title="@string/settings"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

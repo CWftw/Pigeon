@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jameswolfeoliver.pigeon">
 
     <!--Start Normal Permissions-->
@@ -36,25 +35,27 @@
             android:theme="@style/AppTheme.launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".Activities.InboxActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
             android:name=".Activities.ConversationActivity"
-            android:theme="@style/AppTheme"
             android:parentActivityName=".Activities.InboxActivity"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
                 <action android:name="android.intent.action.SENDTO" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="sms" />
                 <data android:scheme="smsto" />
                 <data android:scheme="mms" />
@@ -64,9 +65,9 @@
 
         <activity
             android:name=".Activities.ConnectionActivity"
-            android:theme="@style/AppTheme"
             android:parentActivityName=".Activities.InboxActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <receiver android:name=".Receivers.BackgroundSmsReceiver">
             <intent-filter>
@@ -74,28 +75,34 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".Receivers.WapPushDeliverReceiver"
+        <receiver
+            android:name=".Receivers.WapPushDeliverReceiver"
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
-                <data android:mimeType="application/vnd.wap.mms-message"/>
+                <data android:mimeType="application/vnd.wap.mms-message" />
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".Receivers.SmsDeliverReceiver"
+        <receiver
+            android:name=".Receivers.SmsDeliverReceiver"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".Services.TextService" android:exported="false"/>
-        <service android:name=".Services.MessageReplyService"
+        <service
+            android:name=".Services.TextService"
+            android:exported="false" />
+        <service
+            android:name=".Services.MessageReplyService"
             android:exported="true"
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>
                 <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="sms" />
                 <data android:scheme="smsto" />
                 <data android:scheme="mms" />

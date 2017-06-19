@@ -10,17 +10,17 @@ public class LoginResponse {
     @SerializedName("error")
     private int errorCode;
 
+    public LoginResponse(boolean wasSuccessful, int errorCode) {
+        this.wasSuccessful = wasSuccessful;
+        this.errorCode = errorCode;
+    }
+
     public void setErrorCode(int errorCode) {
         this.errorCode = errorCode;
     }
 
     public void setWasSuccessful(boolean wasSuccessful) {
         this.wasSuccessful = wasSuccessful;
-    }
-
-    public LoginResponse(boolean wasSuccessful, int errorCode) {
-        this.wasSuccessful = wasSuccessful;
-        this.errorCode = errorCode;
     }
 
     @Override

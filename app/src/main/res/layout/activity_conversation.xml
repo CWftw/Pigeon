@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_weight="1">
+    android:layout_weight="1"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/layout_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:padding="8dp"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        android:padding="8dp">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/action_more"
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            app:srcCompat="@drawable/ic_more"
-            android:layout_alignParentStart="true"/>
+            app:srcCompat="@drawable/ic_more" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/action_send"
             android:layout_width="25dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            app:srcCompat="@drawable/ic_send"
-            android:layout_alignParentEnd="true"/>
+            app:srcCompat="@drawable/ic_send" />
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/action_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="35dp"
+            android:layout_centerVertical="true"
             android:layout_toEndOf="@id/action_more"
             android:layout_toStartOf="@id/action_send"
-            android:layout_centerVertical="true"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
             android:background="@android:color/transparent"
             android:hint="Compose a message..."
+            android:inputType="textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences|text"
+            android:minHeight="35dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
             android:textColor="@color/colorWhite"
             android:textColorHint="@android:color/white"
-            android:textSize="16sp"
-            android:inputType="textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences|text" />
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/action_view_messages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/layout_chat"
         android:layout_alignParentTop="true"
         android:background="@color/colorWhite"
-        android:backgroundTint="@color/transparentBlack"
-        android:layout_above="@id/layout_chat"/>
+        android:backgroundTint="@color/transparentBlack" />
 </RelativeLayout>

@@ -40,6 +40,10 @@ public class KeystoreHelper {
     private static KeystoreHelper instance;
     private KeystoreManager manager;
 
+    private KeystoreHelper() {
+        manager = new KeystoreManager();
+    }
+
     public static KeystoreHelper getInstance() {
         if (instance == null) {
             instance = new KeystoreHelper();
@@ -47,8 +51,17 @@ public class KeystoreHelper {
         return instance;
     }
 
-    private KeystoreHelper() {
-        manager = new KeystoreManager();
+    private static void savePassword(String pass) {
+        Log.d(LOG_TAG, "Password: " + pass);
+        SharedPreferences preferences = PigeonApplication.getSharedPreferences();
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(PASSWORD_KEY, pass);
+        editor.commit();
+    }
+
+    public static String getPassword() {
+        Log.d(LOG_TAG, "Saved pass: " + PigeonApplication.getSharedPreferences().getString(PASSWORD_KEY, null));
+        return PigeonApplication.getSharedPreferences().getString(PASSWORD_KEY, null);
     }
 
     public InputStream getKeystoreAsInputStream() {
@@ -65,19 +78,6 @@ public class KeystoreHelper {
             e.printStackTrace();
             return null;
         }
-    }
-
-    private static void savePassword(String pass) {
-        Log.d(LOG_TAG, "Password: " + pass);
-        SharedPreferences preferences = PigeonApplication.getSharedPreferences();
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(PASSWORD_KEY, pass);
-        editor.commit();
-    }
-
-    public static String getPassword() {
-        Log.d(LOG_TAG, "Saved pass: " + PigeonApplication.getSharedPreferences().getString(PASSWORD_KEY, null));
-        return PigeonApplication.getSharedPreferences().getString(PASSWORD_KEY, null);
     }
 
     private class KeystoreManager {

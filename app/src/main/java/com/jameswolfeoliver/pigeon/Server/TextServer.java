@@ -34,11 +34,6 @@ public class TextServer extends NanoHTTPD {
     public static final String LOG_TAG = TextServer.class.getSimpleName();
     private final static String CHARSET_UTF8 = "UTF-8";
     private final static int PORT = 8080;
-    private AtomicBoolean isSecure = new AtomicBoolean(false);
-    private AtomicBoolean isStarted = new AtomicBoolean(false);
-    private String serverIp;
-    private String serverUri;
-
     // Default HTML Response
     private static String BAD_REQUEST;
     private static String NOT_FOUND;
@@ -46,44 +41,41 @@ public class TextServer extends NanoHTTPD {
     private static String FORBIDDEN;
     private static String LOGIN_SECURE;
     private static String LOGIN_INSECURE;
-
-    // region Getters
-    public String getServerUri() {
-        return serverUri;
-    }
-    public String getServerIp() {
-        return serverIp;
-    }
-    public static String getForbidden() {
-        return FORBIDDEN;
-    }
-    public static String getLoginSecure() {
-        return LOGIN_SECURE;
-    }
-    public static String getLoginInsecure() {
-        return LOGIN_INSECURE;
-    }
-    public static String getNotFound() {
-        return NOT_FOUND;
-    }
-    public static String getBadRequest() {
-        return BAD_REQUEST;
-    }
-    public static String getInternalError() {
-        return INTERNAL_ERROR;
-    }
-    public boolean isStarted() {
-        return isStarted.get();
-    }
-    public boolean getIsSecure() {
-        return isSecure.get();
-    }
-    // endregion Getters
+    private AtomicBoolean isSecure = new AtomicBoolean(false);
+    private AtomicBoolean isStarted = new AtomicBoolean(false);
+    private String serverIp;
+    private String serverUri;
+    // region Helper Thread
+    private ExecutorService helperThread;
 
     // region Server Setup
     public TextServer() {
         super(PORT);
         helperThread = Executors.newSingleThreadExecutor();
+    }
+
+    public static String getForbidden() {
+        return FORBIDDEN;
+    }
+
+    public static String getLoginSecure() {
+        return LOGIN_SECURE;
+    }
+
+    public static String getLoginInsecure() {
+        return LOGIN_INSECURE;
+    }
+
+    public static String getNotFound() {
+        return NOT_FOUND;
+    }
+
+    public static String getBadRequest() {
+        return BAD_REQUEST;
+    }
+
+    public static String getInternalError() {
+        return INTERNAL_ERROR;
     }
 
     private static SSLServerSocketFactory makeSSLSocketFactory() {
@@ -105,6 +97,29 @@ public class TextServer extends NanoHTTPD {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void runOnUiThread(Runnable runOnUi) {
+        Handler uiHandler = new Handler(PigeonApplication.getAppContext().getMainLooper());
+        uiHandler.post(runOnUi);
+    }
+    // endregion Getters
+
+    // region Getters
+    public String getServerUri() {
+        return serverUri;
+    }
+
+    public String getServerIp() {
+        return serverIp;
+    }
+
+    public boolean isStarted() {
+        return isStarted.get();
+    }
+
+    public boolean getIsSecure() {
+        return isSecure.get();
     }
 
     @Override
@@ -188,6 +203,7 @@ public class TextServer extends NanoHTTPD {
         };
         helperThread.submit(textServerInitRunnable);
     }
+    // endregion ServerSetup
 
     private void initDefaultResponses() {
         String generalError;
@@ -223,14 +239,6 @@ public class TextServer extends NanoHTTPD {
         }
         return generalError.replace("{CODE}", Integer.toString(error)).replace("{MESSAGE}", message);
     }
-    // endregion ServerSetup
-
-    // region Helper Thread
-    private ExecutorService helperThread;
-    public static void runOnUiThread(Runnable runOnUi) {
-        Handler uiHandler = new Handler(PigeonApplication.getAppContext().getMainLooper());
-        uiHandler.post(runOnUi);
-    }
     // endregion Helper Thread
 
     @Override
@@ -257,6 +265,7 @@ public class TextServer extends NanoHTTPD {
     // Callback interface for time consuming tasks
     public interface StartServerCallback<E> {
         void onSuccess(E... e);
+
         void onFailure(Exception e);
     }
 }

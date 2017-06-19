@@ -3,9 +3,9 @@ package com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations;
 import android.telephony.SmsManager;
 
 import com.google.gson.JsonSyntaxException;
-import com.jameswolfeoliver.pigeon.Server.Endpoint;
-import com.jameswolfeoliver.pigeon.Models.Conversation;
 import com.jameswolfeoliver.pigeon.Models.ClientRequests.MessageRequest;
+import com.jameswolfeoliver.pigeon.Models.Conversation;
+import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.TextServer;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 

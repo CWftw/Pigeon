@@ -21,7 +21,7 @@ public class LoginRequest {
         return password;
     }
 
-   public boolean hasUserAgreed() {
+    public boolean hasUserAgreed() {
         return userHasAgreed;
     }
 }

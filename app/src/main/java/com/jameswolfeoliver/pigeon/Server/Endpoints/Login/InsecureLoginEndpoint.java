@@ -16,7 +16,7 @@ import java.util.Map;
 
 import fi.iki.elonen.NanoHTTPD;
 
-public class InsecureLoginEndpoint extends Endpoint{
+public class InsecureLoginEndpoint extends Endpoint {
     public static final String LOG_TAG = InsecureLoginEndpoint.class.getSimpleName();
 
     // Login errors
@@ -51,7 +51,7 @@ public class InsecureLoginEndpoint extends Endpoint{
         return buildHtmlResponse(TextServer.getLoginInsecure(), NanoHTTPD.Response.Status.OK);
     }
 
-    private static String buildLogInResponse(Map<String, String> bodyMap, String name, String ip)  {
+    private static String buildLogInResponse(Map<String, String> bodyMap, String name, String ip) {
         int error = NO_ERROR;
         final boolean termsChecked = bodyMap.get("hasAgreedToTerms").equals("true");
         JSONObject responseJson = new JSONObject();

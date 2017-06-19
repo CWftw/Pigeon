@@ -25,15 +25,15 @@ public class SecurityHelper {
     private Thread securityThread;
     private SecurityManager manager;
 
+    private SecurityHelper() {
+        manager = new SecurityManager();
+    }
+
     public static SecurityHelper getInstance() {
         if (securityHelper == null) {
             securityHelper = new SecurityHelper();
         }
         return securityHelper;
-    }
-
-    private SecurityHelper() {
-        manager = new SecurityManager();
     }
 
     public boolean storeUserPassword(final String password, final TokenCallback callback) {
@@ -50,7 +50,7 @@ public class SecurityHelper {
                 }
             }
         };
-        if (securityThread  != null && securityThread.isAlive() && !securityThread.isInterrupted()) {
+        if (securityThread != null && securityThread.isAlive() && !securityThread.isInterrupted()) {
             securityThread.interrupt();
             return false;
         } else {
@@ -119,6 +119,18 @@ public class SecurityHelper {
         return PigeonApplication.getSharedPreferences().getString(TOKEN_KEY, null);
     }
 
+    public interface AuthenticationCallback {
+        void onUserAuthenticated();
+
+        void onUserAuthenticationFailed();
+    }
+
+    public interface TokenCallback {
+        void onTokenGenerated();
+
+        void onTokenGenerationFailed();
+    }
+
     private class SecurityManager {
         private static final String TOKEN_ID = "$token$";
         private static final int DEFAULT_COST = 65536;
@@ -176,16 +188,6 @@ public class SecurityHelper {
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(DEFAULT_ALGORITHM);
             return keyFactory.generateSecret(pbeKeySpec).getEncoded();
         }
-    }
-
-    public interface AuthenticationCallback {
-        void onUserAuthenticated();
-        void onUserAuthenticationFailed();
-    }
-
-    public interface TokenCallback {
-        void onTokenGenerated();
-        void onTokenGenerationFailed();
     }
 }
 

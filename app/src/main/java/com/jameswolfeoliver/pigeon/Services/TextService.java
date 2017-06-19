@@ -18,31 +18,11 @@ import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jameswolfeoliver.pigeon.Utilities.Utils;
 
 public class TextService extends Service {
-    private static final String LOG_TAG = TextService.class.getSimpleName();
-    private static final int NOTIFICATION_ID = 1912;
     public static final String TEXT_SERVICE_UPDATE_ACTION = "TEXT_SERVICE_UPDATE_ACTION";
     public static final String COMMAND_KEY = "command";
     public static final String SECURE_KEY = "secure";
-
-    public static class Commands {
-        public static final int COMMAND_INFO = 3;
-        public static final int COMMAND_START = 2;
-        public static final int COMMAND_STOP = 1;
-        public static final int COMMAND_NONE = -1;
-    }
-
-    public static class Status {
-        public static final int RUNNING = 1;
-        public static final int STOPPED = 2;
-    }
-
-    public static class Broadcast {
-        public static final String SERVER_STATUS_KEY = "server_status";
-        public static final String SERVER_ADDRESS_KEY = "server_address";
-        public static final String SERVER_SECURE_KEY = "server_is_secure";
-
-    }
-
+    private static final String LOG_TAG = TextService.class.getSimpleName();
+    private static final int NOTIFICATION_ID = 1912;
     private TextServer textServer;
     private boolean secureServer;
 
@@ -143,5 +123,24 @@ public class TextService extends Service {
         NotificationManager notificationManager = (NotificationManager)
                 getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
+    }
+
+    public static class Commands {
+        public static final int COMMAND_INFO = 3;
+        public static final int COMMAND_START = 2;
+        public static final int COMMAND_STOP = 1;
+        public static final int COMMAND_NONE = -1;
+    }
+
+    public static class Status {
+        public static final int RUNNING = 1;
+        public static final int STOPPED = 2;
+    }
+
+    public static class Broadcast {
+        public static final String SERVER_STATUS_KEY = "server_status";
+        public static final String SERVER_ADDRESS_KEY = "server_address";
+        public static final String SERVER_SECURE_KEY = "server_is_secure";
+
     }
 }

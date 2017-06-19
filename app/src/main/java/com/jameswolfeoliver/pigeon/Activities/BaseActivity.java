@@ -13,8 +13,8 @@ import com.jameswolfeoliver.pigeon.Utilities.NetworkStateReceiver;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 public abstract class BaseActivity extends AppCompatActivity implements NetworkStateReceiver.NetworkStateReceiverListener {
-    private NetworkStateReceiver networkStateReceiver;
     protected BasePresenter basePresenter;
+    private NetworkStateReceiver networkStateReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity implements NetworkS
     @Override
     abstract public void onNetworkStateChange(boolean isAvailable);
 
-    protected void showConnectionSuccess(String loginUrl){
+    protected void showConnectionSuccess(String loginUrl) {
         Snackbar.make(getWindow().getDecorView().getRootView(), String.format(getString(R.string.connected_message), loginUrl), Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, new View.OnClickListener() {
                     @Override
@@ -54,7 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity implements NetworkS
         PigeonApplication.getAppContext().registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
-    public void stopReceiver(){
+    public void stopReceiver() {
         if (networkStateReceiver != null) {
             networkStateReceiver.removeListener(this);
             PigeonApplication.getAppContext().unregisterReceiver(networkStateReceiver);

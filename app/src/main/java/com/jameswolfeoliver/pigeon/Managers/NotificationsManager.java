@@ -12,13 +12,12 @@ import android.support.v4.app.RemoteInput;
 
 import com.jameswolfeoliver.pigeon.Activities.ConnectionActivity;
 import com.jameswolfeoliver.pigeon.Activities.ConversationActivity;
-import com.jameswolfeoliver.pigeon.R;
-import com.jameswolfeoliver.pigeon.Services.MessageReplyService;
-import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
-
 import com.jameswolfeoliver.pigeon.Models.Contact;
 import com.jameswolfeoliver.pigeon.Models.Conversation;
 import com.jameswolfeoliver.pigeon.Models.Message;
+import com.jameswolfeoliver.pigeon.R;
+import com.jameswolfeoliver.pigeon.Services.MessageReplyService;
+import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 public class NotificationsManager {
     private static final String CONVERSATION_TAG = "conversation";

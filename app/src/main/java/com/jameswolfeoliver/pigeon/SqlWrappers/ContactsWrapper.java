@@ -11,12 +11,11 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.util.SparseArray;
 
+import com.jameswolfeoliver.pigeon.Models.Contact;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-
-import com.jameswolfeoliver.pigeon.Models.Contact;
 
 public class ContactsWrapper implements LoaderManager.LoaderCallbacks<Cursor>, Wrapper<Contact> {
 
@@ -26,7 +25,7 @@ public class ContactsWrapper implements LoaderManager.LoaderCallbacks<Cursor>, W
     private static final int CONTACT_THUMBNAIL_INDEX = 3;
     private static final int CONTACT_HAS_PHONE_NUMBER_INDEX = 4;
 
-    private static final String[] PROJECTION = new String[] {
+    private static final String[] PROJECTION = new String[]{
             Contacts._ID,
             Contacts.LOOKUP_KEY,
             Contacts.DISPLAY_NAME_PRIMARY,
@@ -49,7 +48,7 @@ public class ContactsWrapper implements LoaderManager.LoaderCallbacks<Cursor>, W
     }
 
     private String[] getSelectionArgs(String query) {
-        return new String[] {"%" + query + "%"};
+        return new String[]{"%" + query + "%"};
     }
 
     public void unregisterCallback(int callerId) {
@@ -146,7 +145,7 @@ public class ContactsWrapper implements LoaderManager.LoaderCallbacks<Cursor>, W
                     }
                 }
                 cursor.close();
-                for (int i = 0; i <listeners.size(); i++) {
+                for (int i = 0; i < listeners.size(); i++) {
                     SqlCallback<Contact> listener = listeners.valueAt(i);
                     listener.onQueryComplete(contacts);
                 }

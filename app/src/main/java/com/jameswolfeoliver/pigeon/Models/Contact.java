@@ -52,7 +52,7 @@ public class Contact {
     @Override
     public String toString() {
         String contactPhoneNumbers = "";
-        for(PhoneNumber phoneNumber : phoneNumbers) {
+        for (PhoneNumber phoneNumber : phoneNumbers) {
             contactPhoneNumbers += phoneNumber.toString() + "\n\t\t";
         }
         return String.format("id: %d; name: %s; lookupKey: %s;" +
@@ -129,7 +129,7 @@ public class Contact {
         @SerializedName("number")
         private final long number;
 
-        public PhoneNumber(String type, String number){
+        public PhoneNumber(String type, String number) {
             this.type = type;
             this.number = Long.parseLong(sanitizeNumber(number));
 
@@ -151,7 +151,7 @@ public class Contact {
 
         @Override
         public String toString() {
-            return getType() +": "+ getNumber();
+            return getType() + ": " + getNumber();
         }
 
         @Override

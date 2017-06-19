@@ -10,12 +10,16 @@ import java.util.Arrays;
 public class Utils {
     public static int convertToPixels(double sizeInDp) {
         float scale = PigeonApplication.getAppContext().getResources().getDisplayMetrics().density;
-        return (int) (sizeInDp*scale + 0.5f);
+        return (int) (sizeInDp * scale + 0.5f);
     }
 
     public static float convertToDp(int sizeInPixels) {
         int densityDpi = PigeonApplication.getAppContext().getResources().getDisplayMetrics().densityDpi;
         return sizeInPixels / (densityDpi / 160f);
+    }
+
+    public static boolean isStringNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 
     public static String intentToString(Intent intent) {

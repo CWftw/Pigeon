@@ -1,12 +1,11 @@
 package com.jameswolfeoliver.pigeon.Models;
 
 
-
 public class Connection {
     public static final int TYPE_COMPUTER = 0;
     public static final int TYPE_PHONE = 1;
     public static final int TYPE_TABLET = 2;
-    
+
     private String ip;
     private String name;
     private int type;
@@ -45,6 +44,7 @@ public class Connection {
 
     public static class Builder {
         private Connection connection;
+
         public Builder(String ip) {
             connection = new Connection(ip);
             connection.city = "";

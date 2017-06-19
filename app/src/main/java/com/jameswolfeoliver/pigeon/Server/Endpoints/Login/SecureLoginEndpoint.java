@@ -1,9 +1,9 @@
 package com.jameswolfeoliver.pigeon.Server.Endpoints.Login;
 
 import com.jameswolfeoliver.pigeon.Managers.SecurityHelper;
-import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Models.ClientRequests.LoginRequest;
 import com.jameswolfeoliver.pigeon.Models.ClientResponses.LoginResponse;
+import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.TextServer;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jaredrummler.android.device.DeviceName;
@@ -54,7 +54,7 @@ public class SecureLoginEndpoint extends Endpoint {
         return buildHtmlResponse(TextServer.getLoginSecure(), NanoHTTPD.Response.Status.OK);
     }
 
-    private static String buildLogInResponse(LoginRequest request)  {
+    private static String buildLogInResponse(LoginRequest request) {
         LoginResponse response = new LoginResponse(false, NO_ERROR);
 
         if (!request.hasUserAgreed()) {

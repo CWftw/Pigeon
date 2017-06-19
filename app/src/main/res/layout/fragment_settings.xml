@@ -1,76 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
     android:background="@color/whiteBackground"
-    android:layout_gravity="center_vertical">
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="none"
-        android:text="@string/server_settings"
         android:background="@color/colorAccent"
-        android:textColor="@android:color/white"
+        android:inputType="none"
         android:paddingStart="8dp"
-        android:textSize="19sp"
-        android:textAlignment="viewStart"/>
+        android:text="@string/server_settings"
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/white"
+        android:textSize="19sp" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
+        android:orientation="horizontal"
         android:paddingBottom="8dp"
+        android:paddingTop="8dp"
         android:weightSum="1">
+
         <TextView
             android:layout_width="0dp"
-            android:text="@string/server_device_name"
             android:layout_height="wrap_content"
+            android:layout_weight="0.5"
             android:paddingStart="16dp"
-            android:textSize="17sp"
-            android:layout_weight="0.5"
-            android:textAlignment="viewStart"/>
+            android:text="@string/server_device_name"
+            android:textAlignment="viewStart"
+            android:textSize="17sp" />
+
         <TextView
+            android:id="@+id/server_settings_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingEnd="16dp"
-            android:textSize="17sp"
             android:layout_weight="0.5"
+            android:paddingEnd="16dp"
             android:textAlignment="viewEnd"
-            android:id="@+id/server_settings_name" />
+            android:textSize="17sp" />
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:weightSum="1">
+
         <TextView
             android:layout_width="0dp"
-            android:text="@string/server_device_password"
             android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:textSize="17sp"
             android:layout_weight="0.4"
-            android:textAlignment="viewStart"/>
+            android:paddingStart="16dp"
+            android:text="@string/server_device_password"
+            android:textAlignment="viewStart"
+            android:textSize="17sp" />
+
         <EditText
+            android:id="@+id/sever_settings_password"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
             android:layout_weight="0.47"
-            android:textAlignment="viewEnd"
             android:hint="Touch to change"
-            android:id="@+id/sever_settings_password" />
+            android:textAlignment="viewEnd"
+            android:textSize="17sp" />
+
         <ImageView
+            android:id="@+id/sever_save_password"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.13"
-            android:paddingEnd="16dp"
             android:background="?attr/selectableItemBackground"
-            app:srcCompat="@android:drawable/ic_menu_send"
-            android:id="@+id/sever_save_password"/>
+            android:paddingEnd="16dp"
+            app:srcCompat="@android:drawable/ic_menu_send" />
 
     </LinearLayout>
 

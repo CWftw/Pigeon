@@ -8,18 +8,20 @@ import android.net.Uri;
 
 import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
 import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
-
 import com.jameswolfeoliver.pigeon.Models.Contact;
 import com.jameswolfeoliver.pigeon.Models.Conversation;
 import com.jameswolfeoliver.pigeon.Models.Message;
+import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
+import com.jameswolfeoliver.pigeon.Utilities.Utils;
 
 public class BackgroundSmsReceiver extends IncomingMessageReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
-        if (messageAddress != null && !messageAddress.isEmpty()
-                && messageBody != null && !messageBody.isEmpty()
+        if (PigeonApplication.isDefaultSmsApp()
+                && !Utils.isStringNullOrEmpty(messageAddress)
+                && !Utils.isStringNullOrEmpty(messageBody)
                 && messageDate != 0) {
             Contact.PhoneNumber phoneNumber = new Contact.PhoneNumber(null, messageAddress);
 
@@ -42,8 +44,6 @@ public class BackgroundSmsReceiver extends IncomingMessageReceiver {
             final Contact contact = ContactCacheManager.getInstance().getContact(phoneNumber.getNumber());
 
             NotificationsManager.createNotificationForMessageReceived(context, conversation, message, contact);
-
-            abortBroadcast();
         }
     }
 

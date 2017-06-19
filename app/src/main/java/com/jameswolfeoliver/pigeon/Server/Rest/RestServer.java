@@ -10,18 +10,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RestServer {
-    private static final String LOG_TAG = RestServer.class.getSimpleName();
-
     public static final String INSECURE_LOGIN_PATH = "login/login_insecure_v";
     public static final String SECURE_LOGIN_PATH = "login/login_secure_v";
     public static final String INBOX_PATH = "inbox/inbox_v";
     public static final String ERROR_PATH = "error/error_general_v";
+    private static final String LOG_TAG = RestServer.class.getSimpleName();
 
     public void getVersionInfo(final RestCallback<VersionResponse> callback) {
         RestClient.getInstance().getRestService().getLoginVersions().enqueue(new Callback<VersionResponse>() {
             @Override
             public void onResponse(Call<VersionResponse> call, Response<VersionResponse> response) {
-                if (response.isSuccessful() && response.body() != null ) {
+                if (response.isSuccessful() && response.body() != null) {
                     callback.onResult(response.body());
                 } else {
                     onFailure(call, new Throwable(Integer.toString(response.code())));

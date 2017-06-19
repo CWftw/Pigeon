@@ -23,15 +23,15 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     public void onReceive(Context context, Intent intent) {
-        if(intent == null || intent.getExtras() == null)
+        if (intent == null || intent.getExtras() == null)
             return;
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if(networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED) {
+        if (networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED) {
             connected = true;
-        } else if(intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,Boolean.FALSE)) {
+        } else if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, Boolean.FALSE)) {
             connected = false;
         }
 
@@ -39,12 +39,12 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     private void notifyStateToAll() {
-        for(NetworkStateReceiverListener listener : listeners)
+        for (NetworkStateReceiverListener listener : listeners)
             notifyState(listener);
     }
 
     private void notifyState(NetworkStateReceiverListener listener) {
-        if(connected == null || listener == null) return;
+        if (connected == null || listener == null) return;
         listener.onNetworkStateChange(connected);
     }
 

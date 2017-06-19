@@ -33,7 +33,7 @@ public class Conversation implements Serializable {
 
     @SerializedName("read")
     private int read;
-    
+
     @SerializedName("snippet")
     private String snippet;
 
@@ -77,8 +77,8 @@ public class Conversation implements Serializable {
     @Override
     public String toString() {
         return String.format("person: %s; threadId: %d; address: %s; date: %d;" +
-                "\n\tsnippet: %s; " +
-                "\n\t\ttype: %d; status: %d, read: %b;",
+                        "\n\tsnippet: %s; " +
+                        "\n\t\ttype: %d; status: %d, read: %b;",
                 person, threadId, address, date, snippet, type, status, getRead());
     }
 
@@ -153,7 +153,7 @@ public class Conversation implements Serializable {
             this.conversation.status = status;
             return this;
         }
-        
+
         public Conversation build() {
             return conversation;
         }
