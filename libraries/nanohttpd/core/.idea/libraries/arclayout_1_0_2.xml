@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="arclayout-1.0.2">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.android/build-cache/e0e04455a84914038fab57f071ed4277a6db87c1/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/e0e04455a84914038fab57f071ed4277a6db87c1/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.florent37/arclayout/1.0.2/fa2a41ad987c55eb445e4b1c031daee5a3d3f1ef/arclayout-1.0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
