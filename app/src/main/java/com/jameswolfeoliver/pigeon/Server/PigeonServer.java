@@ -18,6 +18,11 @@ import com.jameswolfeoliver.pigeon.Server.Endpoints.Login.InsecureLoginEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Login.SecureLoginEndpoint;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
+import org.nanohttpd.protocols.http.IHTTPSession;
+import org.nanohttpd.protocols.http.NanoHTTPD;
+import org.nanohttpd.protocols.http.response.Response;
+import org.nanohttpd.protocols.http.response.Status;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -28,7 +33,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLServerSocketFactory;
 
-import fi.iki.elonen.NanoHTTPD;
 
 public class TextServer extends NanoHTTPD {
     public static final String LOG_TAG = TextServer.class.getSimpleName();
@@ -258,7 +262,7 @@ public class TextServer extends NanoHTTPD {
             case Endpoints.MESSAGES_ENDPOINT:
                 return MessagesEndpoint.serve(session);
             default:
-                return Endpoint.buildHtmlResponse(NOT_FOUND, Response.Status.NOT_FOUND);
+                return Endpoint.buildHtmlResponse(NOT_FOUND, Status.NOT_FOUND);
         }
     }
 

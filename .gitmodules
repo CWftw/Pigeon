@@ -1,0 +1,3 @@
+[submodule "libraries/nanoHttpd"]
+	path = libraries/nanoHttpd
+	url = git@github.com:jameswolfeoliver/nanoHttpd.git
