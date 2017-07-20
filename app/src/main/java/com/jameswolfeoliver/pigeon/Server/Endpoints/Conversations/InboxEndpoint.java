@@ -1,28 +1,30 @@
 package com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations;
 
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
-import com.jameswolfeoliver.pigeon.Server.TextServer;
+import com.jameswolfeoliver.pigeon.Server.PigeonServer;
 
-import fi.iki.elonen.NanoHTTPD;
+import org.nanohttpd.protocols.http.IHTTPSession;
+import org.nanohttpd.protocols.http.response.Response;
+import org.nanohttpd.protocols.http.response.Status;
 
 public class InboxEndpoint extends Endpoint {
 
-    public static NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
+    public static Response serve(IHTTPSession session) {
         switch (session.getMethod()) {
             case GET:
                 return onGet(session);
             case POST:
                 return onPost(session);
             default:
-                return buildHtmlResponse(TextServer.getBadRequest(), NanoHTTPD.Response.Status.BAD_REQUEST);
+                return buildHtmlResponse(PigeonServer.getBadRequest(), Status.BAD_REQUEST);
         }
     }
 
-    private static NanoHTTPD.Response onPost(NanoHTTPD.IHTTPSession session) {
-        return buildHtmlResponse(TextServer.getForbidden(), NanoHTTPD.Response.Status.FORBIDDEN);
+    private static Response onPost(IHTTPSession session) {
+        return buildHtmlResponse(PigeonServer.getForbidden(), Status.FORBIDDEN);
     }
 
-    private static NanoHTTPD.Response onGet(NanoHTTPD.IHTTPSession session) {
-        return buildHtmlResponse(TextServer.getForbidden(), NanoHTTPD.Response.Status.FORBIDDEN);
+    private static Response onGet(IHTTPSession session) {
+        return buildHtmlResponse(PigeonServer.getForbidden(), Status.FORBIDDEN);
     }
 }

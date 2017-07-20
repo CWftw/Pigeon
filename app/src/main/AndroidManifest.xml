@@ -93,7 +93,7 @@
         </receiver>
 
         <service
-            android:name=".Services.TextService"
+            android:name=".Services.PigeonService"
             android:exported="false" />
         <service
             android:name=".Services.MessageReplyService"

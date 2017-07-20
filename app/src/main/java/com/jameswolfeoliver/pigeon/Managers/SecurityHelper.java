@@ -1,6 +1,7 @@
 package com.jameswolfeoliver.pigeon.Managers;
 
 import android.content.SharedPreferences;
+import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
 
@@ -11,6 +12,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,14 +21,14 @@ import javax.crypto.spec.PBEKeySpec;
 
 public class SecurityHelper {
     private static final String LOG_TAG = SecurityHelper.class.getSimpleName();
-    private static final String THREAD_NAME = "Security Helper Thread";
     private static final String TOKEN_KEY = "token_key";
     private static SecurityHelper securityHelper;
-    private Thread securityThread;
+    private ExecutorService helperThread;
     private SecurityManager manager;
 
     private SecurityHelper() {
         manager = new SecurityManager();
+        helperThread = PigeonApplication.getInstance().getHelperThread();
     }
 
     public static SecurityHelper getInstance() {
@@ -36,7 +38,7 @@ public class SecurityHelper {
         return securityHelper;
     }
 
-    public boolean storeUserPassword(final String password, final TokenCallback callback) {
+    public void storeUserPassword(final String password, final TokenCallback callback) {
         Runnable generateAndStoreToken = new Runnable() {
             @Override
             public void run() {
@@ -50,21 +52,13 @@ public class SecurityHelper {
                 }
             }
         };
-        if (securityThread != null && securityThread.isAlive() && !securityThread.isInterrupted()) {
-            securityThread.interrupt();
-            return false;
-        } else {
-            securityThread = new Thread(generateAndStoreToken);
-            securityThread.setName(THREAD_NAME);
-            securityThread.start();
-            return true;
-        }
+        helperThread.submit(generateAndStoreToken);
     }
 
     // Don't run on UI Thread
-    public boolean checkUserPassword(final String password) { //throws IllegalThreadStateException {
-        /*if (Looper.myLooper() == Looper.getMainLooper())
-            throw new IllegalThreadStateException("Don't run on" + Thread.currentThread().getName());*/
+    public boolean checkUserPassword(final String password) throws IllegalThreadStateException {
+        if (Looper.myLooper() == Looper.getMainLooper())
+            throw new IllegalThreadStateException("Don't run on " + Thread.currentThread().getName());
 
         try {
             return manager.authenticate(sanitizePassword(password), getToken());
@@ -75,7 +69,7 @@ public class SecurityHelper {
         }
     }
 
-    public boolean checkUserPassword(final String password, final AuthenticationCallback callback) {
+    public void checkUserPassword(final String password, final AuthenticationCallback callback) {
         Runnable generateAndStoreToken = new Runnable() {
             @Override
             public void run() {
@@ -92,14 +86,7 @@ public class SecurityHelper {
                 }
             }
         };
-        if (securityThread != null && securityThread.isAlive() && !securityThread.isInterrupted()) {
-            securityThread.interrupt();
-            return false;
-        } else {
-            securityThread = new Thread(generateAndStoreToken);
-            securityThread.start();
-            return true;
-        }
+        helperThread.submit(generateAndStoreToken);
     }
 
     private char[] sanitizePassword(String password) {

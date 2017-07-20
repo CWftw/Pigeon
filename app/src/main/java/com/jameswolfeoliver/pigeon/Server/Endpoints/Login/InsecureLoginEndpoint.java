@@ -5,16 +5,17 @@ import android.content.Intent;
 import com.jameswolfeoliver.pigeon.Activities.ConnectionActivity;
 import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
-import com.jameswolfeoliver.pigeon.Server.TextServer;
+import com.jameswolfeoliver.pigeon.Server.PigeonServer;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.nanohttpd.protocols.http.IHTTPSession;
+import org.nanohttpd.protocols.http.response.Response;
+import org.nanohttpd.protocols.http.response.Status;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import fi.iki.elonen.NanoHTTPD;
 
 public class InsecureLoginEndpoint extends Endpoint {
     public static final String LOG_TAG = InsecureLoginEndpoint.class.getSimpleName();
@@ -25,18 +26,18 @@ public class InsecureLoginEndpoint extends Endpoint {
     private final static int TERMS_UNCHECKED = 2;
     private final static int NO_USER_RESPONSE = 3;
 
-    public static NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
+    public static Response serve(IHTTPSession session) {
         switch (session.getMethod()) {
             case GET:
                 return onGet();
             case POST:
                 return onPost(session);
             default:
-                return buildHtmlResponse(TextServer.getBadRequest(), NanoHTTPD.Response.Status.BAD_REQUEST);
+                return buildHtmlResponse(PigeonServer.getBadRequest(), Status.BAD_REQUEST);
         }
     }
 
-    private static NanoHTTPD.Response onPost(NanoHTTPD.IHTTPSession session) {
+    private static Response onPost(IHTTPSession session) {
         Map<String, String> bodyMap = new HashMap<>();
         try {
             session.parseBody(bodyMap);
@@ -44,11 +45,11 @@ public class InsecureLoginEndpoint extends Endpoint {
             e.printStackTrace();
         }
         bodyMap = session.getParms();
-        return buildJsonResponse(buildLogInResponse(bodyMap, session.getRemoteHostName(), session.getRemoteIpAddress()), NanoHTTPD.Response.Status.OK);
+        return buildJsonResponse(buildLogInResponse(bodyMap, session.getRemoteHostName(), session.getRemoteIpAddress()), Status.OK);
     }
 
-    private static NanoHTTPD.Response onGet() {
-        return buildHtmlResponse(TextServer.getLoginInsecure(), NanoHTTPD.Response.Status.OK);
+    private static Response onGet() {
+        return buildHtmlResponse(PigeonServer.getLoginInsecure(), Status.OK);
     }
 
     private static String buildLogInResponse(Map<String, String> bodyMap, String name, String ip) {

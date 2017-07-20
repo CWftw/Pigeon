@@ -1,22 +1,20 @@
 package com.jameswolfeoliver.pigeon.SqlWrappers;
 
-import android.app.Activity;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
-import android.util.SparseArray;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.jameswolfeoliver.pigeon.Models.Message;
-import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
-public class MessagesWrapper implements Wrapper<Message>, LoaderManager.LoaderCallbacks<Cursor> {
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.annotations.Nullable;
 
+public class MessagesWrapper extends Wrapper<List<Message>> {
     private static final int ADDRESS_INDEX = 0;
     private static final int PERSON_INDEX = 1;
     private static final int DATE_INDEX = 2;
@@ -25,9 +23,6 @@ public class MessagesWrapper implements Wrapper<Message>, LoaderManager.LoaderCa
     private static final int TYPE_INDEX = 5;
     private static final int READ_INDEX = 6;
     private static final int STATUS_INDEX = 7;
-    private static final String LESS_THAN = " < ";
-    private static final String AND = " AND ";
-    private static final String EQUALS = " = ";
     private static final String SORT_ORDER = "date desc limit 25";
     private static final String[] PROJECTION = new String[]{
             "address",
@@ -39,46 +34,15 @@ public class MessagesWrapper implements Wrapper<Message>, LoaderManager.LoaderCa
             "read",
             "status"};
     private final Uri MESSAGES_CONTENT_URI = Uri.parse("content://mms-sms/complete-conversations");
-    private SparseArray<SqlCallback<Message>> listeners;
-    private WeakReference<Activity> activity;
     private long lastReceivedDate = -1L;
     private String threadId;
 
-    public MessagesWrapper(Activity activity, String threadId) {
+    public MessagesWrapper(String threadId) {
         super();
-        this.activity = new WeakReference<>(activity);
-        this.listeners = new SparseArray<>();
         this.threadId = threadId;
     }
 
-
-    @Override
-    public void get(int callerId, SqlCallback<Message> messageCallback, String... args) {
-        getPaginatedMessages(callerId, messageCallback, lastReceivedDate);
-    }
-
-    @Override
-    public void find(int callerId, SqlCallback<Message> messageCallback, String... args) {
-        getPaginatedMessages(callerId, messageCallback, Long.parseLong(args[0]));
-    }
-
-    private void getPaginatedMessages(int callerId,
-                                      SqlCallback<Message> messageCallback, long specifiedDate) {
-        if (activity == null || activity.get() == null) {
-            throw new IllegalStateException("Cannot user LoaderManager without activity reference");
-        }
-        this.listeners.put(callerId, messageCallback);
-        Bundle bundle = new Bundle();
-        bundle.putString(SELECTION_BUNDLE_KEY, getSelection(specifiedDate, threadId));
-        if (activity.get().getLoaderManager()
-                .getLoader(CursorIds.MESSAGES_WRAPPER_ID) != null) {
-            activity.get().getLoaderManager().restartLoader(CursorIds.MESSAGES_WRAPPER_ID, bundle, this);
-        } else {
-            activity.get().getLoaderManager().initLoader(CursorIds.MESSAGES_WRAPPER_ID, bundle, this);
-        }
-    }
-
-    private String getSelection(long lastReceivedDate, String threadId) {
+    public String selectByDateRangeAndThread(long lastReceivedDate, String threadId) {
         if (lastReceivedDate != -1) {
             return "date" + LESS_THAN + lastReceivedDate + AND + "thread_id" + EQUALS + threadId;
         } else {
@@ -87,57 +51,39 @@ public class MessagesWrapper implements Wrapper<Message>, LoaderManager.LoaderCa
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        String selection = bundle.getString(SELECTION_BUNDLE_KEY);
+    public Observable<List<Message>> fetch() {
+        return find(() -> selectByDateRangeAndThread(lastReceivedDate, threadId));
+    }
 
-        return new CursorLoader(
-                PigeonApplication.getAppContext(),
-                MESSAGES_CONTENT_URI,
+    @Override
+    void go(@NonNull ObservableEmitter<List<Message>> subscriber, @Nullable Query query) {
+        String selection = query != null ? query.getSelection() : null;
+        final Cursor cursor = getCursor(MESSAGES_CONTENT_URI,
                 PROJECTION,
                 selection,
                 null,
-                SORT_ORDER
-        );
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (listeners != null && listeners.size() != 0) {
-            ArrayList<Message> messages = new ArrayList<>();
-            int index = 0;
-            while (cursor.moveToNext()) {
-                Message.Builder builder = new Message.Builder(cursor.getInt(THREAD_ID_INDEX))
-                        .setAddress(cursor.getLong(ADDRESS_INDEX))
-                        .setDate(cursor.getLong(DATE_INDEX))
-                        .setPerson(cursor.getInt(PERSON_INDEX))
-                        .setType(cursor.getInt(TYPE_INDEX))
-                        .setBody(cursor.getString(SNIPPET_INDEX))
-                        .setStatus(cursor.getInt(STATUS_INDEX))
-                        .setRead(cursor.getInt(READ_INDEX));
-                messages.add(index, builder.build());
-                if (cursor.getLong(DATE_INDEX) < lastReceivedDate
-                        || lastReceivedDate == -1) {
-                    lastReceivedDate = cursor.getLong(DATE_INDEX);
-                }
-                index++;
+                SORT_ORDER);
+        List<Message> messages = new ArrayList<>();
+        int index = 0;
+        while (cursor.moveToNext()) {
+            Message.Builder builder = new Message.Builder(cursor.getInt(THREAD_ID_INDEX))
+                    .setAddress(cursor.getLong(ADDRESS_INDEX))
+                    .setDate(cursor.getLong(DATE_INDEX))
+                    .setPerson(cursor.getInt(PERSON_INDEX))
+                    .setType(cursor.getInt(TYPE_INDEX))
+                    .setBody(cursor.getString(SNIPPET_INDEX))
+                    .setStatus(cursor.getInt(STATUS_INDEX))
+                    .setRead(cursor.getInt(READ_INDEX));
+            messages.add(index, builder.build());
+            Log.i("James", builder.build().toString());
+            if (cursor.getLong(DATE_INDEX) < lastReceivedDate
+                    || lastReceivedDate == -1) {
+                lastReceivedDate = cursor.getLong(DATE_INDEX);
             }
-            cursor.close();
-            for (int i = 0; i < listeners.size(); i++) {
-                SqlCallback<Message> listener = listeners.valueAt(i);
-                listener.onQueryComplete(messages);
-            }
+            index++;
         }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
-
-    public void unregisterCallback(int callerId) {
-        if (listeners != null
-                && listeners.size() != 0) {
-            listeners.remove(callerId);
-        }
+        subscriber.onNext(messages);
+        cursor.close();
+        subscriber.onComplete();
     }
 }

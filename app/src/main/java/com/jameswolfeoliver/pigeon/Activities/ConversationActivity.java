@@ -16,7 +16,6 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.jameswolfeoliver.pigeon.Adapters.MessageAdapter;
@@ -31,10 +30,12 @@ import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Receivers.IncomingMessageReceiver;
 import com.jameswolfeoliver.pigeon.Receivers.SmsBroadcastReceiver;
 import com.jameswolfeoliver.pigeon.SqlWrappers.MessagesWrapper;
-import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.schedulers.Schedulers;
 
 public class ConversationActivity extends AppCompatActivity
         implements View.OnFocusChangeListener, View.OnClickListener {
@@ -42,13 +43,11 @@ public class ConversationActivity extends AppCompatActivity
     private static final String LOG_TAG = ConversationActivity.class.getSimpleName();
     private static final String SENT_ACTION = "SMS_SENT_ACTION";
     private static final String DELIVERED_ACTION = "SMS_DELIVERED_ACTION";
-    private static final int LISTENER_ID = 55;
-
 
     private AppCompatEditText chatEditText;
     private RecyclerView messageRecyclerView;
     private AppCompatImageView sendButton;
-    private PaginatedScrollListener<Message> paginatedScrollListener;
+    private PaginatedScrollListener<List<Message>> paginatedScrollListener;
     private MessagesWrapper messagesWrapper;
     private MessageAdapter messageAdapter;
     private Conversation conversation;
@@ -82,28 +81,20 @@ public class ConversationActivity extends AppCompatActivity
         // Setup data
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
         this.messageRecyclerView.setLayoutManager(linearLayoutManager);
-        this.messagesWrapper = new MessagesWrapper(this, Integer.toString(conversation.getThreadId()));
-        this.messageAdapter = new MessageAdapter(ConversationActivity.this, new ArrayList<Message>(), contact);
+        this.messagesWrapper = new MessagesWrapper(Integer.toString(conversation.getThreadId()));
+        this.messageAdapter = new MessageAdapter(ConversationActivity.this, new ArrayList<>(), contact);
         this.messageRecyclerView.setAdapter(messageAdapter);
 
-        this.paginatedScrollListener = new PaginatedScrollListener<Message>(linearLayoutManager, LISTENER_ID, 5, messagesWrapper) {
+        this.paginatedScrollListener = new PaginatedScrollListener<List<Message>>(linearLayoutManager, 5, messagesWrapper) {
             private int lastLoadingItem;
 
             @Override
-            protected void paginated(final ArrayList<Message> messages) {
-                messageRecyclerView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        messageAdapter.removeLoading(lastLoadingItem);
-                    }
-                });
+            protected void paginated(final List<Message> messages) {
+                messageRecyclerView.post(() -> messageAdapter.removeLoading(lastLoadingItem));
                 if (!messages.isEmpty()) {
-                    messageRecyclerView.post(new Runnable() {
-                        @Override
-                        public void run() {
+                    messageRecyclerView.post(() -> {
                             messageAdapter.append(messages);
                             loading.set(false);
-                        }
                     });
                 }
                 Log.i(LOG_TAG, "Paginated");
@@ -111,24 +102,12 @@ public class ConversationActivity extends AppCompatActivity
 
             @Override
             protected void paginating() {
-                messageRecyclerView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        lastLoadingItem = messageAdapter.appendLoading();
-                    }
-                });
+                messageRecyclerView.post(() -> lastLoadingItem = messageAdapter.appendLoading());
                 Log.i(LOG_TAG, "Paginating...");
             }
         };
         messageRecyclerView.addOnScrollListener(paginatedScrollListener);
         smsReceiver = new SmsReceiver();
-    }
-
-    private void showSoftKeyboard() {
-        if (chatEditText.requestFocus()) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(chatEditText, InputMethodManager.SHOW_IMPLICIT);
-        }
     }
 
     @Override
@@ -258,19 +237,14 @@ public class ConversationActivity extends AppCompatActivity
     }
 
     private void getNewMessages() {
-        messagesWrapper.find(LISTENER_ID, new SqlCallback<Message>() {
-            @Override
-            public void onQueryComplete(ArrayList<Message> results) {
-                messageAdapter.filteredPrepend(results);
-                messageRecyclerView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        messageRecyclerView.scrollToPosition(0);
-                    }
+        messagesWrapper.fetch()
+                .subscribeOn(Schedulers.io())
+                .subscribe(messages -> {
+                    messageAdapter.filteredPrepend(messages);
+                    messageRecyclerView.post(() -> {
+                            messageRecyclerView.scrollToPosition(0);
+                        });
                 });
-                messagesWrapper.unregisterCallback(LISTENER_ID);
-            }
-        }, String.valueOf(System.currentTimeMillis()));
     }
 
     private void onMessageReceived(Message message) {
@@ -297,12 +271,7 @@ public class ConversationActivity extends AppCompatActivity
                             .setDate(messageDate)
                             .setType(Conversation.TYPE_SENDER)
                             .build();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            onMessageReceived(message);
-                        }
-                    });
+                    runOnUiThread(() -> onMessageReceived(message));
                 }
             }
         }
