@@ -1,11 +1,22 @@
 package com.jameswolfeoliver.pigeon.Utilities;
 
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
+import android.util.SparseArray;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Utils {
     public static int convertToPixels(double sizeInDp) {
@@ -28,6 +39,16 @@ public class Utils {
         }
 
         return intent.toString() + " " + bundleToString(intent.getExtras());
+    }
+
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
     public static String bundleToString(Bundle bundle) {

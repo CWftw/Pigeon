@@ -7,13 +7,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Telephony;
+import android.support.multidex.MultiDexApplication;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jameswolfeoliver.pigeon.Server.Rest.RestServer;
 
-public class PigeonApplication extends Application implements Application.ActivityLifecycleCallbacks {
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class PigeonApplication extends MultiDexApplication implements Application.ActivityLifecycleCallbacks {
     private static final String SHARED_PREF = "pigeon_application_shared_pref";
     private static PigeonApplication instance = null;
     private static Context context = null;
@@ -21,15 +25,13 @@ public class PigeonApplication extends Application implements Application.Activi
     private static RestServer restServer = null;
     private static int started;
     private static int stopped;
+    private ExecutorService helperThread;
 
     public PigeonApplication() {
         super();
     }
 
     public synchronized static PigeonApplication getInstance() {
-        if (instance == null) {
-            instance = new PigeonApplication();
-        }
         return instance;
     }
 
@@ -55,6 +57,10 @@ public class PigeonApplication extends Application implements Application.Activi
         return restServer;
     }
 
+    public ExecutorService getHelperThread() {
+        return helperThread;
+    }
+
     public static boolean isDefaultSmsApp() {
         return Telephony.Sms.getDefaultSmsPackage(getAppContext()).equals(getAppContext().getPackageName());
     }
@@ -73,6 +79,8 @@ public class PigeonApplication extends Application implements Application.Activi
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+        instance = this;
+        helperThread = Executors.newSingleThreadExecutor();
         Fresco.initialize(this);
         registerActivityLifecycleCallbacks(this);
     }

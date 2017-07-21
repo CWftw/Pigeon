@@ -11,6 +11,7 @@ import com.jameswolfeoliver.pigeon.Managers.PageCacheManager;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Contacts.AvatarEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Contacts.ContactsEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations.ConversationsEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations.InboxEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations.MessagesEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Endpoints;
@@ -27,17 +28,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLServerSocketFactory;
 
 
-public class TextServer extends NanoHTTPD {
-    public static final String LOG_TAG = TextServer.class.getSimpleName();
+public class PigeonServer extends NanoHTTPD {
+    public static final String LOG_TAG = PigeonServer.class.getSimpleName();
     private final static String CHARSET_UTF8 = "UTF-8";
-    private final static int PORT = 8080;
+    public final static int DEFAULT_PORT = 8080;
     // Default HTML Response
     private static String BAD_REQUEST;
     private static String NOT_FOUND;
@@ -46,16 +46,15 @@ public class TextServer extends NanoHTTPD {
     private static String LOGIN_SECURE;
     private static String LOGIN_INSECURE;
     private AtomicBoolean isSecure = new AtomicBoolean(false);
-    private AtomicBoolean isStarted = new AtomicBoolean(false);
     private String serverIp;
     private String serverUri;
     // region Helper Thread
     private ExecutorService helperThread;
 
     // region Server Setup
-    public TextServer() {
-        super(PORT);
-        helperThread = Executors.newSingleThreadExecutor();
+    public PigeonServer(int port) {
+        super(port);
+        helperThread = PigeonApplication.getInstance().getHelperThread();
     }
 
     public static String getForbidden() {
@@ -118,10 +117,6 @@ public class TextServer extends NanoHTTPD {
         return serverIp;
     }
 
-    public boolean isStarted() {
-        return isStarted.get();
-    }
-
     public boolean getIsSecure() {
         return isSecure.get();
     }
@@ -129,7 +124,6 @@ public class TextServer extends NanoHTTPD {
     @Override
     public void stop() {
         super.stop();
-        isStarted.compareAndSet(true, false);
         isSecure.set(false);
         serverUri = "";
         serverIp = "";
@@ -139,7 +133,7 @@ public class TextServer extends NanoHTTPD {
         WifiManager wm = (WifiManager) PigeonApplication.getAppContext().getApplicationContext().getSystemService(Service.WIFI_SERVICE);
         this.serverIp = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         this.isSecure.compareAndSet(false, secure);
-        serverUri = String.format("http%s://%s:%s", (secure ? "s" : ""), serverIp, PORT);
+        serverUri = String.format("http%s://%s:%s", (secure ? "s" : ""), serverIp, DEFAULT_PORT);
         initDefaultResponses();
         if (secure) {
             initSecureServer(callback);
@@ -155,9 +149,8 @@ public class TextServer extends NanoHTTPD {
                 try {
                     LOGIN_SECURE = PageCacheManager.loadPageFromStorage(PageCacheManager.SECURE_LOGIN_FILE_NAME);
                     System.setProperty("javax.net.ssl.trustStore", "keystore.jks");
-                    TextServer.this.makeSecure(makeSSLSocketFactory(), null);
-                    TextServer.this.start();
-                    isStarted.set(true);
+                    PigeonServer.this.makeSecure(makeSSLSocketFactory(), null);
+                    PigeonServer.this.start();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -166,7 +159,6 @@ public class TextServer extends NanoHTTPD {
                     });
                 } catch (final IOException io) {
                     Log.e(LOG_TAG, "Error while starting insecure server: " + io.getLocalizedMessage());
-                    isStarted.set(false);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -186,7 +178,6 @@ public class TextServer extends NanoHTTPD {
                 try {
                     LOGIN_INSECURE = PageCacheManager.loadPageFromStorage(PageCacheManager.INSECURE_LOGIN_FILE_NAME);
                     start();
-                    isStarted.set(true);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -195,7 +186,6 @@ public class TextServer extends NanoHTTPD {
                     });
                 } catch (final IOException io) {
                     Log.e(LOG_TAG, "Error while starting insecure server: " + io.getLocalizedMessage());
-                    isStarted.set(false);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -253,6 +243,8 @@ public class TextServer extends NanoHTTPD {
                     return SecureLoginEndpoint.serve(session);
                 }
                 return InsecureLoginEndpoint.serve(session);
+            case Endpoints.CONVERSATIONS_ENDPOINT:
+                return ConversationsEndpoint.serve(session);
             case Endpoints.INBOX_ENDPOINT:
                 return InboxEndpoint.serve(session);
             case Endpoints.AVATAR_ENDPOINT:

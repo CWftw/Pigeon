@@ -1,63 +1,96 @@
 package com.jameswolfeoliver.pigeon.Server.Endpoints.Contacts;
 
 
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 
+import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Endpoints;
-import com.jameswolfeoliver.pigeon.Server.TextServer;
+import com.jameswolfeoliver.pigeon.Server.PigeonServer;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
+import com.jameswolfeoliver.pigeon.Utilities.Utils;
 
+import org.nanohttpd.protocols.http.IHTTPSession;
+import org.nanohttpd.protocols.http.response.Response;
+import org.nanohttpd.protocols.http.response.Status;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.regex.Matcher;
 
-import fi.iki.elonen.NanoHTTPD;
-
 public class AvatarEndpoint extends Endpoint {
     private static final String AVATAR_URI_SUFFIX = "/photo";
     private static final String AVATAR_URI_PREFIX = "content://com.android.contacts/contacts/";
+    private static final int AVATAR_COMPRESSION = 50;
+    private static final int ID_DEFAULT = 0;
+    private static final int ID_INVALID = -1;
 
-    public static NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
+    public static Response serve(IHTTPSession session) {
         switch (session.getMethod()) {
             case GET:
                 return onGet(session);
             default:
-                return buildHtmlResponse(TextServer.getBadRequest(), NanoHTTPD.Response.Status.BAD_REQUEST);
+                return buildHtmlResponse(PigeonServer.getBadRequest(), Status.BAD_REQUEST);
         }
     }
 
-    //content://com.android.contacts/contacts/113/photo
-    private static NanoHTTPD.Response onGet(NanoHTTPD.IHTTPSession session) {
-        String avatarUri = buildAvartarUri(session.getUri());
-        if (avatarUri != null) {
-            InputStream inputStream = getAvatarInputStream(avatarUri);
-            if (inputStream != null) {
-                return NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, MIME_JPEG, inputStream);
-            }
+    private static Response onGet(IHTTPSession session) {
+        int contactId = getContactId(session.getUri());
+        InputStream inputStream;
+        switch (contactId) {
+            case ID_INVALID:
+                return buildJsonError(-1, "Bad url", Status.BAD_REQUEST);
+            case ID_DEFAULT:
+                return Response.newChunkedResponse(Status.OK, MIME_PNG, getDefaultAvatarInputStream());
+            default:
+                inputStream = getAvatarInputStream(buildAvatarUri(contactId));
+                if (inputStream == null) {
+                    return redirectToDefaultAvatar(session.getUri(), contactId);
+                }
+                return Response.newChunkedResponse(Status.OK, MIME_JPEG, inputStream);
         }
-        return buildHtmlResponse(TextServer.getNotFound(), NanoHTTPD.Response.Status.NOT_FOUND);
     }
 
-    private static String buildAvartarUri(String sessionUri) {
-        StringBuilder avatarUriBuilder = new StringBuilder();
-        avatarUriBuilder.append(AVATAR_URI_PREFIX);
+    private static int getContactId(String sessionUri) {
         Matcher contactIdMatcher = Endpoints.AVATAR_URI_PATTERN.matcher(sessionUri);
         if (contactIdMatcher.find()) {
-            avatarUriBuilder.append(contactIdMatcher.group(1));
-            avatarUriBuilder.append(AVATAR_URI_SUFFIX);
-            return avatarUriBuilder.toString();
+            return  Integer.parseInt(contactIdMatcher.group(1));
         }
-        return null;
+        return ID_INVALID;
     }
 
-    private static InputStream getAvatarInputStream(String avatarUri) {
+    private static Uri buildAvatarUri(int contactId) {
+        return Uri.parse(AVATAR_URI_PREFIX.concat(String.valueOf(contactId)).concat(AVATAR_URI_SUFFIX));
+    }
+
+    private static Response redirectToDefaultAvatar(String sessionUri, int contactId) {
+        String contactIdPattern = String.valueOf(contactId);
+        String defaultId = String.valueOf(ID_DEFAULT);
+        Response redirect = Response.newFixedLengthResponse(Status.REDIRECT, MIME_PNG, new byte[0]);
+        redirect.addHeader("Location", sessionUri.replace(contactIdPattern, defaultId));
+        return redirect;
+    }
+
+    private static InputStream getAvatarInputStream(Uri avatarUri) {
         InputStream inputStream = null;
         try {
-            inputStream = PigeonApplication.getAppContext().getContentResolver().openInputStream(Uri.parse(avatarUri));
+            inputStream = PigeonApplication.getAppContext().getContentResolver().openInputStream(avatarUri);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.e(AvatarEndpoint.class.getSimpleName(), "Failed to get contact photo", e);
         }
+        return inputStream;
+    }
+
+    private static InputStream getDefaultAvatarInputStream() {
+        InputStream inputStream;
+        Bitmap bitmap = Utils.getBitmapFromVectorDrawable(PigeonApplication.getAppContext(), R.drawable.ic_friend);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, AVATAR_COMPRESSION, stream);
+        inputStream = new ByteArrayInputStream(stream.toByteArray());
         return inputStream;
     }
 }

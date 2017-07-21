@@ -19,6 +19,7 @@ import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jameswolfeoliver.pigeon.Utilities.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.BaseHolder> {
 
@@ -35,7 +36,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.BaseHold
         this.contact = contact;
     }
 
-    public void append(ArrayList<Message> messages) {
+    public void append(List<Message> messages) {
         int rangeStart = this.dataSet.size();
         this.dataSet.addAll(messages);
         int rangeEnd = this.dataSet.size() - 1;
@@ -54,7 +55,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.BaseHold
         notifyItemRemoved(index);
     }
 
-    public void filteredPrepend(ArrayList<Message> messages) {
+    public void filteredPrepend(List<Message> messages) {
         int rangeStart = 0;
         int rangeEnd = 0;
         for (int i = 0; i < messages.size(); i++) {

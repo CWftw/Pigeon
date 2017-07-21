@@ -4,14 +4,16 @@ import com.jameswolfeoliver.pigeon.Managers.SecurityHelper;
 import com.jameswolfeoliver.pigeon.Models.ClientRequests.LoginRequest;
 import com.jameswolfeoliver.pigeon.Models.ClientResponses.LoginResponse;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
-import com.jameswolfeoliver.pigeon.Server.TextServer;
+import com.jameswolfeoliver.pigeon.Server.PigeonServer;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jaredrummler.android.device.DeviceName;
 
+import org.nanohttpd.protocols.http.IHTTPSession;
+import org.nanohttpd.protocols.http.response.Response;
+import org.nanohttpd.protocols.http.response.Status;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import fi.iki.elonen.NanoHTTPD;
 
 public class SecureLoginEndpoint extends Endpoint {
     public static final String LOG_TAG = SecureLoginEndpoint.class.getSimpleName();
@@ -24,18 +26,18 @@ public class SecureLoginEndpoint extends Endpoint {
     // Login Vars
     private static final String DEVICE_NAME = DeviceName.getDeviceName();
 
-    public static NanoHTTPD.Response serve(NanoHTTPD.IHTTPSession session) {
+    public static Response serve(IHTTPSession session) {
         switch (session.getMethod()) {
             case GET:
                 return onGet();
             case POST:
                 return onPost(session);
             default:
-                return buildHtmlResponse(TextServer.getBadRequest(), NanoHTTPD.Response.Status.BAD_REQUEST);
+                return buildHtmlResponse(PigeonServer.getBadRequest(), Status.BAD_REQUEST);
         }
     }
 
-    private static NanoHTTPD.Response onPost(NanoHTTPD.IHTTPSession session) {
+    private static Response onPost(IHTTPSession session) {
         Map<String, String> bodyMap = new HashMap<>();
         try {
             session.parseBody(bodyMap);
@@ -47,11 +49,11 @@ public class SecureLoginEndpoint extends Endpoint {
         return buildJsonResponse(buildLogInResponse(
                 PigeonApplication.getGson().fromJson(session.getQueryParameterString(),
                         LoginRequest.class)),
-                NanoHTTPD.Response.Status.OK);
+                Status.OK);
     }
 
-    private static NanoHTTPD.Response onGet() {
-        return buildHtmlResponse(TextServer.getLoginSecure(), NanoHTTPD.Response.Status.OK);
+    private static Response onGet() {
+        return buildHtmlResponse(PigeonServer.getLoginSecure(), Status.OK);
     }
 
     private static String buildLogInResponse(LoginRequest request) {

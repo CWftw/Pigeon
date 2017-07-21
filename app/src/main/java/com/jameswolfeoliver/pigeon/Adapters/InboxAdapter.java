@@ -34,6 +34,13 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.Conversation
         notifyDataSetChanged();
     }
 
+    public void singleUpdate(Conversation conversation) {
+        int previousLastIndex = getItemCount() - 1;
+        this.conversations.add(conversation);
+        int newLastIndex = getItemCount() - 1;
+        notifyItemRangeInserted(previousLastIndex, newLastIndex);
+    }
+
     public Conversation getConversation(int position) {
         return conversations.get(position);
     }

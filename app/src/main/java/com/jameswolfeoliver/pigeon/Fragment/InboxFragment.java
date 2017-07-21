@@ -1,6 +1,5 @@
 package com.jameswolfeoliver.pigeon.Fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,10 +16,10 @@ import com.jameswolfeoliver.pigeon.Listeners.RecyclerItemClickListener;
 import com.jameswolfeoliver.pigeon.Models.Conversation;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.SqlWrappers.ConversationWrapper;
-import com.jameswolfeoliver.pigeon.SqlWrappers.SqlCallback;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
+import io.reactivex.schedulers.Schedulers;
 
 public class InboxFragment extends Fragment {
 
@@ -57,12 +56,9 @@ public class InboxFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        conversationWrapper.getAllConversations(new WeakReference<Activity>(getActivity()), 23, new SqlCallback<Conversation>() {
-            @Override
-            public void onQueryComplete(ArrayList<Conversation> results) {
-                inboxAdapter.update(results);
-            }
-        });
+        conversationWrapper.fetch()
+                .subscribeOn(Schedulers.io())
+                .subscribe(conversation -> inbox.post(() -> inboxAdapter.singleUpdate(conversation)));
     }
 
     public void goToConversation(Conversation conversation) {

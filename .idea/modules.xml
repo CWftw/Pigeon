@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/MaterialPermissions/library/MaterialPermissions.iml" filepath="$PROJECT_DIR$/libraries/MaterialPermissions/library/MaterialPermissions.iml" />
       <module fileurl="file://$PROJECT_DIR$/Pigeon.iml" filepath="$PROJECT_DIR$/Pigeon.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/nanohttpd/core/nanohttpd-core.iml" filepath="$PROJECT_DIR$/libraries/nanohttpd/core/nanohttpd-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/nanohttpd/websocket/nanohttpd-websocket.iml" filepath="$PROJECT_DIR$/libraries/nanohttpd/websocket/nanohttpd-websocket.iml" />
     </modules>
   </component>
 </project>

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
@@ -8,10 +9,17 @@ android {
         applicationId "com.jameswolfeoliver.pigeon"
         minSdkVersion 21
         targetSdkVersion 25
+        multiDexEnabled true
+
         versionCode 1
         versionName "1.0"
 
         vectorDrawables.useSupportLibrary = true;
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     dexOptions {
@@ -32,20 +40,19 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile project(':MaterialPermissions')
+    compile project(':nanohttpd-core')
+    compile project(':nanohttpd-websocket')
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
-    compile 'org.nanohttpd:nanohttpd:2.3.1'
     compile 'com.facebook.fresco:fresco:1.2.0'
-    compile 'com.madgag.spongycastle:core:1.51.0.0'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.1'
     compile 'com.madgag.spongycastle:core:1.51.0.0'
     compile 'com.madgag.spongycastle:prov:1.51.0.0'
     compile 'com.madgag.spongycastle:pkix:1.51.0.0'
     compile 'com.madgag.spongycastle:pg:1.51.0.0'
     compile 'com.jaredrummler:android-device-names:1.1.2'
-    compile('com.github.florent37:materialviewpager:1.2.0@aar') {
-        transitive = true
-    }
 }
 

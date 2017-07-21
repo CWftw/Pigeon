@@ -1,2 +1,4 @@
-include ':app', ':MaterialPermissions'
+include ':app', ':MaterialPermissions', ':nanohttpd-core', ':nanohttpd-websocket'
 project(':MaterialPermissions').projectDir = new File('libraries/MaterialPermissions/library')
+project(':nanohttpd-core').projectDir = new File('libraries/nanoHttpd/core')
+project(':nanohttpd-websocket').projectDir = new File('libraries/nanoHttpd/websocket')

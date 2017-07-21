@@ -11,6 +11,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/libraries/MaterialPermissions/library" />
+            <option value="$PROJECT_DIR$/libraries/nanohttpd/core" />
+            <option value="$PROJECT_DIR$/libraries/nanohttpd/websocket" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

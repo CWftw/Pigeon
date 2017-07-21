@@ -20,12 +20,10 @@ import android.widget.Toast;
 
 import com.jameswolfeoliver.pigeon.Fragment.InboxFragment;
 import com.jameswolfeoliver.pigeon.Fragment.SettingsFragment;
-import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
 import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
 import com.jameswolfeoliver.pigeon.Presenters.BasePresenter;
 import com.jameswolfeoliver.pigeon.R;
-import com.jameswolfeoliver.pigeon.Services.TextService;
-import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
+import com.jameswolfeoliver.pigeon.Services.PigeonService;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 public class InboxActivity extends BaseActivity {
@@ -34,7 +32,6 @@ public class InboxActivity extends BaseActivity {
 
     private FloatingActionButton fab;
     private FrameLayout spinnerWrapper;
-    private ContactsWrapper contactsWrapper;
 
     private InboxFragment inboxFragment;
     private SettingsFragment settingsFragment;
@@ -56,8 +53,6 @@ public class InboxActivity extends BaseActivity {
                 .commit();
 
         initViews();
-
-        contactsWrapper = new ContactsWrapper(this);
     }
 
     private void initViews() {
@@ -81,11 +76,7 @@ public class InboxActivity extends BaseActivity {
     public void onStart() {
         super.onStart();
         hideSpinner();
-        ContactCacheManager.getInstance().update(contactsWrapper);
         NotificationsManager.removeAllNotifications(this);
-        if (!PigeonApplication.isDefaultSmsApp()) {
-            PigeonApplication.promptUserToChangeDefaultSmsApp();
-        }
     }
 
     @Override
@@ -134,7 +125,7 @@ public class InboxActivity extends BaseActivity {
         basePresenter.isServerRunning(new BasePresenter.ServerStatusCallback() {
             @Override
             public void onInfoReceived(final String uri, final boolean secure, final int status) {
-                if (status == TextService.Status.RUNNING) {
+                if (status == PigeonService.PigeonServerStatus.RUNNING) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(InboxActivity.this);
                     builder.setMessage(String.format(getString(R.string.connected_message), uri + "/inbox"))
                             .setTitle(R.string.connect_to_pc)
@@ -180,7 +171,7 @@ public class InboxActivity extends BaseActivity {
                                 @Override
                                 public void onInfoReceived(String uri, boolean secure, int status) {
                                     hideSpinner();
-                                    if (status == TextService.Status.RUNNING) {
+                                    if (status == PigeonService.PigeonServerStatus.RUNNING) {
                                         showConnectionSuccess(uri);
                                     } else {
                                         Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
@@ -200,7 +191,7 @@ public class InboxActivity extends BaseActivity {
                                 @Override
                                 public void onInfoReceived(String uri, boolean secure, int status) {
                                     hideSpinner();
-                                    if (status == TextService.Status.RUNNING) {
+                                    if (status == PigeonService.PigeonServerStatus.RUNNING) {
                                         showConnectionSuccess(uri);
                                     } else {
                                         Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();

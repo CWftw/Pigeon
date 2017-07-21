@@ -13,7 +13,6 @@ import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
 import com.jameswolfeoliver.pigeon.Managers.PageCacheManager;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Rest.RestServer;
-import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
 import com.jameswolfeoliver.pigeon.Utilities.PermissionsManager;
 
 import java.util.ArrayList;
@@ -55,8 +54,7 @@ public class SplashActivity extends PermissionActivity {
             @Override
             public void onResult(Boolean success) {
                 if (usePermissions()) {
-                    ContactsWrapper contactsWrapper = new ContactsWrapper(SplashActivity.this);
-                    ContactCacheManager.getInstance().update(contactsWrapper);
+                    ContactCacheManager.getInstance().update();
                     transitionToInbox();
                 }
             }
@@ -92,8 +90,6 @@ public class SplashActivity extends PermissionActivity {
 
     @Override
     public void onPermissionGranted(String[] permissions) {
-        ContactsWrapper contactsWrapper = new ContactsWrapper(this);
-        ContactCacheManager.getInstance().update(contactsWrapper);
         transitionToInbox();
     }
 }
