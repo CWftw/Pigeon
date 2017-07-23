@@ -1,6 +1,18 @@
 package com.jameswolfeoliver.pigeon.Server.Endpoints;
 
 
+import com.jameswolfeoliver.pigeon.Server.Endpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Contacts.AvatarEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Contacts.ContactsEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations.ConversationsEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations.InboxEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations.MessagesEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Login.InsecureLoginEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Endpoints.Login.SecureLoginEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Sessions.SessionManager;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Endpoints {
@@ -18,23 +30,36 @@ public class Endpoints {
     public final static int AVATAR_ENDPOINT = 3;
     public final static int MESSAGES_ENDPOINT = 4;
     public final static int CONVERSATIONS_ENDPOINT = 5;
+    
+    private final List<Endpoint> endpoints;
+    
+    public Endpoints(boolean isSecure, SessionManager sessionManager) {
+        endpoints = new ArrayList<>();
+        endpoints.add(LOGIN_ENDPOINT, isSecure
+                ? new SecureLoginEndpoint(sessionManager) : new InsecureLoginEndpoint(sessionManager));
+        endpoints.add(INBOX_ENDPOINT, new InboxEndpoint(sessionManager));
+        endpoints.add(CONTACTS_ENDPOINT, new ContactsEndpoint(sessionManager));
+        endpoints.add(AVATAR_ENDPOINT, new AvatarEndpoint(sessionManager));
+        endpoints.add(MESSAGES_ENDPOINT, new MessagesEndpoint(sessionManager));
+        endpoints.add(CONVERSATIONS_ENDPOINT, new ConversationsEndpoint(sessionManager));
+    }
 
-    public static int getEndpoint(String uri) {
+    public Endpoint getEndpoint(String uri) {
         if (LOGIN_URI_PATTERN.matcher(uri).find()) {
-            return LOGIN_ENDPOINT;
+            return endpoints.get(LOGIN_ENDPOINT);
         } else if (INBOX_URI_PATTERN.matcher(uri).find()) {
-            return INBOX_ENDPOINT;
+            return endpoints.get(INBOX_ENDPOINT);
         } else if (AVATAR_URI_PATTERN.matcher(uri).find()) {
-            return AVATAR_ENDPOINT;
+            return endpoints.get(AVATAR_ENDPOINT);
         } else if (CONTACTS_URI_PATTERN.matcher(uri).find()
                 || CONTACT_URI_PATTERN.matcher(uri).find()) {
-            return CONTACTS_ENDPOINT;
+            return endpoints.get(CONTACTS_ENDPOINT);
         } else if (MESSAGES_URI_PATTERN.matcher(uri).find()) {
-            return MESSAGES_ENDPOINT;
+            return endpoints.get(LOGIN_ENDPOINT);
         } else if (CONVERSATIONS_URI_PATTERN.matcher(uri).find()) {
-            return CONVERSATIONS_ENDPOINT;
+            return endpoints.get(LOGIN_ENDPOINT);
         } else {
-            return -1;
+            return null;
         }
     }
 }

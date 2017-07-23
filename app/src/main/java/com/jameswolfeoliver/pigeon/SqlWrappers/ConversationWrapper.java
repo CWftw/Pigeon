@@ -30,8 +30,12 @@ public class ConversationWrapper extends Wrapper<Conversation> {
             "status"};
     private final Uri CONVERSATIONS_CONTENT_URI = Uri.parse("content://mms-sms/conversations");
 
+    public String selectByThread(int thread) {
+        return "thread_id" + EQUALS + Integer.toString(thread);
+    }
+
     @Override
-    void go(@NonNull ObservableEmitter<Conversation> subscriber, @Nullable Query query) {
+    public void go(@NonNull ObservableEmitter<Conversation> subscriber, @Nullable Query query) {
         String selection = query != null ? query.getSelection() : null;
         final Cursor cursor = getCursor(CONVERSATIONS_CONTENT_URI,
                 PROJECTION,

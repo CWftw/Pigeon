@@ -5,6 +5,7 @@ import com.jameswolfeoliver.pigeon.Models.ClientRequests.LoginRequest;
 import com.jameswolfeoliver.pigeon.Models.ClientResponses.LoginResponse;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.PigeonServer;
+import com.jameswolfeoliver.pigeon.Server.Sessions.SessionManager;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jaredrummler.android.device.DeviceName;
 
@@ -15,7 +16,7 @@ import org.nanohttpd.protocols.http.response.Status;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SecureLoginEndpoint extends Endpoint {
+public class SecureLoginEndpoint extends LoginEndpoint {
     public static final String LOG_TAG = SecureLoginEndpoint.class.getSimpleName();
 
     // Login errors
@@ -26,18 +27,12 @@ public class SecureLoginEndpoint extends Endpoint {
     // Login Vars
     private static final String DEVICE_NAME = DeviceName.getDeviceName();
 
-    public static Response serve(IHTTPSession session) {
-        switch (session.getMethod()) {
-            case GET:
-                return onGet();
-            case POST:
-                return onPost(session);
-            default:
-                return buildHtmlResponse(PigeonServer.getBadRequest(), Status.BAD_REQUEST);
-        }
+    public SecureLoginEndpoint(SessionManager sessionManager) {
+        super(sessionManager);
     }
 
-    private static Response onPost(IHTTPSession session) {
+    @Override
+    protected Response onPost(IHTTPSession session) {
         Map<String, String> bodyMap = new HashMap<>();
         try {
             session.parseBody(bodyMap);
@@ -52,7 +47,8 @@ public class SecureLoginEndpoint extends Endpoint {
                 Status.OK);
     }
 
-    private static Response onGet() {
+    @Override
+    protected Response onGet(IHTTPSession session) {
         return buildHtmlResponse(PigeonServer.getLoginSecure(), Status.OK);
     }
 

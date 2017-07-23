@@ -17,22 +17,28 @@ import com.jameswolfeoliver.pigeon.Server.Endpoints.Conversations.MessagesEndpoi
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Endpoints;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Login.InsecureLoginEndpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Login.SecureLoginEndpoint;
+import com.jameswolfeoliver.pigeon.Server.Interceptor.CookieInterceptor;
+import com.jameswolfeoliver.pigeon.Server.Interceptor.Interceptor;
+import com.jameswolfeoliver.pigeon.Server.Sessions.SessionManager;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
+import org.nanohttpd.protocols.http.content.CookieHandler;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
+import org.nanohttpd.util.IHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLServerSocketFactory;
-
 
 public class PigeonServer extends NanoHTTPD {
     public static final String LOG_TAG = PigeonServer.class.getSimpleName();
@@ -45,16 +51,23 @@ public class PigeonServer extends NanoHTTPD {
     private static String FORBIDDEN;
     private static String LOGIN_SECURE;
     private static String LOGIN_INSECURE;
+
     private AtomicBoolean isSecure = new AtomicBoolean(false);
     private String serverIp;
     private String serverUri;
+    private List<Interceptor> interceptors;
+    private SessionManager sessionManager;
+
     // region Helper Thread
     private ExecutorService helperThread;
 
     // region Server Setup
     public PigeonServer(int port) {
         super(port);
-        helperThread = PigeonApplication.getInstance().getHelperThread();
+        this.helperThread = PigeonApplication.getInstance().getHelperThread();
+        this.interceptors = new ArrayList<>();
+        this.sessionManager = new SessionManager();
+        addInterceptor(new CookieInterceptor(sessionManager));
     }
 
     public static String getForbidden() {
@@ -79,6 +92,10 @@ public class PigeonServer extends NanoHTTPD {
 
     public static String getInternalError() {
         return INTERNAL_ERROR;
+    }
+
+    protected void addInterceptor(Interceptor interceptor) {
+        interceptors.add(interceptor);
     }
 
     private static SSLServerSocketFactory makeSSLSocketFactory() {
@@ -237,26 +254,40 @@ public class PigeonServer extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
+        for (Interceptor<IHTTPSession> interceptor : interceptors) {
+            interceptor.intercept(session);
+        }
+        Response response;
         switch (Endpoints.getEndpoint(session.getUri())) {
             case Endpoints.LOGIN_ENDPOINT:
                 if (isSecure.get()) {
-                    return SecureLoginEndpoint.serve(session);
+                    response =  SecureLoginEndpoint.serve(session);
+                } else {
+                    response = InsecureLoginEndpoint.serve(session);
                 }
-                return InsecureLoginEndpoint.serve(session);
+                break;
             case Endpoints.CONVERSATIONS_ENDPOINT:
-                return ConversationsEndpoint.serve(session);
+                response = ConversationsEndpoint.serve(session);
+                break;
             case Endpoints.INBOX_ENDPOINT:
-                return InboxEndpoint.serve(session);
+                response = InboxEndpoint.serve(session);
+                break;
             case Endpoints.AVATAR_ENDPOINT:
-                return AvatarEndpoint.serve(session);
+                response = AvatarEndpoint.serve(session);
+                break;
             case Endpoints.CONTACTS_ENDPOINT:
-                return ContactsEndpoint.serve(session);
+                response = ContactsEndpoint.serve(session);
+                break;
             case Endpoints.MESSAGES_ENDPOINT:
-                return MessagesEndpoint.serve(session);
+                response = MessagesEndpoint.serve(session);
+                break;
             default:
                 return Endpoint.buildHtmlResponse(NOT_FOUND, Status.NOT_FOUND);
         }
+        return response;
     }
+
+
 
     // Callback interface for time consuming tasks
     public interface StartServerCallback<E> {

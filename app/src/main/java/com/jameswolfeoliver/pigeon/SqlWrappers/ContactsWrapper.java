@@ -47,7 +47,7 @@ public class ContactsWrapper extends Wrapper<Contact> {
     }
 
     @Override
-    void go(ObservableEmitter<Contact> subscriber, Query query) {
+    public void go(ObservableEmitter<Contact> subscriber, Query query) {
         String selection = query != null ? query.getSelection() : null;
         final Cursor cursor = getCursor(ContactsContract.Contacts.CONTENT_URI, PROJECTION, selection, null, null);
         while (cursor.moveToNext()) {

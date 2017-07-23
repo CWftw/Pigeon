@@ -15,6 +15,7 @@ import io.reactivex.annotations.Nullable;
 public abstract class Wrapper<T> {
     private final Context context;
     protected static final String LESS_THAN = " < ";
+    protected static final String LIKE = " = ?";
     protected static final String AND = " AND ";
     protected static final String EQUALS = " = ";
     protected static final String IN = " in ";
@@ -35,17 +36,17 @@ public abstract class Wrapper<T> {
         return fetchInternal(query);
     }
 
-    private synchronized Observable<T> fetchInternal(Query query) {
+    private synchronized Observable<T> fetchInternal(final Query query) {
         return Observable.create(e -> go(e, query));
     }
 
-    abstract void go(@NonNull ObservableEmitter<T> subscriber, @Nullable Query query);
+    public abstract void go(@NonNull ObservableEmitter<T> subscriber, @Nullable Query query);
 
-    protected static Cursor getCursor(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    protected Cursor getCursor(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         return getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
     }
 
-    protected static ContentResolver getContentResolver() {
+    protected ContentResolver getContentResolver() {
         return PigeonApplication.getAppContext().getContentResolver();
     }
 }

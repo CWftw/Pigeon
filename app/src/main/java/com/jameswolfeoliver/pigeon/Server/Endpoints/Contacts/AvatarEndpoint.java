@@ -5,10 +5,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
+import com.jameswolfeoliver.pigeon.Models.ClientResponses.Error;
 import com.jameswolfeoliver.pigeon.R;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Endpoints;
 import com.jameswolfeoliver.pigeon.Server.PigeonServer;
+import com.jameswolfeoliver.pigeon.Server.Sessions.SessionManager;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jameswolfeoliver.pigeon.Utilities.Utils;
 
@@ -29,21 +31,17 @@ public class AvatarEndpoint extends Endpoint {
     private static final int ID_DEFAULT = 0;
     private static final int ID_INVALID = -1;
 
-    public static Response serve(IHTTPSession session) {
-        switch (session.getMethod()) {
-            case GET:
-                return onGet(session);
-            default:
-                return buildHtmlResponse(PigeonServer.getBadRequest(), Status.BAD_REQUEST);
-        }
+    public AvatarEndpoint(SessionManager sessionManager) {
+        super(sessionManager);
     }
 
-    private static Response onGet(IHTTPSession session) {
+    @Override
+    protected Response onGet(IHTTPSession session) {
         int contactId = getContactId(session.getUri());
         InputStream inputStream;
         switch (contactId) {
             case ID_INVALID:
-                return buildJsonError(-1, "Bad url", Status.BAD_REQUEST);
+                return buildJsonError(Error.Codes.YOUR_FAULT, "Bad url", Status.BAD_REQUEST);
             case ID_DEFAULT:
                 return Response.newChunkedResponse(Status.OK, MIME_PNG, getDefaultAvatarInputStream());
             default:
@@ -53,6 +51,11 @@ public class AvatarEndpoint extends Endpoint {
                 }
                 return Response.newChunkedResponse(Status.OK, MIME_JPEG, inputStream);
         }
+    }
+
+    @Override
+    protected Response onPost(IHTTPSession session) {
+        return buildJsonError(Error.Codes.YOUR_FAULT, "Method not allowed", Status.METHOD_NOT_ALLOWED);
     }
 
     private static int getContactId(String sessionUri) {

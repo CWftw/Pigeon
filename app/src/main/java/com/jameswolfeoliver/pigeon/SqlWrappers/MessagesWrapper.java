@@ -56,7 +56,7 @@ public class MessagesWrapper extends Wrapper<List<Message>> {
     }
 
     @Override
-    void go(@NonNull ObservableEmitter<List<Message>> subscriber, @Nullable Query query) {
+    public void go(@NonNull ObservableEmitter<List<Message>> subscriber, @Nullable Query query) {
         String selection = query != null ? query.getSelection() : null;
         final Cursor cursor = getCursor(MESSAGES_CONTENT_URI,
                 PROJECTION,

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
 import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
@@ -15,6 +16,7 @@ import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 import com.jameswolfeoliver.pigeon.Utilities.Utils;
 
 public class BackgroundSmsReceiver extends IncomingMessageReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
@@ -60,6 +62,7 @@ public class BackgroundSmsReceiver extends IncomingMessageReceiver {
             if (pCur.getCount() != 0) {
                 pCur.moveToNext();
                 threadId = pCur.getString(pCur.getColumnIndex("_id"));
+                Log.d("JAmes", threadId);
             }
             pCur.close();
         }

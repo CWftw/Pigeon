@@ -1,10 +1,12 @@
 package com.jameswolfeoliver.pigeon.Server.Endpoints.Contacts;
 
 import com.jameswolfeoliver.pigeon.Managers.ContactCacheManager;
+import com.jameswolfeoliver.pigeon.Models.ClientResponses.Error;
 import com.jameswolfeoliver.pigeon.Models.Contact;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.Endpoints.Endpoints;
 import com.jameswolfeoliver.pigeon.Server.PigeonServer;
+import com.jameswolfeoliver.pigeon.Server.Sessions.SessionManager;
 import com.jameswolfeoliver.pigeon.SqlWrappers.ContactsWrapper;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
@@ -21,18 +23,12 @@ import java.util.regex.Matcher;
 
 public class ContactsEndpoint extends Endpoint {
 
-    public static Response serve(IHTTPSession session) {
-        switch (session.getMethod()) {
-            case GET:
-                return onGet(session);
-            case POST:
-                return onPost(session);
-            default:
-                return buildHtmlResponse(PigeonServer.getBadRequest(), Status.BAD_REQUEST);
-        }
+    public ContactsEndpoint(SessionManager sessionManager) {
+        super(sessionManager);
     }
 
-    private static Response onGet(IHTTPSession session) {
+    @Override
+    protected Response onGet(IHTTPSession session) {
         final Matcher idMatcher = Endpoints.CONTACT_URI_PATTERN.matcher(session.getUri());
         final Map<String, List<String>> params = session.getParameters();
         if (idMatcher.find()) {
@@ -43,7 +39,7 @@ public class ContactsEndpoint extends Endpoint {
                 try {
                     contactIds.add(Integer.parseInt(id));
                 } catch (NumberFormatException e) {
-                    return buildJsonError(-1, "Bad query", Status.BAD_REQUEST);
+                    return buildJsonError(Error.Codes.YOUR_FAULT, "Bad query", Status.BAD_REQUEST);
                 }
             }
             return buildJsonResponse(onGetByIds(contactIds), Status.OK);
@@ -53,7 +49,7 @@ public class ContactsEndpoint extends Endpoint {
                 try {
                     contactNumbers.add(Long.parseLong(id));
                 } catch (NumberFormatException e) {
-                    return buildJsonError(-1, "Bad query", Status.BAD_REQUEST);
+                    return buildJsonError(Error.Codes.YOUR_FAULT, "Bad query", Status.BAD_REQUEST);
                 }
             }
             return buildJsonResponse(onGetNumbers(contactNumbers), Status.OK);
@@ -61,10 +57,10 @@ public class ContactsEndpoint extends Endpoint {
             return buildJsonResponse(PigeonApplication.getGson().toJson(ContactCacheManager
                     .getInstance().updateNow().getContacts()), Status.OK);
         }
-        return buildJsonError(-1, "Unrecognized", Status.BAD_REQUEST);
+        return buildJsonError(Error.Codes.YOUR_FAULT, "Unrecognized", Status.BAD_REQUEST);
     }
 
-    private static String onGetByIds(final List<Integer> contactIds) {
+    private String onGetByIds(final List<Integer> contactIds) {
         final ContactsWrapper contactsWrapper = new ContactsWrapper();
         final Iterable<Contact> conversations = contactsWrapper.find(() -> contactsWrapper.selectByIds(contactIds))
                 .blockingIterable();
@@ -74,12 +70,13 @@ public class ContactsEndpoint extends Endpoint {
         return PigeonApplication.getGson().toJson(contactList);
     }
 
-    private static String onGetNumbers(final List<Long> phoneNumbers) {
+    private String onGetNumbers(final List<Long> phoneNumbers) {
         return PigeonApplication.getGson().toJson(ContactCacheManager.getInstance().updateNow().getContacts(phoneNumbers));
     }
 
-    private static Response onPost(IHTTPSession session) {
+    @Override
+    protected Response onPost(IHTTPSession session) {
         // TODO implement create contact
-        return buildHtmlResponse(PigeonServer.getNotFound(), Status.NOT_IMPLEMENTED);
+        return buildJsonError(Error.Codes.MY_FAULT, "Not implemented", Status.NOT_IMPLEMENTED);
     }
 }

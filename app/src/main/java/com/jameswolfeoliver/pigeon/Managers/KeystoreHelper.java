@@ -90,7 +90,7 @@ public class KeystoreHelper {
 
         private KeystoreManager() {
             Security.addProvider(new BouncyCastleProvider());
-            random = new SecureRandom();
+            random = PigeonApplication.getSecureRandom();
             provider = new BouncyCastleProvider();
         }
 

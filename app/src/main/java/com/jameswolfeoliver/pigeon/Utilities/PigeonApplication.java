@@ -14,22 +14,23 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jameswolfeoliver.pigeon.Server.Rest.RestServer;
 
+import java.security.SecureRandom;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class PigeonApplication extends MultiDexApplication implements Application.ActivityLifecycleCallbacks {
     private static final String SHARED_PREF = "pigeon_application_shared_pref";
     private static PigeonApplication instance = null;
     private static Context context = null;
     private static Gson gson = null;
+    private static SecureRandom secureRandom = null;
     private static RestServer restServer = null;
     private static int started;
     private static int stopped;
     private ExecutorService helperThread;
-
-    public PigeonApplication() {
-        super();
-    }
 
     public synchronized static PigeonApplication getInstance() {
         return instance;
@@ -48,6 +49,13 @@ public class PigeonApplication extends MultiDexApplication implements Applicatio
             gson = new GsonBuilder().create();
         }
         return gson;
+    }
+
+    public static SecureRandom getSecureRandom() {
+        if (secureRandom == null) {
+            secureRandom = new SecureRandom();
+        }
+        return secureRandom;
     }
 
     public static RestServer getRestServer() {
@@ -83,6 +91,10 @@ public class PigeonApplication extends MultiDexApplication implements Applicatio
         helperThread = Executors.newSingleThreadExecutor();
         Fresco.initialize(this);
         registerActivityLifecycleCallbacks(this);
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().build();
+        Realm.deleteRealm(config);
+        Realm.setDefaultConfiguration(config);
     }
 
     @Override

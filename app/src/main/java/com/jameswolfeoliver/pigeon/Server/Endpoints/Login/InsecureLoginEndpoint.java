@@ -6,6 +6,7 @@ import com.jameswolfeoliver.pigeon.Activities.ConnectionActivity;
 import com.jameswolfeoliver.pigeon.Managers.NotificationsManager;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.PigeonServer;
+import com.jameswolfeoliver.pigeon.Server.Sessions.SessionManager;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import org.json.JSONException;
@@ -17,7 +18,7 @@ import org.nanohttpd.protocols.http.response.Status;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InsecureLoginEndpoint extends Endpoint {
+public class InsecureLoginEndpoint extends LoginEndpoint {
     public static final String LOG_TAG = InsecureLoginEndpoint.class.getSimpleName();
 
     // Login errors
@@ -26,18 +27,12 @@ public class InsecureLoginEndpoint extends Endpoint {
     private final static int TERMS_UNCHECKED = 2;
     private final static int NO_USER_RESPONSE = 3;
 
-    public static Response serve(IHTTPSession session) {
-        switch (session.getMethod()) {
-            case GET:
-                return onGet();
-            case POST:
-                return onPost(session);
-            default:
-                return buildHtmlResponse(PigeonServer.getBadRequest(), Status.BAD_REQUEST);
-        }
+    public InsecureLoginEndpoint(SessionManager sessionManager) {
+        super(sessionManager);
     }
 
-    private static Response onPost(IHTTPSession session) {
+    @Override
+    protected Response onPost(IHTTPSession session) {
         Map<String, String> bodyMap = new HashMap<>();
         try {
             session.parseBody(bodyMap);
@@ -48,7 +43,8 @@ public class InsecureLoginEndpoint extends Endpoint {
         return buildJsonResponse(buildLogInResponse(bodyMap, session.getRemoteHostName(), session.getRemoteIpAddress()), Status.OK);
     }
 
-    private static Response onGet() {
+    @Override
+    protected Response onGet(IHTTPSession session) {
         return buildHtmlResponse(PigeonServer.getLoginInsecure(), Status.OK);
     }
 

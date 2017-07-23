@@ -3,6 +3,7 @@ package com.jameswolfeoliver.pigeon.Server;
 import android.util.Log;
 
 import com.jameswolfeoliver.pigeon.Models.ClientResponses.Error;
+import com.jameswolfeoliver.pigeon.Server.Sessions.SessionManager;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
 import org.nanohttpd.protocols.http.IHTTPSession;
@@ -18,9 +19,25 @@ public abstract class Endpoint {
     protected final static String MIME_HTML = "text/html";
     protected final static String MIME_JPEG = "image/jpeg";
     protected final static String MIME_PNG = "image/png";
+    protected SessionManager sessionManager;
 
-    // TODO: implement cookies
-    // response.addHeader("Set-Cookie", "pigeonId=123456789; Domain=" + PigeonServer.getServerIp());
+    public Endpoint(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+    }
+
+    public Response serve(IHTTPSession session) {
+        switch (session.getMethod()) {
+            case GET:
+                return onGet(session);
+            case POST:
+                return onPost(session);
+            default:
+                return buildJsonError(Error.Codes.YOUR_FAULT, "Method Not allowed", Status.METHOD_NOT_ALLOWED);
+        }
+    }
+
+    abstract protected Response onGet(IHTTPSession session);
+    abstract protected Response onPost(IHTTPSession session);
 
     protected static Response buildHtmlResponse(String responseBody, Status status) {
         return Response.newFixedLengthResponse(status, MIME_HTML, responseBody);
@@ -45,4 +62,5 @@ public abstract class Endpoint {
         }
         return bodyMap.get("postData");
     }
+
 }

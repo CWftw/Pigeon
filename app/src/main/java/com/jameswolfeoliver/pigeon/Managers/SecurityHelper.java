@@ -134,7 +134,7 @@ public class SecurityHelper {
 
         private SecurityManager(int cost) {
             this.cost = cost;
-            this.random = new SecureRandom();
+            this.random = PigeonApplication.getSecureRandom();
         }
 
         private String hash(char[] password) throws InvalidKeySpecException, NoSuchAlgorithmException {

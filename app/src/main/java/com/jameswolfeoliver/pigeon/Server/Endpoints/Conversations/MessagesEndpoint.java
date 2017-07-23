@@ -4,10 +4,12 @@ import android.telephony.SmsManager;
 
 import com.google.gson.JsonSyntaxException;
 import com.jameswolfeoliver.pigeon.Models.ClientRequests.MessageRequest;
+import com.jameswolfeoliver.pigeon.Models.ClientResponses.Error;
 import com.jameswolfeoliver.pigeon.Models.Conversation;
 import com.jameswolfeoliver.pigeon.Models.Message;
 import com.jameswolfeoliver.pigeon.Server.Endpoint;
 import com.jameswolfeoliver.pigeon.Server.PigeonServer;
+import com.jameswolfeoliver.pigeon.Server.Sessions.SessionManager;
 import com.jameswolfeoliver.pigeon.SqlWrappers.MessagesWrapper;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
@@ -20,28 +22,23 @@ import java.util.List;
 import java.util.Map;
 
 public class MessagesEndpoint extends Endpoint {
-    public static Response serve(IHTTPSession session) {
-        switch (session.getMethod()) {
-            case GET:
-                return onGet(session);
-            case POST:
-                return onPost(session);
-            default:
-                return buildHtmlResponse(PigeonServer.getBadRequest(), Status.BAD_REQUEST);
-        }
+
+    public MessagesEndpoint(SessionManager sessionManager) {
+        super(sessionManager);
     }
 
-    private static Response onPost(IHTTPSession session) {
+    @Override
+    protected Response onPost(IHTTPSession session) {
         String postData = getPostData(session);
         if (postData == null) {
-            return buildJsonError(-1, "Bad body", Status.BAD_REQUEST);
+            return buildJsonError(Error.Codes.YOUR_FAULT, "Bad body", Status.BAD_REQUEST);
         }
         MessageRequest messageRequest;
         try {
             messageRequest = PigeonApplication.getGson().fromJson(postData, MessageRequest.class);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
-            return buildJsonError(-1, "Bad body", Status.BAD_REQUEST);
+            return buildJsonError(Error.Codes.YOUR_FAULT, "Bad body", Status.BAD_REQUEST);
         }
 
         // todo handle bad requests
@@ -51,11 +48,12 @@ public class MessagesEndpoint extends Endpoint {
         return buildJsonResponse("sentTime: " + System.currentTimeMillis(), Status.OK);
     }
 
-    private static Response onGet(IHTTPSession session) {
+    @Override
+    protected Response onGet(IHTTPSession session) {
         Map<String, List<String>> params = session.getParameters();
         String threadId = params.get("threadId").get(0);
         if (threadId == null) {
-            return buildJsonError(-1, "threadId query required", Status.BAD_REQUEST);
+            return buildJsonError(Error.Codes.YOUR_FAULT, "threadId query required", Status.BAD_REQUEST);
         }
         long dateRangeStart = params.containsKey("dateRangeStart")
                 ? Long.valueOf(params.get("dateRangeStart").get(0))
