@@ -1,6 +1,5 @@
 package com.jameswolfeoliver.pigeon.Managers;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -15,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import static com.jameswolfeoliver.pigeon.Utilities.SharedPrefKeys.ERROR_KEY;
+import static com.jameswolfeoliver.pigeon.Utilities.SharedPrefKeys.INBOX_CSS_KEY;
+import static com.jameswolfeoliver.pigeon.Utilities.SharedPrefKeys.INBOX_JS_KEY;
 import static com.jameswolfeoliver.pigeon.Utilities.SharedPrefKeys.INBOX_KEY;
 import static com.jameswolfeoliver.pigeon.Utilities.SharedPrefKeys.INSECURE_LOGIN_KEY;
 import static com.jameswolfeoliver.pigeon.Utilities.SharedPrefKeys.SECURE_LOGIN_KEY;
@@ -23,6 +24,8 @@ public class PageCacheManager {
     public static final String SECURE_LOGIN_FILE_NAME = "login_secure.html";
     public static final String INSECURE_LOGIN_FILE_NAME = "login_insecure.html";
     public static final String INBOX_FILE_NAME = "inbox.html";
+    public static final String INBOX_CSS_FILE_NAME = "inbox.css";
+    public static final String INBOX_JS_FILE_NAME = "inbox.js";
     public static final String ERROR_FILE_NAME = "error.html";
 
     private static void updateCacheIndex(final String index, final int version) {
@@ -91,7 +94,41 @@ public class PageCacheManager {
                         public void onResult(String page) {
                             if (page != null && !page.isEmpty()) {
                                 if (updatePage(INBOX_FILE_NAME, page)) {
-                                    updateCacheIndex(INBOX_KEY, serverVersion.getLoginInsecureVersion());
+                                    updateCacheIndex(INBOX_KEY, serverVersion.getInboxVersion());
+                                    updatePages(serverVersion, updateCallback);
+                                    return;
+                                }
+                            }
+                            updateCallback.onResult(Boolean.FALSE);
+                        }
+                    });
+        } else if (sharedPrefs.getInt(INBOX_CSS_KEY, 0)
+                < serverVersion.getInboxVersion()) {
+            PigeonApplication.getRestServer().getPage(RestServer.INBOX_CSS_PATH,
+                    serverVersion.getInboxVersion(),
+                    new RestServer.RestCallback<String>() {
+                        @Override
+                        public void onResult(String page) {
+                            if (page != null && !page.isEmpty()) {
+                                if (updatePage(INBOX_CSS_FILE_NAME, page)) {
+                                    updateCacheIndex(INBOX_CSS_KEY, serverVersion.getInboxVersion());
+                                    updatePages(serverVersion, updateCallback);
+                                    return;
+                                }
+                            }
+                            updateCallback.onResult(Boolean.FALSE);
+                        }
+                    });
+        } else if (sharedPrefs.getInt(INBOX_JS_KEY, 0)
+                < serverVersion.getInboxVersion()) {
+            PigeonApplication.getRestServer().getPage(RestServer.INBOX_JS_PATH,
+                    serverVersion.getInboxVersion(),
+                    new RestServer.RestCallback<String>() {
+                        @Override
+                        public void onResult(String page) {
+                            if (page != null && !page.isEmpty()) {
+                                if (updatePage(INBOX_JS_FILE_NAME, page)) {
+                                    updateCacheIndex(INBOX_JS_KEY, serverVersion.getInboxVersion());
                                     updatePages(serverVersion, updateCallback);
                                     return;
                                 }

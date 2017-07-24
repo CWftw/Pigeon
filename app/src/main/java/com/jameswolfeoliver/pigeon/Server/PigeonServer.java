@@ -47,6 +47,9 @@ public class PigeonServer extends NanoHTTPD {
     // Default HTML Response
     private static String BAD_REQUEST;
     private static String NOT_FOUND;
+    private static String INBOX;
+    private static String INBOX_JS;
+    private static String INBOX_CSS;
     private static String INTERNAL_ERROR;
     private static String FORBIDDEN;
     private static String LOGIN_SECURE;
@@ -57,6 +60,7 @@ public class PigeonServer extends NanoHTTPD {
     private String serverUri;
     private List<Interceptor> interceptors;
     private SessionManager sessionManager;
+    private Endpoints endpointController;
 
     // region Helper Thread
     private ExecutorService helperThread;
@@ -92,6 +96,18 @@ public class PigeonServer extends NanoHTTPD {
 
     public static String getInternalError() {
         return INTERNAL_ERROR;
+    }
+
+    public static String getInbox() {
+        return INBOX;
+    }
+
+    public static String getInboxCss() {
+        return INBOX_CSS;
+    }
+
+    public static String getInboxJs() {
+        return INBOX_JS;
     }
 
     protected void addInterceptor(Interceptor interceptor) {
@@ -147,6 +163,7 @@ public class PigeonServer extends NanoHTTPD {
     }
 
     public void start(boolean secure, StartServerCallback callback) {
+        this.endpointController = new Endpoints(secure, sessionManager);
         WifiManager wm = (WifiManager) PigeonApplication.getAppContext().getApplicationContext().getSystemService(Service.WIFI_SERVICE);
         this.serverIp = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         this.isSecure.compareAndSet(false, secure);
@@ -220,10 +237,14 @@ public class PigeonServer extends NanoHTTPD {
         String generalError;
         try {
             generalError = PageCacheManager.loadPageFromStorage(PageCacheManager.ERROR_FILE_NAME);
+            INBOX = PageCacheManager.loadPageFromStorage(PageCacheManager.INBOX_FILE_NAME);
+            INBOX_CSS = PageCacheManager.loadPageFromStorage(PageCacheManager.INBOX_CSS_FILE_NAME);
+            INBOX_JS = PageCacheManager.loadPageFromStorage(PageCacheManager.INBOX_JS_FILE_NAME);
         } catch (IOException e) {
             e.printStackTrace();
             generalError = PigeonApplication.getAppContext().getResources().getString(R.string.general_error);
         }
+
         NOT_FOUND = transformGeneralToSpecificError(generalError, 404);
         BAD_REQUEST = transformGeneralToSpecificError(generalError, 400);
         FORBIDDEN = transformGeneralToSpecificError(generalError, 403);
@@ -254,36 +275,18 @@ public class PigeonServer extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
-        for (Interceptor<IHTTPSession> interceptor : interceptors) {
+        for (Interceptor interceptor : interceptors) {
             interceptor.intercept(session);
         }
+
         Response response;
-        switch (Endpoints.getEndpoint(session.getUri())) {
-            case Endpoints.LOGIN_ENDPOINT:
-                if (isSecure.get()) {
-                    response =  SecureLoginEndpoint.serve(session);
-                } else {
-                    response = InsecureLoginEndpoint.serve(session);
-                }
-                break;
-            case Endpoints.CONVERSATIONS_ENDPOINT:
-                response = ConversationsEndpoint.serve(session);
-                break;
-            case Endpoints.INBOX_ENDPOINT:
-                response = InboxEndpoint.serve(session);
-                break;
-            case Endpoints.AVATAR_ENDPOINT:
-                response = AvatarEndpoint.serve(session);
-                break;
-            case Endpoints.CONTACTS_ENDPOINT:
-                response = ContactsEndpoint.serve(session);
-                break;
-            case Endpoints.MESSAGES_ENDPOINT:
-                response = MessagesEndpoint.serve(session);
-                break;
-            default:
-                return Endpoint.buildHtmlResponse(NOT_FOUND, Status.NOT_FOUND);
+        Endpoint endpoint = endpointController.getEndpoint(session.getUri());
+        if (endpoint == null) {
+            response = Endpoint.buildHtmlResponse(NOT_FOUND, Status.NOT_FOUND);
+        } else {
+            response = endpoint.serve(session);
         }
+
         return response;
     }
 

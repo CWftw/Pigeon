@@ -5,17 +5,19 @@ import android.support.annotation.NonNull;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Cookie extends RealmObject {
+public class Session extends RealmObject {
     @PrimaryKey
     private int id;
 
     private String name;
     private String value;
-    private boolean isCookieSessionValid;
+    private boolean isSessionValid;
     private long issueTimestamp;
     private long expiryTimestamp;
 
-    public Cookie(@NonNull String name, @NonNull String value) {
+    public Session() {}
+
+    public Session(@NonNull String name, @NonNull String value) {
         this.name = name;
         this.value = value;
         this.id = hashCode();
@@ -25,6 +27,7 @@ public class Cookie extends RealmObject {
         return id;
     }
 
+    @Deprecated
     public void setId(int id) {
         this.id = id;
     }
@@ -33,8 +36,8 @@ public class Cookie extends RealmObject {
         return name;
     }
 
-    public boolean isCookieSessionValid() {
-        return isCookieSessionValid;
+    public boolean isSessionValid() {
+        return isSessionValid;
     }
 
     public void setName(String name) {
@@ -65,8 +68,8 @@ public class Cookie extends RealmObject {
         this.expiryTimestamp = expiryTimestamp;
     }
 
-    public void setCookieSessionValid(boolean isCookieSessionValid) {
-        this.isCookieSessionValid = isCookieSessionValid;
+    public void setSessionValid(boolean isSessionValid) {
+        this.isSessionValid = isSessionValid;
     }
 
     @Override
@@ -74,10 +77,10 @@ public class Cookie extends RealmObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Cookie cookie = (Cookie) o;
+        Session session = (Session) o;
 
-        if (!name.equals(cookie.name)) return false;
-        return value.equals(cookie.value);
+        if (!name.equals(session.name)) return false;
+        return value.equals(session.value);
 
     }
 
@@ -86,5 +89,17 @@ public class Cookie extends RealmObject {
         int result = name.hashCode();
         result = 31 * result + value.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                ", isSessionValid=" + isSessionValid +
+                ", issueTimestamp=" + issueTimestamp +
+                ", expiryTimestamp=" + expiryTimestamp +
+                '}';
     }
 }

@@ -10,10 +10,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RestServer {
-    public static final String INSECURE_LOGIN_PATH = "login/login_insecure_v";
-    public static final String SECURE_LOGIN_PATH = "login/login_secure_v";
-    public static final String INBOX_PATH = "inbox/inbox_v";
-    public static final String ERROR_PATH = "error/error_general_v";
+    public static final String INSECURE_LOGIN_PATH = "login/login_insecure_v%d.html";
+    public static final String SECURE_LOGIN_PATH = "login/login_secure_v%d.html";
+    public static final String INBOX_PATH = "inbox/inbox_v%d.html";
+    public static final String INBOX_CSS_PATH = "inbox/css/inbox_v%d.css";
+    public static final String INBOX_JS_PATH = "inbox/js/inbox_v%d.js";
+    public static final String ERROR_PATH = "error/error_general_v%d.html";
     private static final String LOG_TAG = RestServer.class.getSimpleName();
 
     public void getVersionInfo(final RestCallback<VersionResponse> callback) {
@@ -36,8 +38,8 @@ public class RestServer {
         });
     }
 
-    public void getPage(final String pagePath, final int version, final RestCallback<String> callback) {
-        RestClient.getInstance().getStringResponseRestService().getPage(pagePath + Integer.toString(version)).enqueue(
+    public void getPage(final String pagePath, final int version,  final RestCallback<String> callback) {
+        RestClient.getInstance().getStringResponseRestService().getPage(String.format(pagePath, version)).enqueue(
                 new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {

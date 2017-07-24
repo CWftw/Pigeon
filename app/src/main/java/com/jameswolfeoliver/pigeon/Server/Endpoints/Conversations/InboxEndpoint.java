@@ -21,6 +21,6 @@ public class InboxEndpoint extends Endpoint {
 
     @Override
     protected Response onGet(IHTTPSession session) {
-        return buildHtmlResponse(PigeonServer.getForbidden(), Status.FORBIDDEN);
+        return buildHtmlResponse(PigeonServer.getInbox(), Status.OK);
     }
 }

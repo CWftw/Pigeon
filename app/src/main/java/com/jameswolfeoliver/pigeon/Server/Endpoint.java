@@ -3,6 +3,7 @@ package com.jameswolfeoliver.pigeon.Server;
 import android.util.Log;
 
 import com.jameswolfeoliver.pigeon.Models.ClientResponses.Error;
+import com.jameswolfeoliver.pigeon.Server.Sessions.Session;
 import com.jameswolfeoliver.pigeon.Server.Sessions.SessionManager;
 import com.jameswolfeoliver.pigeon.Utilities.PigeonApplication;
 
@@ -17,6 +18,7 @@ public abstract class Endpoint {
     // MIME Types
     protected final static String MIME_JSON = "application/json";
     protected final static String MIME_HTML = "text/html";
+    protected final static String MIME_PLAIN = "text/plain";
     protected final static String MIME_JPEG = "image/jpeg";
     protected final static String MIME_PNG = "image/png";
     protected SessionManager sessionManager;
@@ -36,9 +38,14 @@ public abstract class Endpoint {
         }
     }
 
+    private boolean isSessionValid(IHTTPSession session) {
+        return sessionManager.validateSession(new Session());
+    }
+
     abstract protected Response onGet(IHTTPSession session);
     abstract protected Response onPost(IHTTPSession session);
 
+    // Shared static functions
     protected static Response buildHtmlResponse(String responseBody, Status status) {
         return Response.newFixedLengthResponse(status, MIME_HTML, responseBody);
     }

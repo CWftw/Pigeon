@@ -93,7 +93,6 @@ public class PigeonApplication extends MultiDexApplication implements Applicatio
         registerActivityLifecycleCallbacks(this);
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().build();
-        Realm.deleteRealm(config);
         Realm.setDefaultConfiguration(config);
     }
 

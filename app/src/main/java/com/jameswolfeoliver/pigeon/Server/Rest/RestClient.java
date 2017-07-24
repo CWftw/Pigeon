@@ -14,7 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestClient {
-    private static final String BASE_URL = "http://jameswolfeoliver.github.io/assets/pigeon/";
+    private static final String BASE_URL = "https://raw.githubusercontent.com/jameswolfeoliver/pigeon-web/master/";
     private static RestClient instance;
     private RestService restService;
     private RestService stringResponseRestService;
